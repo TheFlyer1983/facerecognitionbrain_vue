@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import useNavigation from '@/modules/navigation/useNavigation';
+import { useNavigation } from '@/modules/navigation';
 import { Routes } from '@/router/routes';
 
 const { navigate } = useNavigation();
