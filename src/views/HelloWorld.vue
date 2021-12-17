@@ -1,9 +1,17 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref } from 'vue';
+import useNavigation from '@/modules/navigation/useNavigation';
+import { Routes } from '@/router/routes';
 
-defineProps<{ msg: string }>()
+const { navigate } = useNavigation();
 
-const count = ref(0)
+function changePage() {
+  navigate({ name: Routes.Second });
+}
+
+defineProps<{ msg: string }>();
+
+const count = ref(0);
 </script>
 
 <template>
@@ -31,6 +39,8 @@ const count = ref(0)
     Edit
     <code>components/HelloWorld.vue</code> to test hot module replacement.
   </p>
+
+  <button @click="changePage">Change Page</button>
 </template>
 
 <style scoped>
