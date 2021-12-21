@@ -1,18 +1,16 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { computed, onBeforeMount } from 'vue';
 import { useStore } from 'vuex';
-import { useNavigation } from '@/modules/navigation';
-import { Routes } from '@/router/routes';
 
 const store = useStore();
-const { navigate } = useNavigation();
+
+onBeforeMount(() => {
+  if (!store.getters['user/getUser']) {
+    store.dispatch('user/getToken');
+  }
+});
 
 const user = computed(() => store.getters['user/getUser']);
-console.log(user.value)
-
-defineProps<{ msg: string }>();
-
-const count = ref(0);
 </script>
 
 <template>
