@@ -18,7 +18,6 @@ const routes: Array<RouteRecordRaw> = [
     path: '/home',
     name: Routes.Home,
     component: Home,
-    props: { msg: 'Hello Vue 3 + TypeScript + Vite' },
     beforeEnter: (to, from, next) => authenticated(next)
   },
   {
