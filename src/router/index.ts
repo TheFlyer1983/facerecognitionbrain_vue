@@ -1,9 +1,12 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
+import useRouterGuards from './useRouterGuards';
 
-import HelloWorld from '@/views/HelloWorld.vue';
+import Home from '@/views/Home/Home.vue';
 import { Routes } from './routes';
 
 export const INITIAL_ROUTE = '/';
+
+const { authenticated } = useRouterGuards();
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -14,8 +17,9 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/home',
     name: Routes.Home,
-    component: HelloWorld,
-    props: { msg: 'Hello Vue 3 + TypeScript + Vite' }
+    component: Home,
+    props: { msg: 'Hello Vue 3 + TypeScript + Vite' },
+    beforeEnter: (to, from, next) => authenticated(next)
   },
   {
     path: '/login',

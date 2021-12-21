@@ -5,7 +5,8 @@ export type UserActionContext = ActionContext<UserState, {}>
 export interface UserState {
   isSignedIn: boolean;
   isProfileOpen: false;
-  user: User;
+  user: User | null;
+  token: string;
 }
 
 export interface User {

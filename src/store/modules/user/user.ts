@@ -10,26 +10,22 @@ import {
 export const state: UserState = {
   isSignedIn: false,
   isProfileOpen: false,
-  user: {
-    id: '',
-    name: '',
-    email: '',
-    entries: 0,
-    joined: '',
-    pet: '',
-    age: ''
-  }
+  user: null,
+  token: ''
 };
 
 export const getters = {
   getUser(state: UserState): UserState['user'] {
     return state.user;
+  },
+  getToken(state: UserState): UserState['token'] {
+    return state.token;
   }
 };
 
 export const mutations = {
-  setUserId(state: UserState, payload: UserState['user']['id']): void {
-    state.user.id = payload;
+  setUserId(state: UserState, payload: string): void {
+    state.user = { ...state.user, id: payload } as UserState['user'];
   },
 
   setUser(state: UserState, payload: UserState['user']): void {
@@ -38,6 +34,10 @@ export const mutations = {
 
   toggleSignIn(state: UserState, payload: UserState['isSignedIn']): void {
     state.isSignedIn = payload;
+  },
+
+  setToken(state: UserState, payload: UserState['token']): void {
+    state.token = payload;
   }
 };
 
@@ -61,7 +61,7 @@ export const actions = {
       commit('setUserId', result.userId);
       commit('toggleSignIn', true);
       const success = await dispatch('getUser', result.userId as string);
-      if (!success) throw new Error('Error')
+      if (!success) throw new Error('Error');
 
       return true;
     } catch (error) {
@@ -91,7 +91,10 @@ export const actions = {
       return false;
     }
   },
-  async registerUser({ commit }: UserActionContext, payload: RegisterInfo): Promise<boolean> {
+  async registerUser(
+    { commit }: UserActionContext,
+    payload: RegisterInfo
+  ): Promise<boolean> {
     try {
       const response = await fetch(endpoints.register, {
         method: 'POST',
@@ -101,15 +104,46 @@ export const actions = {
 
       const result = await response.json();
 
-      if (!response.ok) throw new Error(result as string)
+      if (!response.ok) throw new Error(result as string);
 
       saveAuthTokenInSession(result.session.token as string);
-      commit('setUser', result.register.user)
+      commit('setUser', result.register.user);
 
       return true;
     } catch (error) {
       console.log(error);
       return false;
+    }
+  },
+  getToken({ commit, dispatch }: UserActionContext) {
+    const token = getAuthTokenInSession();
+
+    if (token) {
+      commit('setToken', token);
+      dispatch('authenticated');
+    }
+  },
+  async authenticated({ state, dispatch }: UserActionContext) {
+    const token = state.token;
+
+    if (token) {
+      try {
+        const response = await fetch(endpoints.signin, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: token
+          }
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) throw new Error(result as string);
+
+        dispatch('getUser', result.id)
+      } catch (error) {
+        console.log(error);
+      }
     }
   }
 };
