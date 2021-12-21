@@ -7,15 +7,17 @@ import { Routes } from '@/router/routes';
 const store = useStore();
 const { navigate } = useNavigation();
 
+const name = ref('');
 const email = ref('');
 const password = ref('');
 
-async function onSubmitSignIn(): Promise<void> {
-  const loginInfo = {
+async function onSubmitRegister(): Promise<void> {
+  const registerInfo = {
+    name: name.value,
     email: email.value,
     password: password.value
-  };
-  const success = await store.dispatch('user/login', loginInfo);
+  }
+  const success = await store.dispatch('user/registerUser', registerInfo);
   if (success) {
     navigate({ name: Routes.Home });
   }
@@ -23,17 +25,32 @@ async function onSubmitSignIn(): Promise<void> {
 </script>
 
 <template>
-  <article class="login-article">
-    <main class="login-article-main">
-      <div class="login-article-main-measure">
-        <fieldset class="login-article-main-measure-fieldset">
-          <legend class="login-article-main-measure-fieldset--legend">
-            Sign In
+  <article class="register-article">
+    <main class="register-article-main">
+      <div class="register-article-main-measure">
+        <fieldset class="register-article-main-measure-fieldset">
+          <legend class="register-article-main-measure-fieldset--legend">
+            Register
           </legend>
-          <div class="login-article-main-measure-fieldset__field">
+          <div class="register-article-main-measure-fieldset__field">
+            <label
+              for="name"
+              class="register-article-main-measure-fieldset__field--label"
+            >
+              Name
+            </label>
+            <input
+              type="text"
+              name="name"
+              id="name"
+              v-model="name"
+              class="register-article-main-measure-fieldset__field--input"
+            />
+          </div>
+          <div lass="register-article-main-measure-fieldset__field">
             <label
               for="email-address"
-              class="login-article-main-measure-fieldset__field--label"
+              class="register-article-main-measure-fieldset__field--label"
             >
               Email
             </label>
@@ -42,13 +59,13 @@ async function onSubmitSignIn(): Promise<void> {
               name="email-address"
               id="email-address"
               v-model="email"
-              class="login-article-main-measure-fieldset__field--input"
+              class="register-article-main-measure-fieldset__field--input"
             />
           </div>
-          <div class="login-article-main-measure-fieldset__field">
+          <div lass="register-article-main-measure-fieldset__field">
             <label
               for="password"
-              class="login-article-main-measure-fieldset__field--label"
+              class="register-article-main-measure-fieldset__field--label"
             >
               Password
             </label>
@@ -57,25 +74,17 @@ async function onSubmitSignIn(): Promise<void> {
               name="password"
               id="password"
               v-model="password"
-              class="login-article-main-measure-fieldset__field--input"
+              class="register-article-main-measure-fieldset__field--input"
             />
           </div>
         </fieldset>
         <div>
           <input
             type="submit"
-            value="Sign in"
-            @click="onSubmitSignIn"
-            class="login-article-main-measure--submit"
+            value="Register"
+            @click="onSubmitRegister"
+            class="register-article-main-measure--submit"
           />
-        </div>
-        <div class="login-article-main-measure__register">
-          <p
-            @click="navigate({ name: Routes.Register })"
-            class="login-article-main-measure__register--link"
-          >
-            Register
-          </p>
         </div>
       </div>
     </main>
@@ -83,7 +92,7 @@ async function onSubmitSignIn(): Promise<void> {
 </template>
 
 <style scoped lang="scss">
-.login-article {
+.register-article {
   border-radius: 0.5rem;
   border: solid 1px black;
   width: 100%;
