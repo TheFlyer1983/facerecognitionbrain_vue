@@ -6,11 +6,10 @@ import particlesObject from '@/assets/particles/particles.json';
 
 <template>
   <Particles id="tsparticles" class="particles" :options="particlesObject" />
-  <img alt="Vue logo" src="./assets/logo.png" />
   <router-view />
 </template>
 
-<style>
+<style lang='scss'>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

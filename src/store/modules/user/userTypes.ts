@@ -1,3 +1,7 @@
+import { ActionContext } from 'vuex';
+
+export type UserActionContext = ActionContext<UserState, {}>
+
 export interface UserState {
   isSignedIn: boolean;
   isProfileOpen: false;
