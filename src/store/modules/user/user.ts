@@ -1,7 +1,7 @@
 import { UserState, UserActionContext } from './userTypes';
 
 import { endpoints } from '@/constants';
-import { LoginInfo } from '@/types';
+import { LoginInfo, RegisterInfo } from '@/types';
 import {
   getAuthTokenInSession,
   saveAuthTokenInSession
@@ -85,6 +85,27 @@ export const actions = {
       if (!response.ok) throw new Error(result);
 
       commit('setUser', result);
+      return true;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  },
+  async registerUser({ commit }: UserActionContext, payload: RegisterInfo): Promise<boolean> {
+    try {
+      const response = await fetch(endpoints.register, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) throw new Error(result as string)
+
+      saveAuthTokenInSession(result.session.token as string);
+      commit('setUser', result.register.user)
+
       return true;
     } catch (error) {
       console.log(error);
