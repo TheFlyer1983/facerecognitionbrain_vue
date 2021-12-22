@@ -20,6 +20,9 @@ export const getters = {
   },
   getToken(state: UserState): UserState['token'] {
     return state.token;
+  },
+  getIsSignedIn(state: UserState): UserState['isSignedIn'] {
+    return state.isSignedIn;
   }
 };
 
@@ -59,7 +62,7 @@ export const actions = {
 
       saveAuthTokenInSession(result.token as string);
       commit('setUserId', result.userId);
-      commit('toggleSignIn', true);
+
       const success = await dispatch('getUser', result.userId as string);
       if (!success) throw new Error('Error');
 
@@ -85,6 +88,7 @@ export const actions = {
       if (!response.ok) throw new Error(result);
 
       commit('setUser', result);
+      commit('toggleSignIn', true);
       return true;
     } catch (error) {
       console.log(error);
@@ -140,7 +144,7 @@ export const actions = {
 
         if (!response.ok) throw new Error(result as string);
 
-        dispatch('getUser', result.id)
+        dispatch('getUser', result.id);
       } catch (error) {
         console.log(error);
       }

@@ -295,15 +295,15 @@
           "value": 1
         }
       },
-      "enable": true,
-      "mode": "bounce",
+      "enable": false,
+      "mode": "",
       "overlap": {
         "enable": true,
         "retries": 0
       }
     },
     "color": {
-      "value": "#000",
+      "value": "fff",
       "animation": {
         "h": {
           "count": 0,
@@ -465,7 +465,7 @@
         "factor": 1000
       },
       "limit": 0,
-      "value": 80
+      "value": 150
     },
     "opacity": {
       "random": {

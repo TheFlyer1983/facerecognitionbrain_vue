@@ -1,30 +1,41 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+import { useStore } from 'vuex';
 import particlesObject from '@/assets/particles/particles.json';
+import Nav from '@/components/Nav/Nav.vue';
+
+const store = useStore();
+
+const isSignedIn = computed(() => store.getters['user/getIsSignedIn']);
 </script>
 
 <template>
   <Particles id="tsparticles" class="particles" :options="particlesObject" />
+  <Nav v-if="!isSignedIn" />
   <router-view />
 </template>
 
-<style lang='scss'>
+<style lang="scss">
+body {
+  margin: 0;
+  padding: 0;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
-  
 }
 
-.particles{
+.particles {
   position: fixed;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
   z-index: -1;
-  background: linear-gradient(89deg, #FF5EDF 0%, #04C8DE 100%);
+  background: linear-gradient(89deg, #ff5edf 0%, #04c8de 100%);
 }
 </style>
