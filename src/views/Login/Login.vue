@@ -85,11 +85,11 @@ async function onSubmitSignIn(): Promise<void> {
 <style scoped lang="scss">
 .login-article {
   border-radius: 0.5rem;
-  border: solid 1px black;
+  border: solid 1px var(--black-10);
   width: 100%;
   max-width: 32rem;
   box-shadow: 4px 4px 8px 0 rgba(0, 0, 0, 0.2);
-  margin: 10rem auto;
+  margin: 4rem auto;
 
   @include breakpoint-medium {
     width: 50%;
