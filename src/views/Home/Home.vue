@@ -3,6 +3,7 @@ import { computed, onBeforeMount } from 'vue';
 import { useStore } from 'vuex';
 import Logo from '@/components/Logo/Logo.vue'
 import ImageLinkForm from '@/components/ImageLinkForm/ImageLinkForm.vue';
+import FaceRecognition from '@/components/FaceRecognition/FaceRecognition.vue';
 
 const store = useStore();
 
@@ -19,6 +20,7 @@ const user = computed(() => store.getters['user/getUser']);
   <Logo />
   <h1>{{ user }}</h1>
   <ImageLinkForm />
+  <FaceRecognition />
 </template>
 
 <style scoped>

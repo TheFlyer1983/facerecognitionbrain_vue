@@ -10,6 +10,10 @@ export const state: ImageState = {
 export const getters = {
   getImageURL(state: ImageState): ImageState['imageUrl'] {
     return state.imageUrl;
+  },
+
+  getBoxes(state: ImageState): ImageState['boxes'] {
+    return state.boxes;
   }
 };
 
@@ -26,7 +30,6 @@ export const mutations = {
 export const actions = {
   async submitURL({ state, commit, rootGetters }: ImageActionContext): Promise<void> {
     const token = rootGetters['user/getToken'] as UserState['token'];
-    console.log(token);
     try {
       const response = await fetch(endpoints.imageURL, {
         method: 'POST',
