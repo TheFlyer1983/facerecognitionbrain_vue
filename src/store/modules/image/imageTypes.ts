@@ -1,5 +1,8 @@
+import { ActionContext } from 'vuex';
+
+export type ImageActionContext = ActionContext<ImageState, {}>;
+
 export interface ImageState {
-  input: string;
   imageUrl: string;
   boxes: Array<Box>;
 }

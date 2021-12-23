@@ -61,6 +61,7 @@ export const actions = {
       if (!response.ok) throw new Error(result as string);
 
       saveAuthTokenInSession(result.token as string);
+      commit('setToken', result.token);
       commit('setUserId', result.userId);
 
       const success = await dispatch('getUser', result.userId as string);
