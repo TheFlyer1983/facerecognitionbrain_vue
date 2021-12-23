@@ -2,6 +2,7 @@
 import { computed, onBeforeMount } from 'vue';
 import { useStore } from 'vuex';
 import Logo from '@/components/Logo/Logo.vue'
+import ImageLinkForm from '@/components/ImageLinkForm/ImageLinkForm.vue';
 
 const store = useStore();
 
@@ -17,6 +18,7 @@ const user = computed(() => store.getters['user/getUser']);
 <template>
   <Logo />
   <h1>{{ user }}</h1>
+  <ImageLinkForm />
 </template>
 
 <style scoped>
