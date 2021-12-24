@@ -11,7 +11,8 @@ export const state: UserState = {
   isSignedIn: false,
   isProfileOpen: false,
   user: null,
-  token: ''
+  token: '',
+  rank: ''
 };
 
 export const getters = {
@@ -23,6 +24,9 @@ export const getters = {
   },
   getIsSignedIn(state: UserState): UserState['isSignedIn'] {
     return state.isSignedIn;
+  },
+  getRank(state: UserState): UserState['rank'] {
+    return state.rank;
   }
 };
 
@@ -41,6 +45,14 @@ export const mutations = {
 
   setToken(state: UserState, payload: UserState['token']): void {
     state.token = payload;
+  },
+
+  updateEntries(state: UserState, payload: number): void {
+    state.user = { ...state.user, entries: payload } as UserState['user'];
+  },
+
+  setRank(state: UserState, payload: UserState['rank']): void {
+    state.rank = payload;
   }
 };
 
@@ -73,7 +85,7 @@ export const actions = {
       return false;
     }
   },
-  async getUser({ commit }: UserActionContext, payload: string) {
+  async getUser({ commit, dispatch }: UserActionContext, payload: string) {
     const requestURL = endpoints.getProfile.replace(':id', payload);
     const token = getAuthTokenInSession();
     try {
@@ -90,6 +102,7 @@ export const actions = {
 
       commit('setUser', result);
       commit('toggleSignIn', true);
+      dispatch('getRank');
       return true;
     } catch (error) {
       console.log(error);
@@ -150,6 +163,28 @@ export const actions = {
         console.log(error);
       }
     }
+  },
+  async getRank({ state, commit }: UserActionContext): Promise<void> {
+    const token = state.token;
+    const entries = state.user?.entries;
+
+    try {
+      const response = await fetch(endpoints.rank, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: token
+        },
+        body: JSON.stringify({
+          entries
+        })
+      });
+      const result = await response.json();
+
+      if (!response.ok) throw new Error(result);
+
+      commit('setRank', result);
+    } catch (error) {}
   }
 };
 
