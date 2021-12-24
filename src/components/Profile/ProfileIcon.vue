@@ -1,10 +1,16 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
+const emits = defineEmits(['signout'])
+
 const isDropdownOpen = ref(false);
 
 function toggleDropdown() {
   isDropdownOpen.value = !isDropdownOpen.value;
+}
+
+function signOut() {
+  emits('signout')
 }
 </script>
 
@@ -19,7 +25,7 @@ function toggleDropdown() {
     </span>
     <ul v-if="isDropdownOpen" class="dropdown-menu">
       <li class="dropdown-menu-item">View Profile</li>
-      <li class="dropdown-menu-item">Sign Out</li>
+      <li @click="signOut" class="dropdown-menu-item">Sign Out</li>
     </ul>
   </section>
 </template>

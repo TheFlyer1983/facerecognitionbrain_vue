@@ -9,18 +9,23 @@ const store = useStore();
 const { navigate } = useNavigation();
 
 const isSignedIn = computed(() => store.getters['user/getIsSignedIn']);
+
+function signOut() {
+  store.dispatch('user/signOut');
+  navigate({ name: Routes.Login });
+}
 </script>
 
 <template>
   <nav class="nav">
     <template v-if="isSignedIn">
-      <ProfileIcon />
+      <ProfileIcon @signout="signOut" />
     </template>
     <template v-else>
-    <p class="nav--link" @click="navigate({ name: Routes.Login })">Sign In</p>
-    <p class="nav--link" @click="navigate({ name: Routes.Register })">
-      Register
-    </p>
+      <p class="nav--link" @click="navigate({ name: Routes.Login })">Sign In</p>
+      <p class="nav--link" @click="navigate({ name: Routes.Register })">
+        Register
+      </p>
     </template>
   </nav>
 </template>
