@@ -7,6 +7,7 @@ export interface UserState {
   isProfileOpen: false;
   user: User | null;
   token: string;
+  rank: string;
 }
 
 export interface User {

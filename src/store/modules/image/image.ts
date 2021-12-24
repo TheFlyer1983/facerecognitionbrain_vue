@@ -1,6 +1,6 @@
-import { endpoints } from "@/constants";
-import { UserState } from "../user/userTypes";
-import { ImageActionContext, ImageState } from "./imageTypes";
+import { endpoints } from '@/constants';
+import { UserState } from '../user/userTypes';
+import { ImageActionContext, ImageState } from './imageTypes';
 
 export const state: ImageState = {
   imageUrl: '',
@@ -28,7 +28,12 @@ export const mutations = {
 };
 
 export const actions = {
-  async submitURL({ state, commit, rootGetters }: ImageActionContext): Promise<void> {
+  async submitURL({
+    state,
+    commit,
+    dispatch,
+    rootGetters
+  }: ImageActionContext): Promise<void> {
     const token = rootGetters['user/getToken'] as UserState['token'];
     try {
       const response = await fetch(endpoints.imageURL, {
@@ -46,6 +51,38 @@ export const actions = {
       if (!response.ok) throw new Error(result);
 
       commit('setBoxes', result);
+      dispatch('increaseEntries');
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+  async increaseEntries({
+    commit,
+    dispatch,
+    rootGetters
+  }: ImageActionContext): Promise<void> {
+    const token = rootGetters['user/getToken'] as UserState['token'];
+    const user = rootGetters['user/getUser'] as UserState['user'];
+
+    try {
+      const response = await fetch(endpoints.image, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: token
+        },
+        body: JSON.stringify({
+          id: user?.id
+        })
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) throw new Error(result);
+
+      commit('user/updateEntries', result.entries, { root: true });
+      dispatch('user/getRank', null, { root: true });
     } catch (error) {
       console.log(error);
     }
