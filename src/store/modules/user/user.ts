@@ -4,6 +4,7 @@ import { endpoints } from '@/constants';
 import { LoginInfo, RegisterInfo } from '@/types';
 import {
   getAuthTokenInSession,
+  removeAuthTokenFromSession,
   saveAuthTokenInSession
 } from '@/functions/storageFunctions';
 
@@ -53,6 +54,11 @@ export const mutations = {
 
   setRank(state: UserState, payload: UserState['rank']): void {
     state.rank = payload;
+  },
+
+  clearUser(state: UserState): void {
+    state.user = null;
+    state.isSignedIn = false;
   }
 };
 
@@ -185,6 +191,11 @@ export const actions = {
 
       commit('setRank', result);
     } catch (error) {}
+  },
+  signOut({ commit }: UserActionContext): void {
+    removeAuthTokenFromSession();
+
+    commit('clearUser');
   }
 };
 
