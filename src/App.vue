@@ -1,17 +1,11 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-import { useStore } from 'vuex';
 import particlesObject from '@/assets/particles/particles.json';
 import Nav from '@/components/Nav/Nav.vue';
-
-const store = useStore();
-
-const isSignedIn = computed(() => store.getters['user/getIsSignedIn']);
 </script>
 
 <template>
   <Particles id="tsparticles" class="particles" :options="particlesObject" />
-  <Nav v-if="!isSignedIn" />
+  <Nav />
   <router-view />
 </template>
 

@@ -1,16 +1,27 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+import { useStore } from 'vuex';
 import { useNavigation } from '@/modules/navigation';
 import { Routes } from '@/router/routes';
+import ProfileIcon from '../Profile/ProfileIcon.vue';
 
+const store = useStore();
 const { navigate } = useNavigation();
+
+const isSignedIn = computed(() => store.getters['user/getIsSignedIn']);
 </script>
 
 <template>
   <nav class="nav">
+    <template v-if="isSignedIn">
+      <ProfileIcon />
+    </template>
+    <template v-else>
     <p class="nav--link" @click="navigate({ name: Routes.Login })">Sign In</p>
     <p class="nav--link" @click="navigate({ name: Routes.Register })">
       Register
     </p>
+    </template>
   </nav>
 </template>
 
