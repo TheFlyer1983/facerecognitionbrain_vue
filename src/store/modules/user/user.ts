@@ -1,4 +1,4 @@
-import { UserState, UserActionContext } from './userTypes';
+import { UserState, UserActionContext, UpdateInfo } from './userTypes';
 
 import { endpoints } from '@/constants';
 import { LoginInfo, RegisterInfo } from '@/types';
@@ -28,6 +28,9 @@ export const getters = {
   },
   getRank(state: UserState): UserState['rank'] {
     return state.rank;
+  },
+  getIsProfileOpen(state: UserState): UserState['isProfileOpen'] {
+    return state.isProfileOpen;
   }
 };
 
@@ -59,6 +62,10 @@ export const mutations = {
   clearUser(state: UserState): void {
     state.user = null;
     state.isSignedIn = false;
+  },
+
+  toggleModal(state: UserState): void {
+    state.isProfileOpen = !state.isProfileOpen;
   }
 };
 
@@ -196,6 +203,28 @@ export const actions = {
     removeAuthTokenFromSession();
 
     commit('clearUser');
+  },
+  async updateUser(
+    { state, dispatch }: UserActionContext,
+    payload: UpdateInfo
+  ): Promise<void> {
+    const token = getAuthTokenInSession();
+    try {
+      if (!token) throw new Error('No valid token');
+      const response = await fetch(`${endpoints.profile}/${state.user?.id}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: token },
+        body: JSON.stringify({ formInput: payload })
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) throw new Error(result as string);
+
+      await dispatch('getUser', state.user?.id);
+    } catch (error) {
+      console.log(error);
+    }
   }
 };
 
