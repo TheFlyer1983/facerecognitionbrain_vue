@@ -1,15 +1,14 @@
 <script setup lang="ts">
-import Tilt from 'vanilla-tilt-vue';
 import brain from '@/assets/images/brain.png';
 </script>
 
 <template>
   <div class="logo">
-    <Tilt :options="{ max: 55 }" class="logo-tilt">
+    <div class="logo-tilt">
       <div class="logo-tilt-inner">
         <img :src="brain" alt="logo" class="logo-tilt-inner--image">
       </div>
-    </Tilt>
+    </div>
   </div>
 </template>
 
