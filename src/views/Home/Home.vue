@@ -5,6 +5,7 @@ import Logo from '@/components/Logo/Logo.vue'
 import ImageLinkForm from '@/components/ImageLinkForm/ImageLinkForm.vue';
 import FaceRecognition from '@/components/FaceRecognition/FaceRecognition.vue';
 import Rank from '@/components/Rank/Rank.vue';
+import Profile from '@/components/Profile/Profile.vue'
 
 const store = useStore();
 
@@ -15,6 +16,9 @@ onBeforeMount(() => {
 });
 
 const user = computed(() => store.getters['user/getUser']);
+
+const isProfileOpen = computed(() => store.getters['user/getIsProfileOpen']);
+
 </script>
 
 <template>
@@ -22,6 +26,9 @@ const user = computed(() => store.getters['user/getUser']);
   <Rank :user="user" v-if="user"/>
   <ImageLinkForm />
   <FaceRecognition />
+  <teleport to="body">
+    <Profile v-if="isProfileOpen"/>
+  </teleport>
 </template>
 
 <style scoped>

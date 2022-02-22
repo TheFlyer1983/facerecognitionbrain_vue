@@ -4,7 +4,7 @@ export type UserActionContext = ActionContext<UserState, {}>
 
 export interface UserState {
   isSignedIn: boolean;
-  isProfileOpen: false;
+  isProfileOpen: boolean;
   user: User | null;
   token: string;
   rank: string;
@@ -15,7 +15,13 @@ export interface User {
   name: string;
   email: string;
   entries: number;
-  joined: string;
+  joined: string | number | Date;
   pet: string;
-  age: string;
+  age: number;
+}
+
+export interface UpdateInfo {
+  name?: string;
+  pet?: string;
+  age?: number;
 }

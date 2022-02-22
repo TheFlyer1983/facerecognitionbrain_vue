@@ -6,5 +6,6 @@ export const endpoints = {
   getProfile: `${apiConfig}/profile/:id`,
   register: `${apiConfig}/register`,
   imageURL: `${apiConfig}/imageURL`,
-  image: `${apiConfig}/image`
+  image: `${apiConfig}/image`,
+  profile: `${apiConfig}/profile`
 };
