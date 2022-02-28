@@ -22,14 +22,23 @@ function signOut() {
       <ProfileIcon @signout="signOut" />
     </template>
     <template v-else>
-      <p class="nav--link" @click="navigate({ name: Routes.Login })">Sign In</p>
-      <p class="nav--link" @click="navigate({ name: Routes.Register })">
+      <p
+        class="nav--link"
+        @click="navigate({ name: Routes.Login })"
+        data-test="signin"
+      >
+        Sign In
+      </p>
+      <p
+        class="nav--link"
+        @click="navigate({ name: Routes.Register })"
+        data-test="register"
+      >
         Register
       </p>
     </template>
   </nav>
 </template>
-
 <style scoped lang="scss">
 .nav {
   display: flex;
