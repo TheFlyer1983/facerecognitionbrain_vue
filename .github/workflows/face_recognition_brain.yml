@@ -3,7 +3,7 @@ on:
   push:
     branches: [main, staging, dev, feature/*, bug/*]
   pull_request:
-    branches: [feature/*, bug/* ]
+    branches: [main, staging, dev ]
 env:
   buildNumber: $(date +'%Y%m%d')-${{ github.run_number }}
 jobs:
