@@ -1,0 +1,21 @@
+// Vitest Snapshot v1
+
+exports[`Given the \`ProfileIcon\` component > when it is rendered > should match the snapshot 1`] = `
+<section
+  class="dropdown"
+  data-v-462d6e3c=""
+>
+  <span
+    class="dropdown-button pointer"
+    data-v-462d6e3c=""
+  >
+    <img
+      alt="avatar"
+      class="dropdown-button-image"
+      data-v-462d6e3c=""
+      src="http://tachyons.io/img/logo.jpg"
+    />
+  </span>
+  <!--v-if-->
+</section>
+`;

@@ -5,7 +5,6 @@ import { useStore } from 'vuex';
 import { useNavigation } from '@/modules/navigation';
 
 import Nav from './Nav.vue';
-import ProfileIcon from '@/components/Profile/ProfileIcon.vue';
 import { UserState } from '@/store/modules/user/userTypes';
 import { Routes } from '@/router/routes';
 
