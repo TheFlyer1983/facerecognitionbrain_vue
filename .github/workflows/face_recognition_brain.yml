@@ -1,8 +1,7 @@
 name: face_recognition_brain
 on:
-  push:
   pull_request:
-    branches: [main, staging, dev, feature/*, bug/*]
+    branches: [main, staging, dev]
 env:
   buildNumber: $(date +'%Y%m%d')-${{ github.run_number }}
 jobs:
