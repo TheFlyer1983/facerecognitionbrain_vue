@@ -84,6 +84,7 @@ async function onSubmitRegister(): Promise<void> {
             value="Register"
             @click="onSubmitRegister"
             class="register-article-main-measure--submit"
+            data-test="submit"
           />
         </div>
       </div>

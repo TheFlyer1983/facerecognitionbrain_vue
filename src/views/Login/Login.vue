@@ -67,12 +67,14 @@ async function onSubmitSignIn(): Promise<void> {
             value="Sign in"
             @click="onSubmitSignIn"
             class="login-article-main-measure--submit"
+            data-test="submit"
           />
         </div>
         <div class="login-article-main-measure__register">
           <p
             @click="navigate({ name: Routes.Register })"
             class="login-article-main-measure__register--link"
+            data-test="register"
           >
             Register
           </p>

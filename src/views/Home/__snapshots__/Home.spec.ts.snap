@@ -1,0 +1,35 @@
+// Vitest Snapshot v1
+
+exports[`Given the \`Home\` component > when it is rendered > should match the snapshot 1`] = `
+<div
+  data-v-app=""
+>
+  
+  <logo-stub />
+  <rank-stub
+    user="[object Object]"
+  />
+  <image-link-form-stub />
+  <face-recognition-stub />
+  <teleport-stub>
+    <!--v-if-->
+  </teleport-stub>
+  
+</div>
+`;
+
+exports[`Given the \`Home\` component > when it is rendered > when the profile modal is open > should match the snapshot 1`] = `
+<div
+  data-v-app=""
+>
+  
+  <logo-stub />
+  <!--v-if-->
+  <image-link-form-stub />
+  <face-recognition-stub />
+  <teleport-stub>
+    <profile-stub />
+  </teleport-stub>
+  
+</div>
+`;
