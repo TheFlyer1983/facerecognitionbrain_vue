@@ -11,6 +11,7 @@ function closeModal() {
     <div
       class="modal__overlay position-fixed w-100 h-100 bg-white-80 top-0 start-0"
       @click="closeModal"
+      data-test="close-modal"
     ></div>
     <div class="modal__container">
       <slot></slot>
