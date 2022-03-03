@@ -1,6 +1,6 @@
 // Vitest Snapshot v1
 
-exports[`Given the \`ImageLinkForm\` component > when it is rendered > should match the snapshot 1`] = `
+exports[`Given the \`FaceRecognition\` component > when it is rendered > should match the snapshot 1`] = `
 <div
   class="face-recognition"
   data-v-475b3985=""
