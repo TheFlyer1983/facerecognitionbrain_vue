@@ -1,7 +1,7 @@
 import { UserState, UserActionContext, UpdateInfo } from './userTypes';
 
 import { endpoints } from '@/constants';
-import { LoginInfo, RegisterInfo } from '@/types';
+import { LoginInfo, LoginResponse, RegisterInfo } from '@/types';
 import {
   getAuthTokenInSession,
   removeAuthTokenFromSession,

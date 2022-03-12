@@ -12,12 +12,12 @@ export interface UserState {
 
 export interface User {
   id: string;
-  name: string;
-  email: string;
-  entries: number;
-  joined: string | number | Date;
-  pet: string;
-  age: number;
+  name?: string;
+  email?: string;
+  entries?: number;
+  joined?: string | number | Date;
+  pet?: string;
+  age?: number;
 }
 
 export interface UpdateInfo {
