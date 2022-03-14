@@ -5,5 +5,9 @@ dist-ssr
 *.local
 .vscode
 
+# Testing Files
+/coverage
+test-report.json
+
 # Environment Variables
 .env
