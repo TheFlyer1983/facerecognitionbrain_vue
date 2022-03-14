@@ -1,6 +1,5 @@
 import { reactive } from 'vue';
 import { shallowMount, VueWrapper } from '@vue/test-utils';
-import { describe, beforeEach, it, expect, vi, beforeAll } from 'vitest';
 import { useStore } from 'vuex';
 import { useNavigation } from '@/modules/navigation';
 
@@ -8,14 +7,14 @@ import Nav from './Nav.vue';
 import { UserState } from '@/store/modules/user/userTypes';
 import { Routes } from '@/router/routes';
 
-vi.mock('vuex');
-vi.mock('@/modules/navigation');
+jest.mock('vuex');
+jest.mock('@/modules/navigation');
 
-const dispatchMock = vi.fn();
-const navigateMock = vi.fn();
+const dispatchMock = jest.fn();
+const navigateMock = jest.fn();
 
-const mockedUseStore = vi.mocked<() => Partial<typeof useStore>>(useStore);
-const mockedUseNavigation = vi.mocked(useNavigation, true);
+const mockedUseStore = useStore as jest.Mock;
+const mockedUseNavigation = useNavigation as jest.Mock;
 
 describe('Given the Nav component', () => {
   const render = () => shallowMount(Nav);

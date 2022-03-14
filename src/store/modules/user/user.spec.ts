@@ -1,10 +1,9 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-
 import { state, getters, mutations, actions } from './user';
 import { UserState } from './userTypes';
 import { UserMock } from '@/fixtures/users';
 import { LoginInfo } from '@/types';
 import { endpoints } from '@/constants';
+import request from '@/functions/request';
 
 const stateMock: UserState = {
   isSignedIn: false,
@@ -14,20 +13,11 @@ const stateMock: UserState = {
   rank: ''
 };
 
-function setupFetchStub(data: any) {
-  return function fetchStub(_url: any) {
-    return new Promise((resolve) => {
-      resolve({
-        json: () => Promise.resolve(data),
-        ok: true
-      });
-    });
-  };
-}
+jest.mock('@/functions/request');
 
 describe('Given the `user` state', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
   });
 
   describe('and when `getters` are invoked', () => {
@@ -338,31 +328,18 @@ describe('Given the `user` state', () => {
         token: 'ABC123ABC123'
       };
 
-      beforeEach(async () => {
-        // window.fetch = () => Promise.resolve({
-        //     json: () => Promise.resolve(mockedResponse),
-        //     ok: true
-        //   });
+      let requestSpy: SpyInstance;
 
-        vi.spyOn(window, 'fetch').mockImplementation(() =>
-          Promise.resolve({
-            json: () => Promise.resolve(mockedResponse),
-            ok: true
-          })
-        );
-        // vi.spyOn(window, 'fetch').mockResolvedValue({
-        //   json: () => Promise.resolve(mockedResponse),
-        //   ok: true
-        // });
+      beforeEach(async () => {
+        vi.clearAllMocks();
+
+        requestSpy = spyOn(request, 'post').mockResolvedValue({ data: mockedResponse });
 
         await actions.login(contextMock, payload);
       });
+
       it('should call the login api', () => {
-        expect(window.fetch).toHaveBeenCalledWith(requestURL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
+        expect(requestSpy).toHaveBeenCalledWith(requestURL, payload);
       });
 
       it('should commit the correct mutatiI have them ons', () => {

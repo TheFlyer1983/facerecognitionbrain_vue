@@ -11,6 +11,11 @@
     "esModuleInterop": true,
     "lib": ["esnext", "dom"],
     "baseUrl": ".",
+    "types": [
+      "vite/client",
+      "@types/node",
+      "jest"
+    ],
     "paths": {
       "@/*": [
         "src/*"

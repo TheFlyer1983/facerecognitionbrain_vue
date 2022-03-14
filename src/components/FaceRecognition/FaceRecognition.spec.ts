@@ -1,4 +1,3 @@
-import { describe, it, expect, vi, beforeAll, beforeEach } from 'vitest';
 import { shallowMount, VueWrapper } from '@vue/test-utils';
 import { reactive } from 'vue';
 import { useStore } from 'vuex';
@@ -8,11 +7,11 @@ import { ImageState } from '@/store/modules/image/imageTypes';
 import { boxesMock } from '@/fixtures/images';
 import { calculateFaceLocations } from '@/functions/imageFunctions';
 
-vi.mock('vuex');
-vi.mock('@/functions/imageFunctions');
+jest.mock('vuex');
+jest.mock('@/functions/imageFunctions');
 
-const mockedUseStore = vi.mocked<() => Partial<typeof useStore>>(useStore);
-const mockedCalculateFaceLocations = vi.mocked(calculateFaceLocations, true);
+const mockedUseStore = jest.mocked<() => Partial<typeof useStore>>(useStore);
+const mockedCalculateFaceLocations = jest.mocked(calculateFaceLocations, true);
 
 const mockedImageURL =
   'https://images.unsplash.com/photo-1597223557154-721c1cecc4b0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MjB8fGZhY2V8ZW58MHx8MHx8&w=1000&q=80';

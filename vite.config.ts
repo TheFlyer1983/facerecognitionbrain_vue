@@ -1,4 +1,3 @@
-/// <reference types="vitest" />
 import { defineConfig, loadEnv } from 'vite';
 import path from 'path';
 
@@ -32,12 +31,6 @@ export default ({ mode }) => {
           charset: false
         }
       }
-    },
-    test: {
-      globals: true,
-      reporters: ['json', 'verbose'],
-      outputFile: './test-report.json',
-      environment: 'jsdom'
     }
   });
 };
