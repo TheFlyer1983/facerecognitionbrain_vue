@@ -1,0 +1,7 @@
+// Vitest Snapshot v1
+
+exports[`Given the App > when it is rendered > should match the snapshot 1`] = `
+"<particles-stub id=\\"tsparticles\\" class=\\"particles\\" options=\\"[object Object]\\"></particles-stub>
+<nav-stub></nav-stub>
+<router-view-stub></router-view-stub>"
+`;
