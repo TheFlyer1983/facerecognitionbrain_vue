@@ -27,7 +27,7 @@ async function submitURL() {
           v-model="imageURL"
           class="image-link-wrapper-form--input"
         />
-        <button @click="submitURL" class="image-link-wrapper-form--button">Detect</button>
+        <button @click="submitURL" class="image-link-wrapper-form--button" data-test="submit">Detect</button>
       </div>
     </div>
   </div>

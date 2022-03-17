@@ -42,7 +42,7 @@ export const actions = {
       commit('setBoxes', response.data);
       dispatch('increaseEntries');
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   },
 
@@ -61,7 +61,7 @@ export const actions = {
       commit('user/updateEntries', response.data.entries, { root: true });
       dispatch('user/getRank', null, { root: true });
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 };

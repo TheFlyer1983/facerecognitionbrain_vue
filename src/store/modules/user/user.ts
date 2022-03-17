@@ -87,7 +87,7 @@ export const actions = {
 
       return true;
     } catch (error) {
-      console.error(error, 'In the error block');
+      console.error(error);
       return false;
     }
   },
@@ -161,9 +161,7 @@ export const actions = {
     { state, dispatch }: UserActionContext,
     payload: UpdateInfo
   ): Promise<void> {
-    const token = getAuthTokenInSession();
     try {
-      if (!token) throw new Error('No valid token');
       await request.post(`${endpoints.profile}/${state.user?.id}`, {
         formInput: payload
       });

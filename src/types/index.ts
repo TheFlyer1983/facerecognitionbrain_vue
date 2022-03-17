@@ -3,6 +3,12 @@ export interface LoginInfo {
   password: string;
 }
 
+export interface LoginResponse {
+  success: boolean;
+  userId: number;
+  token: string;
+}
+
 export interface RegisterInfo extends LoginInfo {
   name: string;
 }

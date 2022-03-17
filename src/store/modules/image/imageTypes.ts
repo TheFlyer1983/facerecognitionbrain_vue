@@ -10,7 +10,7 @@ export interface ImageState {
 export interface Box {
   id: string;
   region_info: Region;
-  data: Array<Concept>;
+  data: Data;
   value: number;
 }
 
@@ -23,6 +23,10 @@ export interface BoundingBox {
   left_col: number;
   bottom_row: number;
   right_col: number;
+}
+
+export interface Data {
+  concepts: Array<Concept>
 }
 
 export interface Concept {
