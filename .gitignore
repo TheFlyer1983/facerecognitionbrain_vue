@@ -4,10 +4,11 @@ dist
 dist-ssr
 *.local
 .vscode
+/certificates
 
 # Testing Files
 /coverage
-test-report.json
+/tests/test-report.json
 
 # Environment Variables
 .env
