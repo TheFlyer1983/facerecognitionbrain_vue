@@ -4,7 +4,6 @@ import path from 'path';
 
 import vue from '@vitejs/plugin-vue';
 import svgLoader from 'vite-svg-loader';
-import fs from 'fs';
 
 // https://vitejs.dev/config/
 export default ({ mode }) => {
@@ -21,16 +20,17 @@ export default ({ mode }) => {
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src')
-      }
+      },
+      dedupe: ['vue']
     },
     css: {
       preprocessorOptions: {
         scss: {
+          charset: false,
           additionalData: `@import "${path.resolve(
             __dirname,
             './src/styles/main.scss'
-          )}";`,
-          charset: false
+          )}";`
         }
       }
     },

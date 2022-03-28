@@ -1,5 +1,5 @@
 import { shallowMount, VueWrapper } from '@vue/test-utils';
-import { describe, beforeEach, it, expect, vi, beforeAll } from 'vitest';
+import { describe, beforeEach, it, expect } from 'vitest';
 
 import Modal from './Modal.vue';
 
@@ -22,8 +22,8 @@ describe('Given the modal component', () => {
       });
 
       it('should emit the correct event', () => {
-        expect(wrapper.emitted('close-modal')).toStrictEqual([[]])
-      })
+        expect(wrapper.emitted('close-modal')).toStrictEqual([[]]);
+      });
     });
   });
 });
