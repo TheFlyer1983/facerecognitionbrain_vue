@@ -1,3 +1,4 @@
+/// <reference types="vitest" />
 import { defineConfig, loadEnv } from 'vite';
 import path from 'path';
 
@@ -10,7 +11,7 @@ export default ({ mode }) => {
 
   return defineConfig({
     define: {
-      'process.env': { ...process.env, ...loadEnv(mode, process.cwd())}
+      'process.env': { ...process.env, ...loadEnv(mode, process.cwd()) }
     },
     server: {
       port: 8080
@@ -19,18 +20,26 @@ export default ({ mode }) => {
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src')
-      }
+      },
+      dedupe: ['vue']
     },
     css: {
       preprocessorOptions: {
         scss: {
+          charset: false,
           additionalData: `@import "${path.resolve(
             __dirname,
             './src/styles/main.scss'
-          )}";`,
-          charset: false
+          )}";`
         }
       }
+    },
+    test: {
+      globals: true,
+      reporters: ['json', 'verbose'],
+      outputFile: './tests/test-report.json',
+      environment: 'jsdom',
+      setupFiles: './tests/setup.js'
     }
   });
 };

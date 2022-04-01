@@ -1,0 +1,37 @@
+// Vitest Snapshot v1
+
+exports[`Given the \`ImageLinkForm\` component > when it is rendered > should match the snapshot 1`] = `
+<div
+  class="image-link"
+  data-v-1cdfb4fa=""
+>
+  <p
+    class="image-link--text"
+    data-v-1cdfb4fa=""
+  >
+     This Magic Brain will detect faces in your pictures. Give it a try. 
+  </p>
+  <div
+    class="image-link-wrapper"
+    data-v-1cdfb4fa=""
+  >
+    <div
+      class="image-link-wrapper-form"
+      data-v-1cdfb4fa=""
+    >
+      <input
+        class="image-link-wrapper-form--input"
+        data-v-1cdfb4fa=""
+        type="text"
+      />
+      <button
+        class="image-link-wrapper-form--button"
+        data-test="submit"
+        data-v-1cdfb4fa=""
+      >
+        Detect
+      </button>
+    </div>
+  </div>
+</div>
+`;
