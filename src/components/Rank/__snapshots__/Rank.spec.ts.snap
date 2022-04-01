@@ -1,0 +1,25 @@
+// Vitest Snapshot v1
+
+exports[`Given the \`Rank\` component > when it is rendered > should match the snapshot 1`] = `
+<div
+  class="rank"
+  data-v-5588b8cf=""
+>
+  <div
+    data-v-5588b8cf=""
+  >
+    Paul, your current entry count is...
+  </div>
+  <div
+    class="rank-ranking"
+    data-v-5588b8cf=""
+  >
+    1
+  </div>
+  <div
+    data-v-5588b8cf=""
+  >
+    Rank Badge: 😃
+  </div>
+</div>
+`;

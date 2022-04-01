@@ -1,0 +1,91 @@
+// Vitest Snapshot v1
+
+exports[`Given the \`Login\` component > when it is rendered > should match the snapshot 1`] = `
+<article
+  class="login-article"
+  data-v-2c86e14e=""
+>
+  <main
+    class="login-article-main"
+    data-v-2c86e14e=""
+  >
+    <div
+      class="login-article-main-measure"
+      data-v-2c86e14e=""
+    >
+      <fieldset
+        class="login-article-main-measure-fieldset"
+        data-v-2c86e14e=""
+      >
+        <legend
+          class="login-article-main-measure-fieldset--legend"
+          data-v-2c86e14e=""
+        >
+           Sign In 
+        </legend>
+        <div
+          class="login-article-main-measure-fieldset__field"
+          data-v-2c86e14e=""
+        >
+          <label
+            class="login-article-main-measure-fieldset__field--label"
+            data-v-2c86e14e=""
+            for="email-address"
+          >
+             Email 
+          </label>
+          <input
+            class="login-article-main-measure-fieldset__field--input"
+            data-v-2c86e14e=""
+            id="email-address"
+            name="email-address"
+            type="email"
+          />
+        </div>
+        <div
+          class="login-article-main-measure-fieldset__field"
+          data-v-2c86e14e=""
+        >
+          <label
+            class="login-article-main-measure-fieldset__field--label"
+            data-v-2c86e14e=""
+            for="password"
+          >
+             Password 
+          </label>
+          <input
+            class="login-article-main-measure-fieldset__field--input"
+            data-v-2c86e14e=""
+            id="password"
+            name="password"
+            type="password"
+          />
+        </div>
+      </fieldset>
+      <div
+        data-v-2c86e14e=""
+      >
+        <input
+          class="login-article-main-measure--submit"
+          data-test="submit"
+          data-v-2c86e14e=""
+          type="submit"
+          value="Sign in"
+        />
+      </div>
+      <div
+        class="login-article-main-measure__register"
+        data-v-2c86e14e=""
+      >
+        <p
+          class="login-article-main-measure__register--link"
+          data-test="register"
+          data-v-2c86e14e=""
+        >
+           Register 
+        </p>
+      </div>
+    </div>
+  </main>
+</article>
+`;

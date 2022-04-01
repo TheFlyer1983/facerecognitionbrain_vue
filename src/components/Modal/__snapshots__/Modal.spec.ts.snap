@@ -1,0 +1,21 @@
+// Vitest Snapshot v1
+
+exports[`Given the modal component > when it is rendered > should match the snapshot 1`] = `
+<div
+  class="modal position-abosolute d-flex justify-content-center align-items-center"
+  data-v-47db75aa=""
+>
+  <div
+    class="modal__overlay position-fixed w-100 h-100 bg-white-80 top-0 start-0"
+    data-test="close-modal"
+    data-v-47db75aa=""
+  />
+  <div
+    class="modal__container"
+    data-v-47db75aa=""
+  >
+    
+    
+  </div>
+</div>
+`;

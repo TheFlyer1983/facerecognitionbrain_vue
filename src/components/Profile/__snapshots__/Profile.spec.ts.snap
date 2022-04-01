@@ -1,0 +1,7 @@
+// Vitest Snapshot v1
+
+exports[`Given the \`Profile\` component > and when the component is rendered > should match the snapshot 1`] = `
+<modal-stub
+  data-v-69e22fa3=""
+/>
+`;

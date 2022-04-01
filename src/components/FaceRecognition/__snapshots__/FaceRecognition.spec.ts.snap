@@ -1,0 +1,29 @@
+// Vitest Snapshot v1
+
+exports[`Given the \`FaceRecognition\` component > when it is rendered > should match the snapshot 1`] = `
+<div
+  class="face-recognition"
+  data-v-475b3985=""
+>
+  <div
+    class="face-recognition-wrapper"
+    data-v-475b3985=""
+  >
+    <img
+      alt=""
+      class="face-recognition-wrapper--image"
+      data-v-475b3985=""
+      id="inputImage"
+      src="https://images.unsplash.com/photo-1597223557154-721c1cecc4b0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MjB8fGZhY2V8ZW58MHx8MHx8&w=1000&q=80"
+      width="500"
+    />
+    
+    <div
+      class="face-recognition-wrapper--bounding_box"
+      data-v-475b3985=""
+      style="inset: 74.074805px 122.83062999999999px 44.97919999999999px 105.42601499999999px;"
+    />
+    
+  </div>
+</div>
+`;

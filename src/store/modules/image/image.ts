@@ -1,6 +1,7 @@
 import { endpoints } from '@/constants';
 import { UserState } from '../user/userTypes';
 import { ImageActionContext, ImageState } from './imageTypes';
+import request from '@/functions/request';
 
 export const state: ImageState = {
   imageUrl: '',
@@ -31,29 +32,17 @@ export const actions = {
   async submitURL({
     state,
     commit,
-    dispatch,
-    rootGetters
+    dispatch
   }: ImageActionContext): Promise<void> {
-    const token = rootGetters['user/getToken'] as UserState['token'];
     try {
-      const response = await fetch(endpoints.imageURL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: token
-        },
-        body: JSON.stringify({
+      const response = await request.post(endpoints.imageURL, {
           input: state.imageUrl
-        })
-      });
-      const result = await response.json();
+        });
 
-      if (!response.ok) throw new Error(result);
-
-      commit('setBoxes', result);
+      commit('setBoxes', response.data);
       dispatch('increaseEntries');
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   },
 
@@ -62,29 +51,17 @@ export const actions = {
     dispatch,
     rootGetters
   }: ImageActionContext): Promise<void> {
-    const token = rootGetters['user/getToken'] as UserState['token'];
     const user = rootGetters['user/getUser'] as UserState['user'];
 
     try {
-      const response = await fetch(endpoints.image, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: token
-        },
-        body: JSON.stringify({
+      const response = await request.put(endpoints.image, {
           id: user?.id
-        })
-      });
+        });
 
-      const result = await response.json();
-
-      if (!response.ok) throw new Error(result);
-
-      commit('user/updateEntries', result.entries, { root: true });
+      commit('user/updateEntries', response.data.entries, { root: true });
       dispatch('user/getRank', null, { root: true });
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 };

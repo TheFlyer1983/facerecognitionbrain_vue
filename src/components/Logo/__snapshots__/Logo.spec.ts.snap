@@ -1,0 +1,25 @@
+// Vitest Snapshot v1
+
+exports[`Given the Logo component > when it is rendered > should match the snapshot 1`] = `
+<div
+  class="logo"
+  data-v-52a9202f=""
+>
+  <div
+    class="logo-tilt"
+    data-v-52a9202f=""
+  >
+    <div
+      class="logo-tilt-inner"
+      data-v-52a9202f=""
+    >
+      <img
+        alt="logo"
+        class="logo-tilt-inner--image"
+        data-v-52a9202f=""
+        src="/src/assets/images/brain.png"
+      />
+    </div>
+  </div>
+</div>
+`;

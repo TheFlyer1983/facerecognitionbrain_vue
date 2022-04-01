@@ -16,7 +16,7 @@ async function onSubmitRegister(): Promise<void> {
     name: name.value,
     email: email.value,
     password: password.value
-  }
+  };
   const success = await store.dispatch('user/registerUser', registerInfo);
   if (success) {
     navigate({ name: Routes.Home });
@@ -84,6 +84,7 @@ async function onSubmitRegister(): Promise<void> {
             value="Register"
             @click="onSubmitRegister"
             class="register-article-main-measure--submit"
+            data-test="submit"
           />
         </div>
       </div>

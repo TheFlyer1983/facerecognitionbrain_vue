@@ -7,6 +7,7 @@ import {
   removeAuthTokenFromSession,
   saveAuthTokenInSession
 } from '@/functions/storageFunctions';
+import request from '@/functions/request';
 
 export const state: UserState = {
   isSignedIn: false,
@@ -75,50 +76,32 @@ export const actions = {
     payload: LoginInfo
   ): Promise<boolean> {
     try {
-      const response = await fetch(endpoints.signin, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
+      const response = await request.post(endpoints.signin, payload);
 
-      const result = await response.json();
+      saveAuthTokenInSession(response.data.token as string);
+      commit('setToken', response.data.token);
+      commit('setUserId', response.data.userId);
 
-      if (!response.ok) throw new Error(result as string);
-
-      saveAuthTokenInSession(result.token as string);
-      commit('setToken', result.token);
-      commit('setUserId', result.userId);
-
-      const success = await dispatch('getUser', result.userId as string);
+      const success = await dispatch('getUser', response.data.userId as string);
       if (!success) throw new Error('Error');
 
       return true;
     } catch (error) {
-      console.log(error, 'In the error block');
+      console.error(error);
       return false;
     }
   },
   async getUser({ commit, dispatch }: UserActionContext, payload: string) {
     const requestURL = endpoints.getProfile.replace(':id', payload);
-    const token = getAuthTokenInSession();
     try {
-      if (!token) throw new Error('No valid token');
-      const response = await fetch(requestURL, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: token
-        }
-      });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result);
+      const response = await request.get(requestURL);
 
-      commit('setUser', result);
+      commit('setUser', response.data);
       commit('toggleSignIn', true);
       dispatch('getRank');
       return true;
     } catch (error) {
-      console.log(error);
+      console.error(error);
       return false;
     }
   },
@@ -127,22 +110,14 @@ export const actions = {
     payload: RegisterInfo
   ): Promise<boolean> {
     try {
-      const response = await fetch(endpoints.register, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
+      const response = await request.post(endpoints.register, payload);
 
-      const result = await response.json();
-
-      if (!response.ok) throw new Error(result as string);
-
-      saveAuthTokenInSession(result.session.token as string);
-      commit('setUser', result.register.user);
+      saveAuthTokenInSession(response.data.session.token as string);
+      commit('setUser', response.data.register.user);
 
       return true;
     } catch (error) {
-      console.log(error);
+      console.error(error);
       return false;
     }
   },
@@ -159,45 +134,23 @@ export const actions = {
 
     if (token) {
       try {
-        const response = await fetch(endpoints.signin, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: token
-          }
-        });
+        const response = await request.post(endpoints.signin);
 
-        const result = await response.json();
-
-        if (!response.ok) throw new Error(result as string);
-
-        dispatch('getUser', result.id);
+        dispatch('getUser', response.data.id);
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     }
   },
   async getRank({ state, commit }: UserActionContext): Promise<void> {
-    const token = state.token;
     const entries = state.user?.entries;
 
     try {
-      const response = await fetch(endpoints.rank, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: token
-        },
-        body: JSON.stringify({
-          entries
-        })
-      });
-      const result = await response.json();
-
-      if (!response.ok) throw new Error(result);
-
-      commit('setRank', result);
-    } catch (error) {}
+      const response = await request.post(endpoints.rank, { entries });
+      commit('setRank', response.data);
+    } catch (error) {
+      console.error(error);
+    }
   },
   signOut({ commit }: UserActionContext): void {
     removeAuthTokenFromSession();
@@ -208,22 +161,14 @@ export const actions = {
     { state, dispatch }: UserActionContext,
     payload: UpdateInfo
   ): Promise<void> {
-    const token = getAuthTokenInSession();
     try {
-      if (!token) throw new Error('No valid token');
-      const response = await fetch(`${endpoints.profile}/${state.user?.id}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: token },
-        body: JSON.stringify({ formInput: payload })
+      await request.post(`${endpoints.profile}/${state.user?.id}`, {
+        formInput: payload
       });
-
-      const result = await response.json();
-
-      if (!response.ok) throw new Error(result as string);
 
       await dispatch('getUser', state.user?.id);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 };
