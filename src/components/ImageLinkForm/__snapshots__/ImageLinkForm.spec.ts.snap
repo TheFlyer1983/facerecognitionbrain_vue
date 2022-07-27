@@ -29,7 +29,7 @@ exports[`Given the \`ImageLinkForm\` component > when it is rendered > should ma
         data-test="submit"
         data-v-1cdfb4fa=""
       >
-        Detect
+         Detect 
       </button>
     </div>
   </div>
