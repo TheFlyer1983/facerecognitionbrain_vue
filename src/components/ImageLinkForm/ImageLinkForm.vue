@@ -11,7 +11,7 @@ const imageURL = computed<ReturnType<typeof getters['getImageURL']>>({
 });
 
 async function submitURL() {
-  store.dispatch('image/submitURL')
+  store.dispatch('image/submitURL');
 }
 </script>
 
@@ -27,7 +27,13 @@ async function submitURL() {
           v-model="imageURL"
           class="image-link-wrapper-form--input"
         />
-        <button @click="submitURL" class="image-link-wrapper-form--button" data-test="submit">Detect</button>
+        <button
+          @click="submitURL"
+          class="image-link-wrapper-form--button"
+          data-test="submit"
+        >
+          Detect
+        </button>
       </div>
     </div>
   </div>

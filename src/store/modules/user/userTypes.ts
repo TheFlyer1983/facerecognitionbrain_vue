@@ -1,6 +1,7 @@
+import { RootState } from '@/store/rootTypes';
 import { ActionContext } from 'vuex';
 
-export type UserActionContext = ActionContext<UserState, {}>
+export type UserActionContext = ActionContext<UserState, RootState>
 
 export interface UserState {
   isSignedIn: boolean;
