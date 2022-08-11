@@ -70,7 +70,8 @@ async function deleteUser() {
           <h1>{{ user?.name }}</h1>
           <h4>Images Submitted: {{ user?.entries }}</h4>
           <p>
-            Member Since: {{ new Date(`${user?.joined}`).toLocaleDateString('en-GB') }}
+            Member Since:
+            {{ new Date(`${user?.joined}`).toLocaleDateString('en-GB') }}
           </p>
           <hr />
           <template v-if="showConfirmation">
