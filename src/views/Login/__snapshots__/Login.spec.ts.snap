@@ -3,40 +3,40 @@
 exports[`Given the \`Login\` component > when it is rendered > should match the snapshot 1`] = `
 <article
   class="login-article"
-  data-v-2c86e14e=""
+  data-v-5652d04b=""
 >
   <main
     class="login-article-main"
-    data-v-2c86e14e=""
+    data-v-5652d04b=""
   >
     <div
       class="login-article-main-measure"
-      data-v-2c86e14e=""
+      data-v-5652d04b=""
     >
       <fieldset
         class="login-article-main-measure-fieldset"
-        data-v-2c86e14e=""
+        data-v-5652d04b=""
       >
         <legend
           class="login-article-main-measure-fieldset--legend"
-          data-v-2c86e14e=""
+          data-v-5652d04b=""
         >
            Sign In 
         </legend>
         <div
           class="login-article-main-measure-fieldset__field"
-          data-v-2c86e14e=""
+          data-v-5652d04b=""
         >
           <label
             class="login-article-main-measure-fieldset__field--label"
-            data-v-2c86e14e=""
+            data-v-5652d04b=""
             for="email-address"
           >
              Email 
           </label>
           <input
             class="login-article-main-measure-fieldset__field--input"
-            data-v-2c86e14e=""
+            data-v-5652d04b=""
             id="email-address"
             name="email-address"
             type="email"
@@ -44,18 +44,18 @@ exports[`Given the \`Login\` component > when it is rendered > should match the 
         </div>
         <div
           class="login-article-main-measure-fieldset__field"
-          data-v-2c86e14e=""
+          data-v-5652d04b=""
         >
           <label
             class="login-article-main-measure-fieldset__field--label"
-            data-v-2c86e14e=""
+            data-v-5652d04b=""
             for="password"
           >
              Password 
           </label>
           <input
             class="login-article-main-measure-fieldset__field--input"
-            data-v-2c86e14e=""
+            data-v-5652d04b=""
             id="password"
             name="password"
             type="password"
@@ -63,24 +63,24 @@ exports[`Given the \`Login\` component > when it is rendered > should match the 
         </div>
       </fieldset>
       <div
-        data-v-2c86e14e=""
+        data-v-5652d04b=""
       >
         <input
           class="login-article-main-measure--submit"
           data-test="submit"
-          data-v-2c86e14e=""
+          data-v-5652d04b=""
           type="submit"
           value="Sign in"
         />
       </div>
       <div
         class="login-article-main-measure__register"
-        data-v-2c86e14e=""
+        data-v-5652d04b=""
       >
         <p
           class="login-article-main-measure__register--link"
           data-test="register"
-          data-v-2c86e14e=""
+          data-v-5652d04b=""
         >
            Register 
         </p>
