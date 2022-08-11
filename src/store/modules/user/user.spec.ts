@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, SpyInstance } from 'vitest';
+import { SpyInstance } from 'vitest';
 
 import { getters, mutations, actions } from './user';
 import { UserState } from './userTypes';
@@ -383,7 +383,7 @@ describe('Given the `user` state', () => {
 
       it('the dispatched action should return `true`', () => {
         expect(dispatchSpy.mock.results[0].value).toBe(true);
-      })
+      });
 
       it('should not throw an error', () => {
         expect(errorSpy).not.toHaveBeenCalled();
@@ -684,7 +684,7 @@ describe('Given the `user` state', () => {
 
       it('should call the api', () => {
         expect(requestSpy).toHaveBeenCalledWith(endpoints.rank, {
-          entries: stateMock.user!.entries
+          entries: stateMock.user?.entries
         });
       });
 
@@ -778,6 +778,52 @@ describe('Given the `user` state', () => {
           errorSpy = vi.spyOn(console, 'error').mockImplementation(() => ({}));
 
           await actions.updateUser(contextMock, payload);
+        });
+
+        it('should throw and error', () => {
+          expect(errorSpy).toHaveBeenCalledWith(error.message);
+        });
+      });
+    });
+
+    describe('and when `deleteUser` is called', () => {
+      const mockedResponse = {
+        response: 'Success',
+        message: 'User deleted successfully'
+      };
+      const requestUrl = `${endpoints.user}/1`;
+
+      beforeEach(async () => {
+        vi.clearAllMocks();
+
+        requestSpy = vi
+          .spyOn(request, 'delete')
+          .mockResolvedValue({ data: mockedResponse });
+
+        await actions.deleteUser(contextMock);
+      });
+
+      it('should call the api', () => {
+        expect(requestSpy).toHaveBeenCalledWith(requestUrl);
+      });
+
+      it('should remove the token from local storage', () => {
+        expect(mockedRemoveToken).toHaveBeenCalled();
+      });
+
+      it('should commit the correct mutation', () => {
+        expect(contextMock.commit).toHaveBeenCalledWith('clearUser');
+      });
+
+      describe('and when the api call fails', () => {
+        const error = new Error('error');
+
+        beforeEach(async () => {
+          vi.spyOn(request, 'delete').mockRejectedValue(error.message);
+
+          errorSpy = vi.spyOn(console, 'error').mockImplementation(() => ({}));
+
+          await actions.deleteUser(contextMock);
         });
 
         it('should throw and error', () => {
