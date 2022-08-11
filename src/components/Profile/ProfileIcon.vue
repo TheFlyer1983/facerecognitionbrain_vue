@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useStore } from 'vuex'
+import { useStore } from 'vuex';
 
 const store = useStore();
-const emits = defineEmits(['signout'])
+const emits = defineEmits(['signout']);
 
 const isDropdownOpen = ref(false);
 
@@ -17,7 +17,7 @@ function toggleModal() {
 }
 
 function signOut() {
-  emits('signout')
+  emits('signout');
 }
 </script>
 
@@ -31,8 +31,16 @@ function signOut() {
       />
     </span>
     <ul v-if="isDropdownOpen" class="dropdown-menu dropdown-menu-right">
-      <li @click="toggleModal" class="dropdown-item pointer" data-test="view-profile">View Profile</li>
-      <li @click="signOut" class="dropdown-item pointer" data-test="signout">Sign Out</li>
+      <li
+        @click="toggleModal"
+        class="dropdown-item pointer"
+        data-test="view-profile"
+      >
+        View Profile
+      </li>
+      <li @click="signOut" class="dropdown-item pointer" data-test="signout">
+        Sign Out
+      </li>
     </ul>
   </section>
 </template>

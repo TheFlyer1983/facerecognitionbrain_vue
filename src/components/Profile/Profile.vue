@@ -6,8 +6,11 @@ import { getters as userGetters } from '@/store/modules/user/user';
 import Modal from '@/components/Modal/Modal.vue';
 import { UpdateInfo } from '@/store/modules/user/userTypes';
 import isEmpty from 'lodash.isempty';
+import { useNavigation } from '@/modules/navigation';
+import { Routes } from '@/router/routes';
 
 const store = useStore();
+const { navigate } = useNavigation();
 
 function closeModal() {
   store.commit('user/toggleModal');
@@ -38,6 +41,18 @@ async function updateProfile() {
   if (!isEmpty(userInfo)) await store.dispatch('user/updateUser', userInfo);
   closeModal();
 }
+
+const showConfirmation = ref(false);
+
+function toggleConfirmation() {
+  showConfirmation.value = !showConfirmation.value;
+}
+
+async function deleteUser() {
+  await store.dispatch('user/deleteUser');
+  store.dispatch('user/signOut');
+  navigate({ name: Routes.Login });
+}
 </script>
 
 <template>
@@ -58,47 +73,79 @@ async function updateProfile() {
             Member Since: {{ new Date(`${user?.joined}`).toLocaleDateString() }}
           </p>
           <hr />
-          <label for="user-name" class="mv2 fw6">Name:</label>
-          <input
-            type="text"
-            name="user-name"
-            id="name"
-            class="pa2 ba w-100"
-            v-model="userName"
-            :placeholder="user?.name"
-          />
-          <label for="user-age" class="mv2 fw6">Age:</label>
-          <input
-            type="text"
-            name="user-age"
-            id="age"
-            class="pa2 ba w-100"
-            v-model="age"
-            :placeholder="agePlaceHolderText"
-          />
-          <label for="user-pet" class="mv2 fw6">Pet:</label>
-          <input
-            type="text"
-            name="user-pet"
-            id="pet"
-            class="pa2 ba w-100"
-            v-model="pet"
-            :placeholder="user?.pet"
-          />
-          <div class="button-group mt4">
-            <button
-              class="b pa2 grow pointer hover-white w-40 bg-light-blue b--black-20"
-              @click="updateProfile"
-            >
-              Save
-            </button>
-            <button
-              class="b pa2 grow pointer hover-white w-40 bg-light-red b--black-20"
-              @click="closeModal"
-            >
-              Cancel
-            </button>
-          </div>
+          <template v-if="showConfirmation">
+            <p>Are you sure you want to delete your profile?</p>
+            <p>This is cannot be undone!</p>
+            <div class="button-group mt4">
+              <button
+                class="b pa2 grow pointer hover-white w-40 bg-light-blue b--black-20"
+                @click="deleteUser"
+                data-test="confirm"
+              >
+                Yes
+              </button>
+              <button
+                class="b pa2 grow pointer hover-white w-40 bg-light-red b--black-20"
+                @click="closeModal"
+                data-test="cancel-delete"
+              >
+                No
+              </button>
+            </div>
+          </template>
+          <template v-else>
+            <label for="user-name" class="mv2 fw6">Name:</label>
+            <input
+              type="text"
+              name="user-name"
+              id="name"
+              class="pa2 ba w-100"
+              v-model="userName"
+              :placeholder="user?.name"
+            />
+            <label for="user-age" class="mv2 fw6">Age:</label>
+            <input
+              type="text"
+              name="user-age"
+              id="age"
+              class="pa2 ba w-100"
+              v-model="age"
+              :placeholder="agePlaceHolderText"
+            />
+            <label for="user-pet" class="mv2 fw6">Pet:</label>
+            <input
+              type="text"
+              name="user-pet"
+              id="pet"
+              class="pa2 ba w-100"
+              v-model="pet"
+              :placeholder="user?.pet"
+            />
+            <div class="button-group mt4">
+              <button
+                class="b pa2 grow pointer hover-white w-40 bg-light-blue b--black-20"
+                @click="updateProfile"
+              >
+                Save
+              </button>
+              <button
+                class="b pa2 grow pointer hover-white w-40 bg-light-red b--black-20"
+                @click="closeModal"
+              >
+                Cancel
+              </button>
+            </div>
+            <hr />
+            <div class="button-group mt4">
+              <button
+                class="b pa2 grow pointer hover-white w-40 bg-light-red b--black-20"
+                @click="toggleConfirmation"
+                data-test="delete"
+              >
+                Delete User
+              </button>
+            </div>
+          </template>
         </main>
         <div class="modal-close" @click="closeModal">&times;</div>
       </article>

@@ -1,7 +1,243 @@
 // Vitest Snapshot v1
 
-exports[`Given the \`Profile\` component > and when the component is rendered > should match the snapshot 1`] = `
-<modal-stub
+exports[`Given the \`Profile\` component > and when the component is rendered > and when then \`Delete\` button is clicked > should match the snapshot 1`] = `
+<div
+  class="modal position-abosolute d-flex justify-content-center align-items-center"
+  data-v-47db75aa=""
   data-v-69e22fa3=""
-/>
+>
+  <div
+    class="modal__overlay position-fixed w-100 h-100 bg-white-80 top-0 start-0"
+    data-test="close-modal"
+    data-v-47db75aa=""
+  />
+  <div
+    class="modal__container"
+    data-v-47db75aa=""
+  >
+    
+    <div
+      class="profile-modal"
+      data-v-69e22fa3=""
+    >
+      <article
+        class="br3 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 bg-white d-flex justify-content-center"
+        data-v-69e22fa3=""
+      >
+        <main
+          class="pa4 black-80 w-80"
+          data-v-69e22fa3=""
+        >
+          <img
+            alt="avatar"
+            class="h3 w3 dib"
+            data-v-69e22fa3=""
+            src="http://tachyons.io/img/logo.jpg"
+          />
+          <h1
+            data-v-69e22fa3=""
+          >
+            Paul
+          </h1>
+          <h4
+            data-v-69e22fa3=""
+          >
+            Images Submitted: 1
+          </h4>
+          <p
+            data-v-69e22fa3=""
+          >
+             Member Since: 09/04/2021
+          </p>
+          <hr
+            data-v-69e22fa3=""
+          />
+          
+          <p
+            data-v-69e22fa3=""
+          >
+            Are you sure you want to delete your profile?
+          </p>
+          <p
+            data-v-69e22fa3=""
+          >
+            This is cannot be undone!
+          </p>
+          <div
+            class="button-group mt4"
+            data-v-69e22fa3=""
+          >
+            <button
+              class="b pa2 grow pointer hover-white w-40 bg-light-blue b--black-20"
+              data-test="confirm"
+              data-v-69e22fa3=""
+            >
+               Yes 
+            </button>
+            <button
+              class="b pa2 grow pointer hover-white w-40 bg-light-red b--black-20"
+              data-test="cancel-delete"
+              data-v-69e22fa3=""
+            >
+               No 
+            </button>
+          </div>
+          
+        </main>
+        <div
+          class="modal-close"
+          data-v-69e22fa3=""
+        >
+          ×
+        </div>
+      </article>
+    </div>
+    
+  </div>
+</div>
+`;
+
+exports[`Given the \`Profile\` component > and when the component is rendered > should match the snapshot 1`] = `
+<div
+  class="modal position-abosolute d-flex justify-content-center align-items-center"
+  data-v-47db75aa=""
+  data-v-69e22fa3=""
+>
+  <div
+    class="modal__overlay position-fixed w-100 h-100 bg-white-80 top-0 start-0"
+    data-test="close-modal"
+    data-v-47db75aa=""
+  />
+  <div
+    class="modal__container"
+    data-v-47db75aa=""
+  >
+    
+    <div
+      class="profile-modal"
+      data-v-69e22fa3=""
+    >
+      <article
+        class="br3 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 bg-white d-flex justify-content-center"
+        data-v-69e22fa3=""
+      >
+        <main
+          class="pa4 black-80 w-80"
+          data-v-69e22fa3=""
+        >
+          <img
+            alt="avatar"
+            class="h3 w3 dib"
+            data-v-69e22fa3=""
+            src="http://tachyons.io/img/logo.jpg"
+          />
+          <h1
+            data-v-69e22fa3=""
+          >
+            Paul
+          </h1>
+          <h4
+            data-v-69e22fa3=""
+          >
+            Images Submitted: 1
+          </h4>
+          <p
+            data-v-69e22fa3=""
+          >
+             Member Since: 09/04/2021
+          </p>
+          <hr
+            data-v-69e22fa3=""
+          />
+          
+          <label
+            class="mv2 fw6"
+            data-v-69e22fa3=""
+            for="user-name"
+          >
+            Name:
+          </label>
+          <input
+            class="pa2 ba w-100"
+            data-v-69e22fa3=""
+            id="name"
+            name="user-name"
+            placeholder="Paul"
+            type="text"
+          />
+          <label
+            class="mv2 fw6"
+            data-v-69e22fa3=""
+            for="user-age"
+          >
+            Age:
+          </label>
+          <input
+            class="pa2 ba w-100"
+            data-v-69e22fa3=""
+            id="age"
+            name="user-age"
+            placeholder="37"
+            type="text"
+          />
+          <label
+            class="mv2 fw6"
+            data-v-69e22fa3=""
+            for="user-pet"
+          >
+            Pet:
+          </label>
+          <input
+            class="pa2 ba w-100"
+            data-v-69e22fa3=""
+            id="pet"
+            name="user-pet"
+            placeholder="Ruby"
+            type="text"
+          />
+          <div
+            class="button-group mt4"
+            data-v-69e22fa3=""
+          >
+            <button
+              class="b pa2 grow pointer hover-white w-40 bg-light-blue b--black-20"
+              data-v-69e22fa3=""
+            >
+               Save 
+            </button>
+            <button
+              class="b pa2 grow pointer hover-white w-40 bg-light-red b--black-20"
+              data-v-69e22fa3=""
+            >
+               Cancel 
+            </button>
+          </div>
+          <hr
+            data-v-69e22fa3=""
+          />
+          <div
+            class="button-group mt4"
+            data-v-69e22fa3=""
+          >
+            <button
+              class="b pa2 grow pointer hover-white w-40 bg-light-red b--black-20"
+              data-test="delete"
+              data-v-69e22fa3=""
+            >
+               Delete User 
+            </button>
+          </div>
+          
+        </main>
+        <div
+          class="modal-close"
+          data-v-69e22fa3=""
+        >
+          ×
+        </div>
+      </article>
+    </div>
+    
+  </div>
+</div>
 `;

@@ -39,7 +39,21 @@ export default ({ mode }) => {
       reporters: ['json', 'verbose'],
       outputFile: './tests/test-report.json',
       environment: 'jsdom',
-      setupFiles: './tests/setup.js'
+      setupFiles: './tests/setup.js',
+      coverage: {
+        // all: true,
+        reporter: ['text', 'json', 'html'],
+        exclude: [
+          'node_modules/**',
+          'coverage',
+          'public/**',
+          '**/*{.,-}spec.ts',
+          '**/vite.config.ts',
+          '**/src/*.d.ts',
+          '**/src/main.ts'
+        ],
+        extension: ['.ts', '.vue']
+      }
     }
   });
 };

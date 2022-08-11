@@ -170,6 +170,16 @@ export const actions = {
     } catch (error) {
       console.error(error);
     }
+  },
+
+  async deleteUser({ state, commit }: UserActionContext): Promise<void> {
+    try {
+      await request.delete(`${endpoints.user}/${state.user?.id}`);
+
+      commit('clearUser');
+    } catch (error) {
+      console.error(error);
+    }
   }
 };
 
