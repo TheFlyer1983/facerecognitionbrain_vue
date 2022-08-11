@@ -807,6 +807,10 @@ describe('Given the `user` state', () => {
         expect(requestSpy).toHaveBeenCalledWith(requestUrl);
       });
 
+      it('should remove the token from local storage', () => {
+        expect(mockedRemoveToken).toHaveBeenCalled();
+      });
+
       it('should commit the correct mutation', () => {
         expect(contextMock.commit).toHaveBeenCalledWith('clearUser');
       });
@@ -825,7 +829,7 @@ describe('Given the `user` state', () => {
         it('should throw and error', () => {
           expect(errorSpy).toHaveBeenCalledWith(error.message);
         });
-      })
+      });
     });
   });
 });
