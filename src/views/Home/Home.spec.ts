@@ -5,9 +5,9 @@ import { useStore } from 'vuex';
 
 import Home from './Home.vue';
 import { UserMock } from '@/fixtures/users';
-import { User } from '@/store/modules/user/userTypes';
+import { User, UserState } from '@/store/modules/user/userTypes';
 
-
+const RankMock = '😀';
 vi.mock('vuex');
 
 const mockedUseStore = vi.mocked<() => Partial<typeof useStore>>(useStore);
@@ -17,7 +17,10 @@ describe('Given the `Home` component', () => {
     shallowMount(Home, {
       global: {
         stubs: {
-          teleport: true
+          teleport: true,
+          Logo: false,
+          Rank: false,
+          ImageLinkForm: false
         }
       }
     });
@@ -25,6 +28,7 @@ describe('Given the `Home` component', () => {
 
   const mockedGetters = {
     ['user/getUser']: UserMock as User | null,
+    ['user/getRank']: RankMock as UserState['rank'],
     ['user/getIsProfileOpen']: false
   };
 

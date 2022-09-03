@@ -16,8 +16,8 @@ async function submitURL() {
 </script>
 
 <template>
-  <div class="image-link">
-    <p class="image-link--text">
+  <div class="image-link d-flex flex-column">
+    <p class="image-link--text mx-auto">
       This Magic Brain will detect faces in your pictures. Give it a try.
     </p>
     <div class="image-link-wrapper">
