@@ -3,16 +3,16 @@
 exports[`Given the \`ProfileIcon\` component > when it is rendered > should match the snapshot 1`] = `
 <section
   class="dropdown"
-  data-v-462d6e3c=""
+  data-v-96f08be6=""
 >
   <span
     class="dropdown-button pointer"
-    data-v-462d6e3c=""
+    data-v-96f08be6=""
   >
     <img
       alt="avatar"
       class="dropdown-button-image"
-      data-v-462d6e3c=""
+      data-v-96f08be6=""
       src="http://tachyons.io/img/logo.jpg"
     />
   </span>

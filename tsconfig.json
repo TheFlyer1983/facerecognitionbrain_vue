@@ -15,7 +15,8 @@
     "types": [
       "vite/client",
       "@types/node",
-      "vitest"
+      "vitest",
+      "vitest/globals"
     ],
     "paths": {
       "@/*": [

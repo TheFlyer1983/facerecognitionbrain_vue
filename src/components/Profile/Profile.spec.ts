@@ -1,16 +1,21 @@
 import { shallowMount, VueWrapper } from '@vue/test-utils';
-import { beforeEach, describe, it, expect, vi, beforeAll } from 'vitest';
 import { reactive } from 'vue';
 import { useStore } from 'vuex';
+import { useNavigation } from '@/modules/navigation';
 
 import Profile from './Profile.vue';
 
 import { UserMock } from '@/fixtures/users';
 import { User } from '@/store/modules/user/userTypes';
+import { Routes } from '@/router/routes';
 
 vi.mock('vuex');
+vi.mock('@/modules/navigation');
+
+const navigateMock = vi.fn();
 
 const mockedUseStore = vi.mocked<() => Partial<typeof useStore>>(useStore);
+const mockedUseNavigation = vi.mocked(useNavigation, true);
 
 const mockedGetters = {
   ['user/getUser']: UserMock as User | null
@@ -23,11 +28,19 @@ const mockedStore = reactive({
 });
 
 describe('Given the `Profile` component', () => {
-  const render = () => shallowMount(Profile);
+  const render = () =>
+    shallowMount(Profile, {
+      global: {
+        stubs: {
+          Modal: false
+        }
+      }
+    });
   let wrapper: VueWrapper<InstanceType<typeof Profile>>;
 
   beforeAll(() => {
     mockedUseStore.mockReturnValue(mockedStore);
+    mockedUseNavigation.mockReturnValue({ navigate: navigateMock });
   });
 
   describe('and when the component is rendered', () => {
@@ -122,6 +135,46 @@ describe('Given the `Profile` component', () => {
             'user/updateUser',
             userInfo
           );
+        });
+      });
+    });
+
+    describe('and when then `Delete` button is clicked', () => {
+      beforeEach(() => {
+        wrapper.find('[data-test="delete"]').trigger('click');
+      });
+
+      it('should update the `showConfirmation` value', () => {
+        expect(wrapper.vm.showConfirmation).toBe(true);
+      });
+
+      it('should match the snapshot', () => {
+        expect(wrapper.element).toMatchSnapshot();
+      });
+
+      describe('and when the `Yes` button is clicked', () => {
+        beforeEach(() => {
+          wrapper.find('[data-test="confirm"]').trigger('click');
+        });
+
+        it('should dispatch the correct actions', () => {
+          expect(mockedStore.dispatch).toHaveBeenCalledWith('user/deleteUser');
+
+          expect(mockedStore.dispatch).toHaveBeenCalledWith('user/signOut');
+        });
+
+        it('should navigate to the correct page', () => {
+          expect(navigateMock).toHaveBeenCalledWith({ name: Routes.Login });
+        });
+      });
+
+      describe('and when the `Cancel` button is clicked', () => {
+        beforeEach(() => {
+          wrapper.find('[data-test="cancel-delete"]').trigger('click');
+        });
+
+        it('should commit the correct mutation', () => {
+          expect(mockedStore.commit).toHaveBeenCalledWith('user/toggleModal');
         });
       });
     });

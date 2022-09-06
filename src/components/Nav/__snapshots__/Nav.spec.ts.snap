@@ -3,20 +3,20 @@
 exports[`Given the Nav component > when it is rendered > should match the snapshot 1`] = `
 <nav
   class="nav"
-  data-v-542b3c97=""
+  data-v-b2021e10=""
 >
   
   <p
     class="nav--link"
     data-test="signin"
-    data-v-542b3c97=""
+    data-v-b2021e10=""
   >
      Sign In 
   </p>
   <p
     class="nav--link"
     data-test="register"
-    data-v-542b3c97=""
+    data-v-b2021e10=""
   >
      Register 
   </p>

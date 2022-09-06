@@ -3,78 +3,78 @@
 exports[`Given the \`Register\` component > when it is rendered > should match the snapshot 1`] = `
 <article
   class="register-article"
-  data-v-7674e665=""
+  data-v-89291785=""
 >
   <main
     class="register-article-main"
-    data-v-7674e665=""
+    data-v-89291785=""
   >
     <div
       class="register-article-main-measure"
-      data-v-7674e665=""
+      data-v-89291785=""
     >
       <fieldset
         class="register-article-main-measure-fieldset"
-        data-v-7674e665=""
+        data-v-89291785=""
       >
         <legend
           class="register-article-main-measure-fieldset--legend"
-          data-v-7674e665=""
+          data-v-89291785=""
         >
            Register 
         </legend>
         <div
           class="register-article-main-measure-fieldset__field"
-          data-v-7674e665=""
+          data-v-89291785=""
         >
           <label
             class="register-article-main-measure-fieldset__field--label"
-            data-v-7674e665=""
+            data-v-89291785=""
             for="name"
           >
              Name 
           </label>
           <input
             class="register-article-main-measure-fieldset__field--input"
-            data-v-7674e665=""
+            data-v-89291785=""
             id="name"
             name="name"
             type="text"
           />
         </div>
         <div
-          data-v-7674e665=""
+          data-v-89291785=""
           lass="register-article-main-measure-fieldset__field"
         >
           <label
             class="register-article-main-measure-fieldset__field--label"
-            data-v-7674e665=""
+            data-v-89291785=""
             for="email-address"
           >
              Email 
           </label>
           <input
             class="register-article-main-measure-fieldset__field--input"
-            data-v-7674e665=""
+            data-v-89291785=""
             id="email-address"
             name="email-address"
             type="email"
           />
         </div>
         <div
-          data-v-7674e665=""
+          data-v-89291785=""
           lass="register-article-main-measure-fieldset__field"
         >
           <label
             class="register-article-main-measure-fieldset__field--label"
-            data-v-7674e665=""
+            data-v-89291785=""
             for="password"
           >
              Password 
           </label>
           <input
             class="register-article-main-measure-fieldset__field--input"
-            data-v-7674e665=""
+            data-v-89291785=""
             id="password"
             name="password"
             type="password"
@@ -82,12 +82,12 @@ exports[`Given the \`Register\` component > when it is rendered > should match t
         </div>
       </fieldset>
       <div
-        data-v-7674e665=""
+        data-v-89291785=""
       >
         <input
           class="register-article-main-measure--submit"
           data-test="submit"
-          data-v-7674e665=""
+          data-v-89291785=""
           type="submit"
           value="Register"
         />
