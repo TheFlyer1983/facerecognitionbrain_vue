@@ -3,21 +3,21 @@
 exports[`Given the \`Rank\` component > when it is rendered > should match the snapshot 1`] = `
 <div
   class="rank"
-  data-v-5588b8cf=""
+  data-v-e828e83c=""
 >
   <div
-    data-v-5588b8cf=""
+    data-v-e828e83c=""
   >
     Paul, your current entry count is...
   </div>
   <div
     class="rank-ranking"
-    data-v-5588b8cf=""
+    data-v-e828e83c=""
   >
     1
   </div>
   <div
-    data-v-5588b8cf=""
+    data-v-e828e83c=""
   >
     Rank Badge: 😃
   </div>

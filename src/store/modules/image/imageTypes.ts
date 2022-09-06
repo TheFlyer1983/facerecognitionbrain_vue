@@ -1,6 +1,7 @@
+import { RootState } from '@/store/rootTypes';
 import { ActionContext } from 'vuex';
 
-export type ImageActionContext = ActionContext<ImageState, {}>;
+export type ImageActionContext = ActionContext<ImageState, RootState>;
 
 export interface ImageState {
   imageUrl: string;
@@ -26,7 +27,7 @@ export interface BoundingBox {
 }
 
 export interface Data {
-  concepts: Array<Concept>
+  concepts: Array<Concept>;
 }
 
 export interface Concept {
