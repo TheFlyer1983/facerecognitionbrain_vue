@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { User } from '@/store/modules/user/userTypes';
+import { User, UserState } from '@/store/modules/user/userTypes';
 import { NonNullableObject } from '@/types';
 
 defineProps<{
   user: NonNullableObject<User>;
-  userRank: string;
+  userRank: UserState['rank'];
 }>();
 </script>
 
