@@ -2,7 +2,7 @@
 
 exports[`Given the \`Rank\` component > when it is rendered > should match the snapshot 1`] = `
 <div
-  class="rank"
+  class="rank d-flex flex-column align-items-center"
   data-v-e828e83c=""
 >
   <div
@@ -19,7 +19,7 @@ exports[`Given the \`Rank\` component > when it is rendered > should match the s
   <div
     data-v-e828e83c=""
   >
-    Rank Badge: 😃
+    Rank Badge: 😀
   </div>
 </div>
 `;

@@ -1,31 +1,24 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-import { useStore } from 'vuex';
-import { User } from '@/store/modules/user/userTypes';
-import { PropType } from 'vue';
+import { User, UserState } from '@/store/modules/user/userTypes';
 import { NonNullableObject } from '@/types';
-defineProps({
-  user: {
-    type: Object as PropType<NonNullableObject<User>>,
-    required: true
-  }
-});
 
-const store = useStore();
-
-const rank = computed(() => store.getters['user/getRank']);
+defineProps<{
+  user: NonNullableObject<User>;
+  userRank: UserState['rank'];
+}>();
 </script>
 
 <template>
-  <div class="rank">
+  <div class="rank d-flex flex-column align-items-center">
     <div>{{ user.name }}, your current entry count is...</div>
     <div class="rank-ranking">{{ user.entries }}</div>
-    <div>Rank Badge: {{ rank }}</div>
+    <div>Rank Badge: {{ userRank }}</div>
   </div>
 </template>
 
 <style scoped lang="scss">
 .rank {
+  text-align: center;
   color: white;
   font-size: 1.5rem;
 
