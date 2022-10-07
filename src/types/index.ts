@@ -22,4 +22,4 @@ export interface FaceLocation {
 
 export type NonNullableObject<T extends Record<string, any>> = {
   [P in keyof T]: NonNullable<T[P]>;
-}
+};
