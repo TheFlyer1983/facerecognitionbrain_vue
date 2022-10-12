@@ -1,36 +1,30 @@
-import { describe, expect, it, beforeEach, vi, beforeAll } from 'vitest';
 import { shallowMount, VueWrapper } from '@vue/test-utils';
-import { reactive } from 'vue';
-import { useStore } from 'vuex';
+import { createTestingPinia } from '@pinia/testing';
+import { useUserStore } from '@/store/modules/user';
 import { useNavigation } from '@/modules/navigation';
 import { Routes } from '@/router/routes';
 
 import Login from './Login.vue';
 
-vi.mock('vuex');
 vi.mock('@/modules/navigation');
 
-const mockedUseStore = vi.mocked<() => Partial<typeof useStore>>(useStore);
 const mockedUseNavigation = vi.mocked(useNavigation, true);
 
 const navigateMock = vi.fn();
-const dispatchMock = vi.fn();
 
 const mockedLoginInfo = {
   email: 'test@test.com',
   password: 'password'
 };
 
+const pinia = createTestingPinia();
+const mockUserStore = useUserStore(pinia);
+
 describe('Given the `Login` component', () => {
-  const render = () => shallowMount(Login);
+  const render = () => shallowMount(Login, { global: { plugins: [pinia] } });
   let wrapper: VueWrapper<InstanceType<typeof Login>>;
 
-  const mockedStore = reactive({
-    dispatch: dispatchMock
-  });
-
   beforeAll(() => {
-    mockedUseStore.mockReturnValue(mockedStore);
     mockedUseNavigation.mockReturnValue({
       navigate: navigateMock
     });
@@ -49,16 +43,12 @@ describe('Given the `Login` component', () => {
       beforeEach(() => {
         wrapper.vm.email = mockedLoginInfo.email;
         wrapper.vm.password = mockedLoginInfo.password;
-        wrapper.find('[data-test="submit"]').trigger('click');
 
-        dispatchMock.mockReturnValue(true)
+        wrapper.find('[data-test="submit"]').trigger('click');
       });
 
       it('should dispatch the correct action', () => {
-        expect(mockedStore.dispatch).toHaveBeenCalledWith(
-          'user/login',
-          mockedLoginInfo
-        );
+        expect(mockUserStore.login).toHaveBeenCalledWith(mockedLoginInfo);
       });
 
       it('should navigate to the correct page', () => {
