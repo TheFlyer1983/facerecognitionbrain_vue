@@ -1,435 +1,35 @@
 import { SpyInstance } from 'vitest';
-
-import { getters, mutations, actions } from './user';
-import { UserState } from './userTypes';
-import { UserMock } from '@/fixtures/users';
-import { LoginInfo } from '@/types';
-import { endpoints } from '@/constants';
+import { setActivePinia, createPinia } from 'pinia';
+import { useUserStore } from './user';
 import request from '@/functions/request';
 import {
-  saveAuthTokenInSession,
   getAuthTokenInSession,
-  removeAuthTokenFromSession
+  removeAuthTokenFromSession,
+  saveAuthTokenInSession
 } from '@/functions/storageFunctions';
+import { endpoints } from '@/constants';
+import { LoginInfo } from '@/types';
+import { UserMock } from '@/fixtures/users';
 
-const stateMock: UserState = {
-  isSignedIn: false,
-  isProfileOpen: false,
-  user: null,
-  token: '',
-  rank: ''
-};
-
+vi.mock('@/functions/request');
 vi.mock('@/functions/storageFunctions');
 
-const mockedSaveToken = vi.mocked(saveAuthTokenInSession);
 const mockedGetToken = vi.mocked(getAuthTokenInSession);
 const mockedRemoveToken = vi.mocked(removeAuthTokenFromSession);
+const mockedSaveToken = vi.mocked(saveAuthTokenInSession);
 
-const contextMock = {
-  state: stateMock,
-  commit: vi.fn(),
-  dispatch: vi.fn(),
-  getters: {},
-  rootState: {},
-  rootGetters: {}
-};
+const pinia = createPinia();
+const mockUserStore = useUserStore(pinia);
 
-let requestSpy: SpyInstance;
-let errorSpy: SpyInstance;
-let dispatchSpy: SpyInstance;
-
-describe('Given the `user` state', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
+describe('Given the user store', () => {
+  beforeAll(() => {
+    setActivePinia(pinia);
   });
 
-  describe('and when `getters` are invoked', () => {
-    describe('and when `getUser` is called', () => {
-      const stateMock: UserState = {
-        isSignedIn: false,
-        isProfileOpen: false,
-        user: UserMock,
-        token: '',
-        rank: ''
-      };
-
-      it('should return then correct result', () => {
-        expect(getters.getUser(stateMock)).toStrictEqual(stateMock.user);
-      });
-    });
-
-    describe('and when `getToken` is called', () => {
-      const stateMock: UserState = {
-        isSignedIn: false,
-        isProfileOpen: false,
-        user: null,
-        token: 'ABC123ABC123',
-        rank: ''
-      };
-
-      it('should return the correct result', () => {
-        expect(getters.getToken(stateMock)).toStrictEqual(stateMock.token);
-      });
-    });
-
-    describe('and when `getIsSignedIn` is called', () => {
-      const stateMock: UserState = {
-        isSignedIn: true,
-        isProfileOpen: false,
-        user: null,
-        token: '',
-        rank: ''
-      };
-
-      it('should return then correct result', () => {
-        expect(getters.getIsSignedIn(stateMock)).toStrictEqual(
-          stateMock.isSignedIn
-        );
-      });
-    });
-
-    describe('and when `getRank` is called', () => {
-      const stateMock: UserState = {
-        isSignedIn: false,
-        isProfileOpen: false,
-        user: null,
-        token: '',
-        rank: '😃'
-      };
-
-      it('should return then correct result', () => {
-        expect(getters.getRank(stateMock)).toStrictEqual(stateMock.rank);
-      });
-    });
-
-    describe('and when `getIsProfileOpen` is called', () => {
-      const stateMock: UserState = {
-        isSignedIn: false,
-        isProfileOpen: true,
-        user: null,
-        token: '',
-        rank: ''
-      };
-
-      it('should return then correct result', () => {
-        expect(getters.getIsProfileOpen(stateMock)).toStrictEqual(
-          stateMock.isProfileOpen
-        );
-      });
-    });
-  });
-
-  describe('and when `mutations` are invoked', () => {
-    describe('and when `setUserId` is called', () => {
-      const stateMock: UserState = {
-        isSignedIn: false,
-        isProfileOpen: false,
-        user: null,
-        token: '',
-        rank: ''
-      };
-      const payload = '1';
-      const expectedResult: UserState = {
-        isSignedIn: false,
-        isProfileOpen: false,
-        user: { id: payload },
-        token: '',
-        rank: ''
-      };
-
-      beforeEach(() => {
-        mutations.setUserId(stateMock, payload);
-      });
-
-      it('should change the state correctly', () => {
-        expect(stateMock).toStrictEqual(expectedResult);
-      });
-    });
-
-    describe('and when `setUser` is called', () => {
-      const stateMock: UserState = {
-        isSignedIn: false,
-        isProfileOpen: false,
-        user: null,
-        token: '',
-        rank: ''
-      };
-      const payload = UserMock;
-      const expectedResult: UserState = {
-        isSignedIn: false,
-        isProfileOpen: false,
-        user: payload,
-        token: '',
-        rank: ''
-      };
-
-      beforeEach(() => {
-        mutations.setUser(stateMock, payload);
-      });
-
-      it('should change the state correctly', () => {
-        expect(stateMock).toStrictEqual(expectedResult);
-      });
-    });
-
-    describe('and when `toggleSignIn` is called', () => {
-      const stateMock: UserState = {
-        isSignedIn: false,
-        isProfileOpen: false,
-        user: null,
-        token: '',
-        rank: ''
-      };
-      const payload = true;
-      const expectedResult: UserState = {
-        isSignedIn: payload,
-        isProfileOpen: false,
-        user: null,
-        token: '',
-        rank: ''
-      };
-
-      beforeEach(() => {
-        mutations.toggleSignIn(stateMock, payload);
-      });
-
-      it('should change the state correctly', () => {
-        expect(stateMock).toStrictEqual(expectedResult);
-      });
-    });
-
-    describe('and when `setToken` is called', () => {
-      const stateMock: UserState = {
-        isSignedIn: false,
-        isProfileOpen: false,
-        user: null,
-        token: '',
-        rank: ''
-      };
-      const payload = '123ABC123ABC';
-      const expectedResult: UserState = {
-        isSignedIn: false,
-        isProfileOpen: false,
-        user: null,
-        token: payload,
-        rank: ''
-      };
-
-      beforeEach(() => {
-        mutations.setToken(stateMock, payload);
-      });
-
-      it('should change the state correctly', () => {
-        expect(stateMock).toStrictEqual(expectedResult);
-      });
-    });
-
-    describe('and when `toggleSignIn` is called', () => {
-      const stateMock: UserState = {
-        isSignedIn: false,
-        isProfileOpen: false,
-        user: UserMock,
-        token: '',
-        rank: ''
-      };
-      const payload = 1;
-      const expectedResult: UserState = {
-        isSignedIn: false,
-        isProfileOpen: false,
-        user: { ...UserMock, entries: payload },
-        token: '',
-        rank: ''
-      };
-
-      beforeEach(() => {
-        mutations.updateEntries(stateMock, payload);
-      });
-
-      it('should change the state correctly', () => {
-        expect(stateMock).toStrictEqual(expectedResult);
-      });
-    });
-
-    describe('and when `setRank` is called', () => {
-      const stateMock: UserState = {
-        isSignedIn: false,
-        isProfileOpen: false,
-        user: null,
-        token: '',
-        rank: ''
-      };
-      const payload = '😃';
-      const expectedResult: UserState = {
-        isSignedIn: false,
-        isProfileOpen: false,
-        user: null,
-        token: '',
-        rank: payload
-      };
-
-      beforeEach(() => {
-        mutations.setRank(stateMock, payload);
-      });
-
-      it('should change the state correctly', () => {
-        expect(stateMock).toStrictEqual(expectedResult);
-      });
-    });
-
-    describe('and when `clearUser` is called', () => {
-      const stateMock: UserState = {
-        isSignedIn: true,
-        isProfileOpen: false,
-        user: UserMock,
-        token: '',
-        rank: ''
-      };
-      const expectedResult: UserState = {
-        isSignedIn: false,
-        isProfileOpen: false,
-        user: null,
-        token: '',
-        rank: ''
-      };
-
-      beforeEach(() => {
-        mutations.clearUser(stateMock);
-      });
-
-      it('should change the state correctly', () => {
-        expect(stateMock).toStrictEqual(expectedResult);
-      });
-    });
-
-    describe('and when `toggleModal` is called', () => {
-      const stateMock: UserState = {
-        isSignedIn: false,
-        isProfileOpen: false,
-        user: null,
-        token: '',
-        rank: ''
-      };
-      const expectedResult: UserState = {
-        isSignedIn: false,
-        isProfileOpen: true,
-        user: null,
-        token: '',
-        rank: ''
-      };
-
-      beforeEach(() => {
-        mutations.toggleModal(stateMock);
-      });
-
-      it('should change the state correctly', () => {
-        expect(stateMock).toStrictEqual(expectedResult);
-      });
-    });
-  });
-
-  describe('and when actions are invoked', () => {
-    describe('and when `login` is called', () => {
-      const requestURL = endpoints.signin;
-
-      const payload: LoginInfo = {
-        email: 'test@test.com',
-        password: 'password'
-      };
-
-      const mockedResponse = {
-        success: 'true',
-        userId: 1,
-        token: 'ABC123ABC123'
-      };
-
-      beforeEach(async () => {
-        vi.clearAllMocks();
-
-        requestSpy = vi
-          .spyOn(request, 'post')
-          .mockResolvedValue({ data: mockedResponse });
-
-        dispatchSpy = vi.spyOn(contextMock, 'dispatch').mockReturnValue(true);
-
-        errorSpy = vi.spyOn(console, 'error');
-
-        await actions.login(contextMock, payload);
-      });
-      it('should call the login api', () => {
-        expect(requestSpy).toHaveBeenCalledWith(requestURL, payload);
-      });
-
-      it('should commit the correct mutations', () => {
-        expect(contextMock.commit).toHaveBeenNthCalledWith(
-          1,
-          'setToken',
-          mockedResponse.token
-        );
-
-        expect(contextMock.commit).toHaveBeenNthCalledWith(
-          2,
-          'setUserId',
-          mockedResponse.userId
-        );
-      });
-
-      it('should dispatch the correct action', () => {
-        expect(contextMock.dispatch).toHaveBeenCalledWith(
-          'getUser',
-          mockedResponse.userId
-        );
-      });
-
-      it('the dispatched action should return `true`', () => {
-        expect(dispatchSpy.mock.results[0].value).toBe(true);
-      });
-
-      it('should not throw an error', () => {
-        expect(errorSpy).not.toHaveBeenCalled();
-      });
-
-      describe('and when the api call fails', () => {
-        const error = new Error('error');
-        beforeEach(async () => {
-          vi.spyOn(request, 'post').mockRejectedValue(error.message);
-
-          errorSpy = vi.spyOn(console, 'error').mockImplementation(() => ({}));
-
-          await actions.login(contextMock, payload);
-        });
-
-        it('should throw error', () => {
-          expect(errorSpy).toHaveBeenCalledWith(error.message);
-        });
-      });
-
-      describe('when the dispatched action fails', () => {
-        const error = new Error('Error');
-
-        beforeEach(async () => {
-          vi.clearAllMocks();
-
-          vi.spyOn(request, 'post').mockResolvedValue({ data: mockedResponse });
-
-          dispatchSpy = vi
-            .spyOn(contextMock, 'dispatch')
-            .mockReturnValue(false);
-
-          errorSpy = vi.spyOn(console, 'error').mockImplementation(() => ({}));
-
-          await actions.login(contextMock, payload);
-        });
-
-        it('the dispatched action should return `false`', () => {
-          expect(dispatchSpy.mock.results[0].value).toBe(false);
-        });
-
-        it('should throw an error', () => {
-          expect(errorSpy).toHaveBeenCalledWith(error);
-        });
-      });
-    });
+  describe('and when the actions are called', () => {
+    let requestSpy: SpyInstance;
+    let errorSpy: SpyInstance;
+    let functionSpy: SpyInstance;
 
     describe('and when `getUser` is called', () => {
       const payloadMock = '1';
@@ -447,44 +47,145 @@ describe('Given the `user` state', () => {
           .spyOn(request, 'get')
           .mockResolvedValue({ data: responseMock });
 
-        await actions.getUser(contextMock, payloadMock);
+        functionSpy = vi.spyOn(mockUserStore, 'getRank');
+
+        await mockUserStore.getUser(payloadMock);
       });
 
       it('should call the `getUser` api', () => {
         expect(requestSpy).toHaveBeenCalledWith(requestURL);
       });
 
-      it('should call the correct mutations', () => {
-        expect(contextMock.commit).toHaveBeenNthCalledWith(
-          1,
-          'setUser',
-          responseMock
-        );
+      it('should update the state correctly', () => {
+        expect(mockUserStore.user).toStrictEqual(responseMock);
+        expect(mockUserStore.isSignedIn).toBe(true);
+      });
 
-        expect(contextMock.commit).toHaveBeenNthCalledWith(
-          2,
-          'toggleSignIn',
-          true
+      it('should call the next action', () => {
+        expect(functionSpy).toHaveBeenCalled();
+      });
+
+      describe('and when the api call is unsuccessful', () => {
+        const error = new Error('error');
+
+        beforeEach(async () => {
+          mockUserStore.$reset();
+          vi.spyOn(request, 'get').mockRejectedValue(error.message);
+
+          errorSpy = vi.spyOn(console, 'error').mockImplementation(() => ({}));
+
+          await mockUserStore.getUser(payloadMock);
+        });
+
+        it('should throw error', () => {
+          expect(errorSpy).toHaveBeenCalledWith(error.message);
+        });
+
+        it('should not update the state', () => {
+          expect(mockUserStore.user).toBeNull();
+          expect(mockUserStore.isSignedIn).toBe(false);
+        });
+      });
+    });
+
+    describe('and when `login` is called', () => {
+      const requestURL = endpoints.signin;
+
+      const payload: LoginInfo = {
+        email: 'test@test.com',
+        password: 'password'
+      };
+
+      const mockedResponse = {
+        success: 'true',
+        userId: 1,
+        token: 'ABC123ABC123'
+      };
+
+      beforeEach(async () => {
+        requestSpy = vi
+          .spyOn(request, 'post')
+          .mockResolvedValue({ data: mockedResponse });
+
+        errorSpy = vi.spyOn(console, 'error');
+
+        functionSpy = vi
+          .spyOn(mockUserStore, 'getUser')
+          .mockResolvedValue(true);
+
+        await mockUserStore.login(payload);
+      });
+
+      it('should call the login api', () => {
+        expect(requestSpy).toHaveBeenCalledWith(requestURL, payload);
+      });
+
+      it('shoud update the state corectly', () => {
+        expect(mockUserStore.token).toStrictEqual(mockedResponse.token);
+        expect(mockUserStore.user?.id).toStrictEqual(mockedResponse.userId);
+      });
+
+      it('should save the token in local storage', () => {
+        expect(mockedSaveToken).toHaveBeenCalledWith(mockedResponse.token);
+      });
+
+      it('should call the next action', () => {
+        expect(mockUserStore.getUser).toHaveBeenCalledWith(
+          mockedResponse.userId
         );
       });
 
-      it('should dispatch the correct action', () => {
-        expect(contextMock.dispatch).toHaveBeenCalledWith('getRank');
+      it('and the action should return `true`', () => {
+        expect(functionSpy.mock.results[0].value).toBe(true);
+      });
+
+      it('should not throw an error', () => {
+        expect(errorSpy).not.toHaveBeenCalled();
       });
 
       describe('and when the api call fails', () => {
         const error = new Error('error');
 
         beforeEach(async () => {
-          vi.spyOn(request, 'get').mockRejectedValue(error.message);
+          mockUserStore.$reset();
+          vi.spyOn(request, 'post').mockRejectedValue(error.message);
 
           errorSpy = vi.spyOn(console, 'error').mockImplementation(() => ({}));
 
-          await actions.getUser(contextMock, payloadMock);
+          await mockUserStore.login(payload);
         });
 
-        it('should throw error', () => {
+        it('should throw an error', () => {
           expect(errorSpy).toHaveBeenCalledWith(error.message);
+        });
+
+        it('should not update the state', () => {
+          expect(mockUserStore.token).toBe('');
+          expect(mockUserStore.user).toBeNull();
+        });
+      });
+
+      describe('when the action returns false', () => {
+        const error = new Error('Error');
+
+        beforeEach(async () => {
+          vi.spyOn(request, 'post').mockResolvedValue({ data: mockedResponse });
+
+          functionSpy = vi
+            .spyOn(mockUserStore, 'getUser')
+            .mockResolvedValue(false);
+
+          errorSpy = vi.spyOn(console, 'error').mockImplementation(() => ({}));
+
+          await mockUserStore.login(payload);
+        });
+
+        it('the action should return false', () => {
+          expect(functionSpy.mock.results[0].value).toBe(false);
+        });
+
+        it('should throw an error', () => {
+          expect(errorSpy).toHaveBeenCalledWith(error);
         });
       });
     });
@@ -520,21 +221,18 @@ describe('Given the `user` state', () => {
           .spyOn(request, 'post')
           .mockResolvedValue({ data: responseMock });
 
-        await actions.registerUser(contextMock, payloadMock);
+        await mockUserStore.registerUser(payloadMock);
       });
 
-      it('should call the `getUser` api', () => {
+      it('should call the `registerUser` api', () => {
         expect(requestSpy).toHaveBeenCalledWith(requestURL, payloadMock);
       });
 
-      it('should call the correct mutations', () => {
-        expect(contextMock.commit).toHaveBeenCalledWith(
-          'setUser',
-          responseMock.register.user
-        );
+      it('should update the state correctly', () => {
+        expect(mockUserStore.user).toStrictEqual(responseMock.register.user);
       });
 
-      it('should save the token', () => {
+      it('should save the token in local storage', () => {
         expect(mockedSaveToken).toHaveBeenCalledWith(
           responseMock.session.token
         );
@@ -542,88 +240,87 @@ describe('Given the `user` state', () => {
 
       describe('and when the api call fails', () => {
         const error = new Error('error');
+
         beforeEach(async () => {
+          mockUserStore.$reset();
           vi.spyOn(request, 'post').mockRejectedValue(error.message);
 
           errorSpy = vi.spyOn(console, 'error').mockImplementation(() => ({}));
 
-          await actions.registerUser(contextMock, payloadMock);
+          await mockUserStore.registerUser(payloadMock);
         });
 
         it('should throw error', () => {
           expect(errorSpy).toHaveBeenCalledWith(error.message);
         });
+
+        it('should not update the state', () => {
+          expect(mockUserStore.user).toBeNull();
+        });
       });
     });
 
     describe('and when `getToken` is called', () => {
-      const mockedToken = '123ABC123ABC';
+      const mockedToken = 'ABC123ABC123';
 
       beforeEach(() => {
+        functionSpy = vi.spyOn(mockUserStore, 'authenticated');
+
         mockedGetToken.mockReturnValue(mockedToken);
-        actions.getToken(contextMock);
+
+        mockUserStore.getToken();
       });
 
       it('should retreive the token', () => {
         expect(mockedGetToken).toHaveBeenCalled();
       });
 
-      it('should commmit the correct mutations', () => {
-        expect(contextMock.commit).toHaveBeenCalledWith(
-          'setToken',
-          mockedToken
-        );
+      it('should update the state correctly', () => {
+        expect(mockUserStore.token).toStrictEqual(mockedToken);
       });
 
-      it('should dispatch the correct action', () => {
-        expect(contextMock.dispatch).toHaveBeenCalledWith('authenticated');
+      it('should call the next action', () => {
+        expect(functionSpy).toHaveBeenCalled();
       });
 
-      describe('when no token available', () => {
-        const mockedToken = null;
-
+      describe('and when there is no token available', () => {
         beforeEach(() => {
-          vi.clearAllMocks();
+          mockUserStore.$reset();
 
-          mockedGetToken.mockReturnValue(mockedToken);
-          actions.getToken(contextMock);
+          mockedGetToken.mockReturnValue(null);
+
+          mockUserStore.getToken();
         });
 
-        it('should not commit any mutations', () => {
-          expect(contextMock.commit).not.toHaveBeenCalled();
-        });
-
-        it('should not dispatch any actions', () => {
-          expect(contextMock.dispatch).not.toHaveBeenCalled();
+        it('should not update the state', () => {
+          expect(mockUserStore.token).toBe('');
         });
       });
     });
 
-    describe('and when `authencitated` is called', () => {
+    describe('and when `authenticated` is called', () => {
       const mockedResponse = {
         id: 1
       };
 
       beforeEach(async () => {
-        vi.clearAllMocks();
-        stateMock.token = 'ABC123ABC123';
+        mockUserStore.$patch({ token: 'ABC123ABC123' });
 
         requestSpy = vi
           .spyOn(request, 'post')
           .mockResolvedValue({ data: mockedResponse });
 
-        await actions.authenticated(contextMock);
+        functionSpy = vi.spyOn(mockUserStore, 'getUser');
+
+        await mockUserStore.authenticated();
       });
 
       it('should call the api', () => {
         expect(requestSpy).toHaveBeenCalledWith(endpoints.signin);
       });
 
-      it('should dispatch the correct action', () => {
-        expect(contextMock.dispatch).toHaveBeenCalledWith(
-          'getUser',
-          mockedResponse.id
-        );
+      it('call the next action', () => {
+        expect(functionSpy).toHaveBeenCalledWith(mockedResponse.id);
       });
 
       describe('and when the api call fails', () => {
@@ -634,7 +331,7 @@ describe('Given the `user` state', () => {
 
           errorSpy = vi.spyOn(console, 'error').mockImplementation(() => ({}));
 
-          await actions.authenticated(contextMock);
+          await mockUserStore.authenticated();
         });
 
         it('should throw error', () => {
@@ -644,21 +341,21 @@ describe('Given the `user` state', () => {
 
       describe('and when there is no token', () => {
         beforeEach(async () => {
-          vi.clearAllMocks();
-
-          stateMock.token = '';
+          mockUserStore.$reset();
 
           requestSpy = vi.spyOn(request, 'post');
 
-          await actions.authenticated(contextMock);
+          functionSpy = vi.spyOn(mockUserStore, 'getUser');
+
+          await mockUserStore.authenticated();
         });
 
         it('should not call the api', () => {
           expect(requestSpy).not.toHaveBeenCalled();
         });
 
-        it('should not call the action', () => {
-          expect(contextMock.dispatch).not.toHaveBeenCalled();
+        it('should not call the next action', () => {
+          expect(functionSpy).not.toHaveBeenCalled();
         });
       });
     });
@@ -667,106 +364,94 @@ describe('Given the `user` state', () => {
       const mockedResponse = '🔸';
 
       beforeEach(async () => {
-        stateMock.user = {
-          id: '1',
-          name: 'Paul',
-          email: 'test@test.com',
-          entries: 6,
-          joined: '2022-03-15T15:43:43.780Z'
-        };
+        mockUserStore.$patch({ user: { ...UserMock } });
 
         requestSpy = vi
           .spyOn(request, 'post')
           .mockResolvedValue({ data: mockedResponse });
 
-        await actions.getRank(contextMock);
+        await mockUserStore.getRank();
       });
 
       it('should call the api', () => {
         expect(requestSpy).toHaveBeenCalledWith(endpoints.rank, {
-          entries: stateMock.user?.entries
+          entries: mockUserStore.user?.entries
         });
       });
 
-      it('should commit the correct mutation', () => {
-        expect(contextMock.commit).toHaveBeenCalledWith(
-          'setRank',
-          mockedResponse
-        );
+      it('should update the state correctly', () => {
+        expect(mockUserStore.rank).toStrictEqual(mockedResponse);
       });
 
-      describe('when the api call fails', () => {
+      describe('and when the api call fails', () => {
         const error = new Error('error');
+
         beforeEach(async () => {
-          vi.clearAllMocks();
+          mockUserStore.$reset();
 
           vi.spyOn(request, 'post').mockRejectedValue(error.message);
 
           errorSpy = vi.spyOn(console, 'error').mockImplementation(() => ({}));
 
-          await actions.getRank(contextMock);
+          await mockUserStore.getRank();
         });
 
         it('should throw an error', () => {
           expect(errorSpy).toHaveBeenCalledWith(error.message);
         });
+
+        it('should not update the state', () => {
+          expect(mockUserStore.rank).toStrictEqual('');
+        });
       });
     });
 
-    describe('and when `signOut` is called', () => {
+    describe('and when signout is called', () => {
       beforeEach(() => {
-        actions.signOut(contextMock);
+        functionSpy = vi.spyOn(mockUserStore, '$reset');
+        mockUserStore.signout();
       });
 
-      it('should call `removeAuthTokenFromSession', () => {
+      it('should call `removeAuthTokenFromSession`', () => {
         expect(mockedRemoveToken).toHaveBeenCalled();
       });
 
-      it('should commit the correct mutation', () => {
-        expect(contextMock.commit).toHaveBeenCalledWith('clearUser');
+      it('should reset the state', () => {
+        expect(functionSpy).toHaveBeenCalled();
       });
     });
 
     describe('and when `updateUser` is called', () => {
       const mockedResponse = 'success';
 
-      const payload = {
+      const mockedPayload = {
         name: 'Paul',
-        age: 38,
+        age: 39,
         pet: 'Ruby'
       };
 
-      stateMock.user = {
-        id: '1',
-        name: 'Paul',
-        email: 'test@test.com',
-        entries: 6,
-        joined: '2022-03-15T15:43:43.780Z'
-      };
-
-      const requestURL = `${endpoints.profile}/${stateMock.user?.id}`;
+      const requestURL = `${endpoints.profile}/${UserMock.id}`;
 
       beforeEach(async () => {
-        vi.clearAllMocks();
+        mockUserStore.$patch({ user: { ...UserMock } });
 
         requestSpy = vi
           .spyOn(request, 'post')
           .mockResolvedValue({ data: mockedResponse });
 
-        await actions.updateUser(contextMock, payload);
+        functionSpy = vi.spyOn(mockUserStore, 'getUser');
+
+        await mockUserStore.updateUser(mockedPayload);
       });
 
       it('should call the api', () => {
         expect(requestSpy).toHaveBeenCalledWith(requestURL, {
-          formInput: payload
+          formInput: mockedPayload
         });
       });
 
-      it('should dispatch the correct action', () => {
-        expect(contextMock.dispatch).toHaveBeenCalledWith(
-          'getUser',
-          stateMock.user?.id
-        );
+      it('should call the next action', () => {
+        expect(functionSpy).toHaveBeenCalledWith(UserMock.id);
       });
 
       describe('and when the api call fails', () => {
@@ -777,10 +462,10 @@ describe('Given the `user` state', () => {
 
           errorSpy = vi.spyOn(console, 'error').mockImplementation(() => ({}));
 
-          await actions.updateUser(contextMock, payload);
+          await mockUserStore.updateUser(mockedPayload);
         });
 
-        it('should throw and error', () => {
+        it('should throw an error', () => {
           expect(errorSpy).toHaveBeenCalledWith(error.message);
         });
       });
@@ -791,31 +476,30 @@ describe('Given the `user` state', () => {
         response: 'Success',
         message: 'User deleted successfully'
       };
-      const requestUrl = `${endpoints.user}/1`;
+
+      const requestURL = `${endpoints.user}/${UserMock.id}`;
 
       beforeEach(async () => {
-        vi.clearAllMocks();
+        mockUserStore.$patch({ user: { ...UserMock } });
 
         requestSpy = vi
           .spyOn(request, 'delete')
           .mockResolvedValue({ data: mockedResponse });
 
-        await actions.deleteUser(contextMock);
+        functionSpy = vi.spyOn(mockUserStore, 'signout');
+
+        await mockUserStore.deleteUser();
       });
 
       it('should call the api', () => {
-        expect(requestSpy).toHaveBeenCalledWith(requestUrl);
+        expect(requestSpy).toHaveBeenCalledWith(requestURL);
       });
 
-      it('should remove the token from local storage', () => {
-        expect(mockedRemoveToken).toHaveBeenCalled();
+      it('should call the next action', () => {
+        expect(functionSpy).toHaveBeenCalled();
       });
 
-      it('should commit the correct mutation', () => {
-        expect(contextMock.commit).toHaveBeenCalledWith('clearUser');
-      });
-
-      describe('and when the api call fails', () => {
+      describe('when the api call fails', () => {
         const error = new Error('error');
 
         beforeEach(async () => {
@@ -823,10 +507,10 @@ describe('Given the `user` state', () => {
 
           errorSpy = vi.spyOn(console, 'error').mockImplementation(() => ({}));
 
-          await actions.deleteUser(contextMock);
+          await mockUserStore.deleteUser();
         });
 
-        it('should throw and error', () => {
+        it('should throw an error', () => {
           expect(errorSpy).toHaveBeenCalledWith(error.message);
         });
       });
