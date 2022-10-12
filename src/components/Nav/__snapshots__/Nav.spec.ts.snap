@@ -1,6 +1,6 @@
 // Vitest Snapshot v1
 
-exports[`Given the Nav component > when it is rendered > should match the snapshot 1`] = `
+exports[`Given the Nav component > when it is rendered > and when the user is logged out > should match the snapshot 1`] = `
 <nav
   class="nav"
   data-v-b2021e10=""
@@ -21,5 +21,31 @@ exports[`Given the Nav component > when it is rendered > should match the snapsh
      Register 
   </p>
   
+</nav>
+`;
+
+exports[`Given the Nav component > when it is rendered > should match the snapshot 1`] = `
+<nav
+  class="nav"
+  data-v-b2021e10=""
+>
+  <section
+    class="dropdown"
+    data-v-96f08be6=""
+    data-v-b2021e10=""
+  >
+    <span
+      class="dropdown-button pointer"
+      data-v-96f08be6=""
+    >
+      <img
+        alt="avatar"
+        class="dropdown-button-image"
+        data-v-96f08be6=""
+        src="http://tachyons.io/img/logo.jpg"
+      />
+    </span>
+    <!--v-if-->
+  </section>
 </nav>
 `;

@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useStore } from 'vuex';
+import { useUserStore } from '@/store/modules/user'
 import { useNavigation } from '@/modules/navigation';
 import { Routes } from '@/router/routes';
 import ProfileIcon from '../Profile/ProfileIcon.vue';
 
-const store = useStore();
+const userStore = useUserStore();
 const { navigate } = useNavigation();
 
-const isSignedIn = computed(() => store.getters['user/getIsSignedIn']);
+const isSignedIn = computed(() => userStore.isSignedIn);
 
 function signOut() {
-  store.dispatch('user/signOut');
+  userStore.signout();
   navigate({ name: Routes.Login });
 }
 </script>

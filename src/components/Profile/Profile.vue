@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { useStore } from 'vuex';
-import { getters as userGetters } from '@/store/modules/user/user';
+import { useUserStore } from '@/store/modules/user';
 
 import Modal from '@/components/Modal/Modal.vue';
 import { UpdateInfo } from '@/store/modules/user/userTypes';
@@ -9,16 +8,14 @@ import isEmpty from 'lodash.isempty';
 import { useNavigation } from '@/modules/navigation';
 import { Routes } from '@/router/routes';
 
-const store = useStore();
+const userStore = useUserStore();
 const { navigate } = useNavigation();
 
 function closeModal() {
-  store.commit('user/toggleModal');
+  userStore.isProfileOpen = false;
 }
 
-const user = computed<ReturnType<typeof userGetters.getUser>>(
-  () => store.getters['user/getUser']
-);
+const user = computed(() => userStore.user);
 
 const userName = ref(null);
 const age = ref<number | null>(null);
@@ -38,7 +35,7 @@ async function updateProfile() {
   if (pet.value && pet.value !== user.value?.pet)
     userInfo = { ...userInfo, pet: pet.value };
 
-  if (!isEmpty(userInfo)) await store.dispatch('user/updateUser', userInfo);
+  if (!isEmpty(userInfo)) await userStore.updateUser(userInfo);
   closeModal();
 }
 
@@ -49,8 +46,7 @@ function toggleConfirmation() {
 }
 
 async function deleteUser() {
-  await store.dispatch('user/deleteUser');
-  store.dispatch('user/signOut');
+  await userStore.deleteUser();
   navigate({ name: Routes.Login });
 }
 </script>
