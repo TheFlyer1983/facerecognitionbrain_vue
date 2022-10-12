@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useStore } from 'vuex';
+import { useUserStore } from '@/store/modules/user';
 
-const store = useStore();
+const userStore = useUserStore();
 const emits = defineEmits(['signout']);
 
 const isDropdownOpen = ref(false);
@@ -12,7 +12,7 @@ function toggleDropdown() {
 }
 
 function toggleModal() {
-  store.commit('user/toggleModal');
+  userStore.isProfileOpen = true;
   toggleDropdown();
 }
 
