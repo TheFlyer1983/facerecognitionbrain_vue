@@ -5,6 +5,7 @@ import { useNavigation } from '@/modules/navigation';
 import { Routes } from '@/router/routes';
 
 import Login from './Login.vue';
+import { UserMock } from '@/fixtures/users';
 
 vi.mock('@/modules/navigation');
 
@@ -40,9 +41,11 @@ describe('Given the `Login` component', () => {
     });
 
     describe('when the submit button is clicked', () => {
-      beforeEach(() => {
+      beforeEach(async () => {
         wrapper.vm.email = mockedLoginInfo.email;
         wrapper.vm.password = mockedLoginInfo.password;
+
+        mockUserStore.$patch({ user: { ...UserMock } });
 
         wrapper.find('[data-test="submit"]').trigger('click');
       });

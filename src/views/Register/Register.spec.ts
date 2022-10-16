@@ -1,20 +1,18 @@
 import { describe, expect, it, beforeEach, vi, beforeAll } from 'vitest';
 import { shallowMount, VueWrapper } from '@vue/test-utils';
-import { reactive } from 'vue';
-import { useStore } from 'vuex';
+import { createTestingPinia } from '@pinia/testing';
+import { useUserStore } from '@/store/modules/user';
 import { useNavigation } from '@/modules/navigation';
 import { Routes } from '@/router/routes';
 
 import Register from './Register.vue';
+import { UserMock } from '@/fixtures/users';
 
-vi.mock('vuex');
 vi.mock('@/modules/navigation');
 
-const mockedUseStore = vi.mocked<() => Partial<typeof useStore>>(useStore);
 const mockedUseNavigation = vi.mocked(useNavigation, true);
 
 const navigateMock = vi.fn();
-const dispatchMock = vi.fn();
 
 const mockedRegisterInfo = {
   name: 'Paul',
@@ -22,16 +20,14 @@ const mockedRegisterInfo = {
   password: 'password'
 };
 
+const pinia = createTestingPinia();
+const mockUserStore = useUserStore(pinia);
+
 describe('Given the `Register` component', () => {
-  const render = () => shallowMount(Register);
+  const render = () => shallowMount(Register, { global: { plugins: [pinia] } });
   let wrapper: VueWrapper<InstanceType<typeof Register>>;
 
-  const mockedStore = reactive({
-    dispatch: dispatchMock
-  });
-
   beforeAll(() => {
-    mockedUseStore.mockReturnValue(mockedStore);
     mockedUseNavigation.mockReturnValue({
       navigate: navigateMock
     });
@@ -51,14 +47,14 @@ describe('Given the `Register` component', () => {
         wrapper.vm.name = mockedRegisterInfo.name;
         wrapper.vm.email = mockedRegisterInfo.email;
         wrapper.vm.password = mockedRegisterInfo.password;
-        wrapper.find('[data-test="submit"]').trigger('click');
 
-        dispatchMock.mockReturnValue(true);
+        mockUserStore.$patch({ user: { ...UserMock } });
+
+        wrapper.find('[data-test="submit"]').trigger('click');
       });
 
       it('should dispatch the correct action', () => {
-        expect(mockedStore.dispatch).toHaveBeenCalledWith(
-          'user/registerUser',
+        expect(mockUserStore.registerUser).toHaveBeenCalledWith(
           mockedRegisterInfo
         );
       });
