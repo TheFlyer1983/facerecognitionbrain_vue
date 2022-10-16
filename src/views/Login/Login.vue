@@ -16,7 +16,7 @@ async function onSubmitSignIn(): Promise<void> {
     password: password.value
   };
   await userStore.login(loginInfo);
-  if (userStore.user.id) {
+  if (userStore.user?.id) {
     navigate({ name: Routes.Home });
   }
 }

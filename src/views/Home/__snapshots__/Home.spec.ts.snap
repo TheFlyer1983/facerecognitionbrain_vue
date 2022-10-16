@@ -1,6 +1,6 @@
 // Vitest Snapshot v1
 
-exports[`Given the \`Home\` component > when it is rendered > should match the snapshot 1`] = `
+exports[`Given the Home component > when it is rendered > should match the snapshot 1`] = `
 <div
   data-v-app=""
 >
@@ -47,39 +47,7 @@ exports[`Given the \`Home\` component > when it is rendered > should match the s
       Rank Badge: 😀
     </div>
   </div>
-  <div
-    class="image-link d-flex flex-column"
-    data-v-25c2f2dc=""
-  >
-    <p
-      class="image-link--text mx-auto"
-      data-v-25c2f2dc=""
-    >
-       This Magic Brain will detect faces in your pictures. Give it a try. 
-    </p>
-    <div
-      class="image-link-wrapper"
-      data-v-25c2f2dc=""
-    >
-      <div
-        class="image-link-wrapper-form"
-        data-v-25c2f2dc=""
-      >
-        <input
-          class="image-link-wrapper-form--input"
-          data-v-25c2f2dc=""
-          type="text"
-        />
-        <button
-          class="image-link-wrapper-form--button"
-          data-test="submit"
-          data-v-25c2f2dc=""
-        >
-           Detect 
-        </button>
-      </div>
-    </div>
-  </div>
+  <image-link-form-stub />
   <face-recognition-stub />
   <teleport-stub>
     <!--v-if-->
@@ -88,7 +56,7 @@ exports[`Given the \`Home\` component > when it is rendered > should match the s
 </div>
 `;
 
-exports[`Given the \`Home\` component > when it is rendered > when the profile modal is open > should match the snapshot 1`] = `
+exports[`Given the Home component > when it is rendered > when the profile modal is open > should match the snapshot 1`] = `
 <div
   data-v-app=""
 >
@@ -114,40 +82,28 @@ exports[`Given the \`Home\` component > when it is rendered > when the profile m
       </div>
     </div>
   </div>
-  <!--v-if-->
   <div
-    class="image-link d-flex flex-column"
-    data-v-25c2f2dc=""
+    class="rank d-flex flex-column align-items-center"
+    data-v-e828e83c=""
   >
-    <p
-      class="image-link--text mx-auto"
-      data-v-25c2f2dc=""
-    >
-       This Magic Brain will detect faces in your pictures. Give it a try. 
-    </p>
     <div
-      class="image-link-wrapper"
-      data-v-25c2f2dc=""
+      data-v-e828e83c=""
     >
-      <div
-        class="image-link-wrapper-form"
-        data-v-25c2f2dc=""
-      >
-        <input
-          class="image-link-wrapper-form--input"
-          data-v-25c2f2dc=""
-          type="text"
-        />
-        <button
-          class="image-link-wrapper-form--button"
-          data-test="submit"
-          data-v-25c2f2dc=""
-        >
-           Detect 
-        </button>
-      </div>
+      Paul, your current entry count is...
+    </div>
+    <div
+      class="rank-ranking"
+      data-v-e828e83c=""
+    >
+      1
+    </div>
+    <div
+      data-v-e828e83c=""
+    >
+      Rank Badge: 😀
     </div>
   </div>
+  <image-link-form-stub />
   <face-recognition-stub />
   <teleport-stub>
     <profile-stub />

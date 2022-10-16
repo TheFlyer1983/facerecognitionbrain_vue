@@ -1,5 +1,6 @@
 import { vi } from 'vitest';
 
 global.console = {
-  error: vi.fn()
+  error: vi.fn(),
+  warn: vi.fn()
 };
