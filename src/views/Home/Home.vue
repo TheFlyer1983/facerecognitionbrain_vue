@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, onBeforeMount } from 'vue';
+import { onBeforeMount } from 'vue';
+import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/store/user';
 import Logo from '@/components/Logo/Logo.vue';
 import ImageLinkForm from '@/components/ImageLinkForm/ImageLinkForm.vue';
@@ -15,10 +16,7 @@ onBeforeMount(() => {
   }
 });
 
-const user = computed(() => userStore.user);
-const userRank = computed(() => userStore.rank);
-
-const isProfileOpen = computed(() => userStore.isProfileOpen);
+const { user, rank: userRank, isProfileOpen } = storeToRefs(userStore);
 </script>
 
 <template>

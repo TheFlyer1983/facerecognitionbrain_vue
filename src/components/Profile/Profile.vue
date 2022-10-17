@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useUserStore } from '@/store/user';
-
+import { storeToRefs } from 'pinia';
 import Modal from '@/components/Modal/Modal.vue';
 import { UpdateInfo } from '@/store/user/userTypes';
 import isEmpty from 'lodash.isempty';
@@ -15,7 +15,7 @@ function closeModal() {
   userStore.isProfileOpen = false;
 }
 
-const user = computed(() => userStore.user);
+const { user } = storeToRefs(userStore);
 
 const userName = ref(null);
 const age = ref<number | null>(null);

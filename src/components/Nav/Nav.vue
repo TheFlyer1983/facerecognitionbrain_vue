@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/store/user';
 import { useNavigation } from '@/modules/navigation';
 import { Routes } from '@/router/routes';
@@ -8,7 +8,7 @@ import ProfileIcon from '../Profile/ProfileIcon.vue';
 const userStore = useUserStore();
 const { navigate } = useNavigation();
 
-const isSignedIn = computed(() => userStore.isSignedIn);
+const { isSignedIn } = storeToRefs(userStore);
 
 function signOut() {
   userStore.signout();
