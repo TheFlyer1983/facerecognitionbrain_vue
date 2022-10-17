@@ -1,6 +1,6 @@
 import { shallowMount, VueWrapper } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
-import { useImageStore } from '@/store/modules/image';
+import { useImageStore } from '@/store/image';
 import FaceRecognition from './FaceRecognition.vue';
 import { boxesMock } from '@/fixtures/images';
 import { calculateFaceLocations } from '@/functions/imageFunctions';

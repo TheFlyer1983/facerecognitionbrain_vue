@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onBeforeMount } from 'vue';
-import { useUserStore } from '@/store/modules/user';
+import { useUserStore } from '@/store/user';
 import Logo from '@/components/Logo/Logo.vue';
 import ImageLinkForm from '@/components/ImageLinkForm/ImageLinkForm.vue';
 import FaceRecognition from '@/components/FaceRecognition/FaceRecognition.vue';

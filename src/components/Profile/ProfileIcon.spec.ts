@@ -1,6 +1,6 @@
 import { shallowMount, VueWrapper } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
-import { useUserStore } from '@/store/modules/user';
+import { useUserStore } from '@/store/user';
 import ProfileIcon from './ProfileIcon.vue';
 
 const pinia = createTestingPinia();

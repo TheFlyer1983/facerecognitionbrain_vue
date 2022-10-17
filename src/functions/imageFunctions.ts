@@ -1,8 +1,8 @@
-import { Box } from '@/store/modules/image/imageTypes';
+import { Box } from '@/store/image/imageTypes';
 import { FaceLocation } from '@/types';
 
 export const calculateFaceLocations = (
-  data: Array<Box>,
+  data: Array<Box>
 ): Array<FaceLocation> => {
   const image = document.getElementById('inputImage') as HTMLImageElement;
   const width = image.width;

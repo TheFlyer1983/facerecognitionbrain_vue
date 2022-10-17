@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
-import { useImageStore } from '@/store/modules/image';
-import { Box } from '@/store/modules/image/imageTypes';
+import { useImageStore } from '@/store/image';
+import { Box } from '@/store/image/imageTypes';
 import { calculateFaceLocations } from '@/functions/imageFunctions';
 
 const imageStore = useImageStore();

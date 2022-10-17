@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { useUserStore } from '@/store/modules/user';
+import { useUserStore } from '@/store/user';
 
 import Modal from '@/components/Modal/Modal.vue';
-import { UpdateInfo } from '@/store/modules/user/userTypes';
+import { UpdateInfo } from '@/store/user/userTypes';
 import isEmpty from 'lodash.isempty';
 import { useNavigation } from '@/modules/navigation';
 import { Routes } from '@/router/routes';

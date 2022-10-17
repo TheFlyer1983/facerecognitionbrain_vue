@@ -1,4 +1,4 @@
-import { User } from '@/store/modules/user/userTypes';
+import { User } from '@/store/user/userTypes';
 
 export const UserMock: User = {
   id: '1',

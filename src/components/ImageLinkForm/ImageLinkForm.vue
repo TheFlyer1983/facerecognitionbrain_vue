@@ -1,18 +1,13 @@
 <script setup lang="ts">
-import { useImageStore } from '@/store/modules/image';
+import { useImageStore } from '@/store/image';
 import { storeToRefs } from 'pinia';
 
 const imageStore = useImageStore();
 
 const { imageUrl } = storeToRefs(imageStore);
-// const imageURL = computed<ReturnType<typeof getters['getImageURL']>>({
-//   get: () => store.getters['image/getImageURL'],
-//   set: (value) => store.commit('image/setImageURL', value)
-// });
 
 async function submitURL() {
   imageStore.submitURL();
-  // store.dispatch('image/submitURL');
 }
 </script>
 

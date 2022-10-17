@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useUserStore } from '@/store/modules/user';
+import { useUserStore } from '@/store/user';
 
 const userStore = useUserStore();
 const emits = defineEmits(['signout']);
