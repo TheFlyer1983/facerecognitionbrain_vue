@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { User, UserState } from '@/store/modules/user/userTypes';
+import { User, UserState } from '@/store/user/userTypes';
 import { NonNullableObject } from '@/types';
 
 defineProps<{

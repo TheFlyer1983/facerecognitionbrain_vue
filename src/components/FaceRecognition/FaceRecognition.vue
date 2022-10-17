@@ -1,18 +1,16 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useStore } from 'vuex';
-import { Box } from '@/store/modules/image/imageTypes';
-import { getters } from '@/store/modules/image/image';
+import { storeToRefs } from 'pinia';
+import { useImageStore } from '@/store/image';
+import { Box } from '@/store/image/imageTypes';
 import { calculateFaceLocations } from '@/functions/imageFunctions';
 
-const store = useStore();
+const imageStore = useImageStore();
 
-const imageURL = computed<ReturnType<typeof getters.getImageURL>>(
-  () => store.getters['image/getImageURL']
-);
+const { imageUrl } = storeToRefs(imageStore);
 
 const boxes = computed(() => {
-  const data: Array<Box> = store.getters['image/getBoxes'];
+  const data: Array<Box> = imageStore.boxes;
   if (data.length) {
     return calculateFaceLocations(data);
   }
@@ -24,7 +22,7 @@ const boxes = computed(() => {
     <div class="face-recognition-wrapper">
       <img
         id="inputImage"
-        :src="imageURL"
+        :src="imageUrl"
         alt=""
         width="500"
         class="face-recognition-wrapper--image"

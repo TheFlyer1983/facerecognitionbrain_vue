@@ -1,24 +1,22 @@
 <script setup lang="ts">
-import { computed, onBeforeMount } from 'vue';
-import { useStore } from 'vuex';
+import { onBeforeMount } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useUserStore } from '@/store/user';
 import Logo from '@/components/Logo/Logo.vue';
 import ImageLinkForm from '@/components/ImageLinkForm/ImageLinkForm.vue';
 import FaceRecognition from '@/components/FaceRecognition/FaceRecognition.vue';
 import Rank from '@/components/Rank/Rank.vue';
 import Profile from '@/components/Profile/Profile.vue';
 
-const store = useStore();
+const userStore = useUserStore();
 
 onBeforeMount(() => {
-  if (!store.getters['user/getUser']) {
-    store.dispatch('user/getToken');
+  if (!userStore.user) {
+    userStore.getToken();
   }
 });
 
-const user = computed(() => store.getters['user/getUser']);
-const userRank = computed(() => store.getters['user/getRank']);
-
-const isProfileOpen = computed(() => store.getters['user/getIsProfileOpen']);
+const { user, rank: userRank, isProfileOpen } = storeToRefs(userStore);
 </script>
 
 <template>

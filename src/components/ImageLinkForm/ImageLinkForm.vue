@@ -1,17 +1,13 @@
 <script setup lang="ts">
-import { getters } from '@/store/modules/image/image';
-import { computed } from 'vue';
-import { useStore } from 'vuex';
+import { useImageStore } from '@/store/image';
+import { storeToRefs } from 'pinia';
 
-const store = useStore();
+const imageStore = useImageStore();
 
-const imageURL = computed<ReturnType<typeof getters['getImageURL']>>({
-  get: () => store.getters['image/getImageURL'],
-  set: (value) => store.commit('image/setImageURL', value)
-});
+const { imageUrl } = storeToRefs(imageStore);
 
 async function submitURL() {
-  store.dispatch('image/submitURL');
+  imageStore.submitURL();
 }
 </script>
 
@@ -24,7 +20,7 @@ async function submitURL() {
       <div class="image-link-wrapper-form">
         <input
           type="text"
-          v-model="imageURL"
+          v-model="imageUrl"
           class="image-link-wrapper-form--input"
         />
         <button

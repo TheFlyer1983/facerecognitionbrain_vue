@@ -1,6 +1,6 @@
 // Vitest Snapshot v1
 
-exports[`Given the \`Home\` component > when it is rendered > should match the snapshot 1`] = `
+exports[`Given the Home component > when it is rendered > should match the snapshot 1`] = `
 <div
   data-v-app=""
 >
@@ -80,7 +80,26 @@ exports[`Given the \`Home\` component > when it is rendered > should match the s
       </div>
     </div>
   </div>
-  <face-recognition-stub />
+  <div
+    class="face-recognition"
+    data-v-853af80e=""
+  >
+    <div
+      class="face-recognition-wrapper"
+      data-v-853af80e=""
+    >
+      <img
+        alt=""
+        class="face-recognition-wrapper--image"
+        data-v-853af80e=""
+        id="inputImage"
+        src=""
+        width="500"
+      />
+      
+      
+    </div>
+  </div>
   <teleport-stub>
     <!--v-if-->
   </teleport-stub>
@@ -88,7 +107,7 @@ exports[`Given the \`Home\` component > when it is rendered > should match the s
 </div>
 `;
 
-exports[`Given the \`Home\` component > when it is rendered > when the profile modal is open > should match the snapshot 1`] = `
+exports[`Given the Home component > when it is rendered > when the profile modal is open > should match the snapshot 1`] = `
 <div
   data-v-app=""
 >
@@ -114,7 +133,27 @@ exports[`Given the \`Home\` component > when it is rendered > when the profile m
       </div>
     </div>
   </div>
-  <!--v-if-->
+  <div
+    class="rank d-flex flex-column align-items-center"
+    data-v-e828e83c=""
+  >
+    <div
+      data-v-e828e83c=""
+    >
+      Paul, your current entry count is...
+    </div>
+    <div
+      class="rank-ranking"
+      data-v-e828e83c=""
+    >
+      1
+    </div>
+    <div
+      data-v-e828e83c=""
+    >
+      Rank Badge: 😀
+    </div>
+  </div>
   <div
     class="image-link d-flex flex-column"
     data-v-25c2f2dc=""
@@ -148,7 +187,26 @@ exports[`Given the \`Home\` component > when it is rendered > when the profile m
       </div>
     </div>
   </div>
-  <face-recognition-stub />
+  <div
+    class="face-recognition"
+    data-v-853af80e=""
+  >
+    <div
+      class="face-recognition-wrapper"
+      data-v-853af80e=""
+    >
+      <img
+        alt=""
+        class="face-recognition-wrapper--image"
+        data-v-853af80e=""
+        id="inputImage"
+        src=""
+        width="500"
+      />
+      
+      
+    </div>
+  </div>
   <teleport-stub>
     <profile-stub />
   </teleport-stub>
