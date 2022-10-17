@@ -19,8 +19,8 @@ describe('Given the Home component', () => {
           teleport: true,
           Logo: false,
           Rank: false,
-          ImageLinkForm: true,
-          FaceRecognition: true
+          ImageLinkForm: false,
+          FaceRecognition: false
         }
       }
     });

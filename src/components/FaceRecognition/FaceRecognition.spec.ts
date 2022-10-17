@@ -1,17 +1,12 @@
-import { describe, it, expect, vi, beforeAll, beforeEach } from 'vitest';
 import { shallowMount, VueWrapper } from '@vue/test-utils';
-import { reactive } from 'vue';
-import { useStore } from 'vuex';
-
+import { createTestingPinia } from '@pinia/testing';
+import { useImageStore } from '@/store/modules/image';
 import FaceRecognition from './FaceRecognition.vue';
-import { ImageState } from '@/store/modules/image/imageTypes';
 import { boxesMock } from '@/fixtures/images';
 import { calculateFaceLocations } from '@/functions/imageFunctions';
 
-vi.mock('vuex');
 vi.mock('@/functions/imageFunctions');
 
-const mockedUseStore = vi.mocked<() => Partial<typeof useStore>>(useStore);
 const mockedCalculateFaceLocations = vi.mocked(calculateFaceLocations, true);
 
 const mockedImageURL =
@@ -26,22 +21,21 @@ const mockedFaceLocation = [
   }
 ];
 
+const pinia = createTestingPinia();
+const mockImageStore = useImageStore(pinia);
+
 describe('Given the `FaceRecognition` component', () => {
-  const render = () => shallowMount(FaceRecognition);
+  const render = () =>
+    shallowMount(FaceRecognition, { global: { plugins: [pinia] } });
   let wrapper: VueWrapper<InstanceType<typeof FaceRecognition>>;
 
-  const mockedGetters = {
-    ['image/getImageURL']: mockedImageURL as ImageState['imageUrl'],
-    ['image/getBoxes']: boxesMock as ImageState['boxes']
-  };
-
-  const mockedStore = reactive({
-    getters: mockedGetters
-  });
-
   beforeAll(() => {
-    mockedUseStore.mockReturnValue(mockedStore);
     mockedCalculateFaceLocations.mockReturnValue(mockedFaceLocation);
+
+    mockImageStore.$patch({
+      imageUrl: mockedImageURL,
+      boxes: [...boxesMock]
+    });
   });
 
   describe('when it is rendered', () => {
