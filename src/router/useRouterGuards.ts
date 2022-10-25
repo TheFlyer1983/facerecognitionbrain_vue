@@ -3,13 +3,10 @@ import { NavigationGuardNext } from 'vue-router';
 import { Routes } from './routes';
 
 function useRouterGuards() {
-
-  function authenticated(
-    next: NavigationGuardNext
-  ) {
+  function authenticated(next: NavigationGuardNext) {
     const token = getAuthTokenInSession();
 
-    return token ? next() : next({ name: Routes.Login});
+    return token ? next() : next({ name: Routes.Login });
   }
 
   return { authenticated };

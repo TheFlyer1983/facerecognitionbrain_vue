@@ -1,18 +1,13 @@
-import { RootState } from '@/store/rootTypes';
-import { ActionContext } from 'vuex';
-
-export type UserActionContext = ActionContext<UserState, RootState>;
-
 export interface UserState {
   isSignedIn: boolean;
   isProfileOpen: boolean;
+  id: string;
   user: User | null;
   token: string;
   rank: string;
 }
 
 export interface User {
-  id: string;
   name?: string;
   email?: string;
   entries?: number;

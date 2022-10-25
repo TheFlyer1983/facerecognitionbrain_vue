@@ -9,7 +9,7 @@ import { UserMock } from '@/fixtures/users';
 
 vi.mock('@/modules/navigation');
 
-const mockedUseNavigation = vi.mocked(useNavigation, true);
+const mockedUseNavigation = vi.mocked(useNavigation);
 
 const navigateMock = vi.fn();
 
@@ -45,7 +45,7 @@ describe('Given the `Login` component', () => {
         wrapper.vm.email = mockedLoginInfo.email;
         wrapper.vm.password = mockedLoginInfo.password;
 
-        mockUserStore.$patch({ user: { ...UserMock } });
+        mockUserStore.$patch({ id: '123ABC123' });
 
         wrapper.find('[data-test="submit"]').trigger('click');
       });
