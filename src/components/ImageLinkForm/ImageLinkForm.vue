@@ -1,30 +1,26 @@
 <script setup lang="ts">
-import { getters } from '@/store/modules/image/image';
-import { computed } from 'vue';
-import { useStore } from 'vuex';
+import { useImageStore } from '@/store/image';
+import { storeToRefs } from 'pinia';
 
-const store = useStore();
+const imageStore = useImageStore();
 
-const imageURL = computed<ReturnType<typeof getters['getImageURL']>>({
-  get: () => store.getters['image/getImageURL'],
-  set: (value) => store.commit('image/setImageURL', value)
-});
+const { imageUrl } = storeToRefs(imageStore);
 
 async function submitURL() {
-  store.dispatch('image/submitURL');
+  imageStore.submitURL();
 }
 </script>
 
 <template>
-  <div class="image-link">
-    <p class="image-link--text">
+  <div class="image-link d-flex flex-column">
+    <p class="image-link--text mx-auto">
       This Magic Brain will detect faces in your pictures. Give it a try.
     </p>
     <div class="image-link-wrapper">
       <div class="image-link-wrapper-form">
         <input
           type="text"
-          v-model="imageURL"
+          v-model="imageUrl"
           class="image-link-wrapper-form--input"
         />
         <button

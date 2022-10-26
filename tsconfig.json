@@ -24,6 +24,6 @@
       ]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/components/Logo/Logo.stories.ts", "vite.config.*"],
   "exclude": ["node_modules"]
 }

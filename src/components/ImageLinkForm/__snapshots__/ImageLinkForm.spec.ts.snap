@@ -2,11 +2,11 @@
 
 exports[`Given the \`ImageLinkForm\` component > when it is rendered > should match the snapshot 1`] = `
 <div
-  class="image-link"
+  class="image-link d-flex flex-column"
   data-v-25c2f2dc=""
 >
   <p
-    class="image-link--text"
+    class="image-link--text mx-auto"
     data-v-25c2f2dc=""
   >
      This Magic Brain will detect faces in your pictures. Give it a try. 

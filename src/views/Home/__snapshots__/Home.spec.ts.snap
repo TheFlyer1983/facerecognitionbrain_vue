@@ -1,16 +1,105 @@
 // Vitest Snapshot v1
 
-exports[`Given the \`Home\` component > when it is rendered > should match the snapshot 1`] = `
+exports[`Given the Home component > when it is rendered > should match the snapshot 1`] = `
 <div
   data-v-app=""
 >
   
-  <logo-stub />
-  <rank-stub
-    user="[object Object]"
-  />
-  <image-link-form-stub />
-  <face-recognition-stub />
+  <div
+    class="logo"
+    data-v-4bfea8c3=""
+  >
+    <div
+      class="logo-tilt"
+      data-v-4bfea8c3=""
+    >
+      <div
+        class="logo-tilt-inner"
+        data-v-4bfea8c3=""
+      >
+        <img
+          alt="logo"
+          class="logo-tilt-inner--image"
+          data-v-4bfea8c3=""
+          src="/src/assets/images/brain.png"
+        />
+      </div>
+    </div>
+  </div>
+  <div
+    class="rank d-flex flex-column align-items-center"
+    data-v-e828e83c=""
+  >
+    <div
+      data-v-e828e83c=""
+    >
+      Paul, your current entry count is...
+    </div>
+    <div
+      class="rank-ranking"
+      data-v-e828e83c=""
+    >
+      1
+    </div>
+    <div
+      data-v-e828e83c=""
+    >
+      Rank Badge: 😀
+    </div>
+  </div>
+  <div
+    class="image-link d-flex flex-column"
+    data-v-25c2f2dc=""
+  >
+    <p
+      class="image-link--text mx-auto"
+      data-v-25c2f2dc=""
+    >
+       This Magic Brain will detect faces in your pictures. Give it a try. 
+    </p>
+    <div
+      class="image-link-wrapper"
+      data-v-25c2f2dc=""
+    >
+      <div
+        class="image-link-wrapper-form"
+        data-v-25c2f2dc=""
+      >
+        <input
+          class="image-link-wrapper-form--input"
+          data-v-25c2f2dc=""
+          type="text"
+        />
+        <button
+          class="image-link-wrapper-form--button"
+          data-test="submit"
+          data-v-25c2f2dc=""
+        >
+           Detect 
+        </button>
+      </div>
+    </div>
+  </div>
+  <div
+    class="face-recognition"
+    data-v-853af80e=""
+  >
+    <div
+      class="face-recognition-wrapper"
+      data-v-853af80e=""
+    >
+      <img
+        alt=""
+        class="face-recognition-wrapper--image"
+        data-v-853af80e=""
+        id="inputImage"
+        src=""
+        width="500"
+      />
+      
+      
+    </div>
+  </div>
   <teleport-stub>
     <!--v-if-->
   </teleport-stub>
@@ -18,15 +107,106 @@ exports[`Given the \`Home\` component > when it is rendered > should match the s
 </div>
 `;
 
-exports[`Given the \`Home\` component > when it is rendered > when the profile modal is open > should match the snapshot 1`] = `
+exports[`Given the Home component > when it is rendered > when the profile modal is open > should match the snapshot 1`] = `
 <div
   data-v-app=""
 >
   
-  <logo-stub />
-  <!--v-if-->
-  <image-link-form-stub />
-  <face-recognition-stub />
+  <div
+    class="logo"
+    data-v-4bfea8c3=""
+  >
+    <div
+      class="logo-tilt"
+      data-v-4bfea8c3=""
+    >
+      <div
+        class="logo-tilt-inner"
+        data-v-4bfea8c3=""
+      >
+        <img
+          alt="logo"
+          class="logo-tilt-inner--image"
+          data-v-4bfea8c3=""
+          src="/src/assets/images/brain.png"
+        />
+      </div>
+    </div>
+  </div>
+  <div
+    class="rank d-flex flex-column align-items-center"
+    data-v-e828e83c=""
+  >
+    <div
+      data-v-e828e83c=""
+    >
+      Paul, your current entry count is...
+    </div>
+    <div
+      class="rank-ranking"
+      data-v-e828e83c=""
+    >
+      1
+    </div>
+    <div
+      data-v-e828e83c=""
+    >
+      Rank Badge: 😀
+    </div>
+  </div>
+  <div
+    class="image-link d-flex flex-column"
+    data-v-25c2f2dc=""
+  >
+    <p
+      class="image-link--text mx-auto"
+      data-v-25c2f2dc=""
+    >
+       This Magic Brain will detect faces in your pictures. Give it a try. 
+    </p>
+    <div
+      class="image-link-wrapper"
+      data-v-25c2f2dc=""
+    >
+      <div
+        class="image-link-wrapper-form"
+        data-v-25c2f2dc=""
+      >
+        <input
+          class="image-link-wrapper-form--input"
+          data-v-25c2f2dc=""
+          type="text"
+        />
+        <button
+          class="image-link-wrapper-form--button"
+          data-test="submit"
+          data-v-25c2f2dc=""
+        >
+           Detect 
+        </button>
+      </div>
+    </div>
+  </div>
+  <div
+    class="face-recognition"
+    data-v-853af80e=""
+  >
+    <div
+      class="face-recognition-wrapper"
+      data-v-853af80e=""
+    >
+      <img
+        alt=""
+        class="face-recognition-wrapper--image"
+        data-v-853af80e=""
+        id="inputImage"
+        src=""
+        width="500"
+      />
+      
+      
+    </div>
+  </div>
   <teleport-stub>
     <profile-stub />
   </teleport-stub>

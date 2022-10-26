@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useStore } from 'vuex';
+import { useUserStore } from '@/store/user';
 import { useNavigation } from '@/modules/navigation';
 import { Routes } from '@/router/routes';
 
-const store = useStore();
+const userStore = useUserStore();
 const { navigate } = useNavigation();
 
 const email = ref('');
@@ -15,8 +15,8 @@ async function onSubmitSignIn(): Promise<void> {
     email: email.value,
     password: password.value
   };
-  const success = await store.dispatch('user/login', loginInfo);
-  if (success) {
+  await userStore.login(loginInfo);
+  if (userStore.user?.id) {
     navigate({ name: Routes.Home });
   }
 }

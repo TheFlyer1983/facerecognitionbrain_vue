@@ -1,24 +1,15 @@
 import { shallowMount, VueWrapper } from '@vue/test-utils';
-import { beforeEach, describe, it, expect, vi, beforeAll } from 'vitest';
-import { reactive } from 'vue';
-import { useStore } from 'vuex';
+import { createTestingPinia } from '@pinia/testing';
+import { useUserStore } from '@/store/user';
 import ProfileIcon from './ProfileIcon.vue';
 
-vi.mock('vuex');
-
-const mockedUseStore = vi.mocked<() => Partial<typeof useStore>>(useStore);
-
-const mockedStore = reactive({
-  commit: vi.fn()
-});
+const pinia = createTestingPinia();
+const mockUserStore = useUserStore(pinia);
 
 describe('Given the `ProfileIcon` component', () => {
-  const render = () => shallowMount(ProfileIcon);
+  const render = () =>
+    shallowMount(ProfileIcon, { global: { plugins: [pinia] } });
   let wrapper: VueWrapper<InstanceType<typeof ProfileIcon>>;
-
-  beforeAll(() => {
-    mockedUseStore.mockReturnValue(mockedStore);
-  });
 
   describe('when it is rendered', () => {
     beforeEach(() => {
@@ -36,7 +27,7 @@ describe('Given the `ProfileIcon` component', () => {
       });
 
       it('should emit the correct event', () => {
-        expect(mockedStore.commit).toHaveBeenCalledWith('user/toggleModal');
+        expect(mockUserStore.isProfileOpen).toBe(true);
       });
 
       it('should update the component state', () => {
