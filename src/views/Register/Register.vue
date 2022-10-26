@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useStore } from 'vuex';
+import { useUserStore } from '@/store/user';
 import { useNavigation } from '@/modules/navigation';
 import { Routes } from '@/router/routes';
 
-const store = useStore();
+const userStore = useUserStore();
 const { navigate } = useNavigation();
 
 const name = ref('');
@@ -17,8 +17,10 @@ async function onSubmitRegister(): Promise<void> {
     email: email.value,
     password: password.value
   };
-  const success = await store.dispatch('user/registerUser', registerInfo);
-  if (success) {
+
+  await userStore.registerUser(registerInfo);
+
+  if (userStore.user?.id) {
     navigate({ name: Routes.Home });
   }
 }

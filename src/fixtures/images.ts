@@ -1,4 +1,4 @@
-import { Box } from "@/store/modules/image/imageTypes";
+import { Box } from '@/store/image/imageTypes';
 
 export const boxesMock: Array<Box> = [
   {

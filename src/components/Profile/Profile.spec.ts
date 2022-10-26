@@ -1,12 +1,11 @@
 import { shallowMount, VueWrapper } from '@vue/test-utils';
-import { reactive } from 'vue';
-import { useStore } from 'vuex';
+import { createTestingPinia } from '@pinia/testing';
+import { useUserStore } from '@/store/user';
 import { useNavigation } from '@/modules/navigation';
 
 import Profile from './Profile.vue';
 
 import { UserMock } from '@/fixtures/users';
-import { User } from '@/store/modules/user/userTypes';
 import { Routes } from '@/router/routes';
 
 vi.mock('vuex');
@@ -14,23 +13,16 @@ vi.mock('@/modules/navigation');
 
 const navigateMock = vi.fn();
 
-const mockedUseStore = vi.mocked<() => Partial<typeof useStore>>(useStore);
 const mockedUseNavigation = vi.mocked(useNavigation, true);
 
-const mockedGetters = {
-  ['user/getUser']: UserMock as User | null
-};
-
-const mockedStore = reactive({
-  getters: mockedGetters,
-  commit: vi.fn(),
-  dispatch: vi.fn()
-});
+const pinia = createTestingPinia();
+const mockUserStore = useUserStore(pinia);
 
 describe('Given the `Profile` component', () => {
   const render = () =>
     shallowMount(Profile, {
       global: {
+        plugins: [pinia],
         stubs: {
           Modal: false
         }
@@ -39,7 +31,7 @@ describe('Given the `Profile` component', () => {
   let wrapper: VueWrapper<InstanceType<typeof Profile>>;
 
   beforeAll(() => {
-    mockedUseStore.mockReturnValue(mockedStore);
+    mockUserStore.$patch({ user: { ...UserMock } });
     mockedUseNavigation.mockReturnValue({ navigate: navigateMock });
   });
 
@@ -58,13 +50,13 @@ describe('Given the `Profile` component', () => {
       });
 
       it('should commit the correct mutation', () => {
-        expect(mockedStore.commit).toHaveBeenCalledWith('user/toggleModal');
+        expect(mockUserStore.isProfileOpen).toBe(false);
       });
     });
 
     describe('and when the user getter returns no age value', () => {
       beforeEach(() => {
-        mockedStore.getters['user/getUser'] = null;
+        mockUserStore.$patch({ user: null });
       });
 
       it('and the placeholder text should be blank', () => {
@@ -74,7 +66,7 @@ describe('Given the `Profile` component', () => {
 
     describe('and when the `updateProfile` function is called', () => {
       beforeEach(() => {
-        mockedStore.getters['user/getUser'] = UserMock;
+        mockUserStore.$patch({ user: { ...UserMock } });
       });
 
       describe('and when there are no values entered', () => {
@@ -83,7 +75,7 @@ describe('Given the `Profile` component', () => {
         });
 
         it('should not dispatch the action', () => {
-          expect(mockedStore.dispatch).not.toHaveBeenCalled();
+          expect(mockUserStore.updateUser).not.toHaveBeenCalled();
         });
       });
 
@@ -100,7 +92,7 @@ describe('Given the `Profile` component', () => {
           });
 
           it('should not dispatch the action', () => {
-            expect(mockedStore.dispatch).not.toHaveBeenCalled();
+            expect(mockUserStore.updateUser).not.toHaveBeenCalled();
           });
         }
       );
@@ -131,10 +123,7 @@ describe('Given the `Profile` component', () => {
         });
 
         it('should not dispatch the action', () => {
-          expect(mockedStore.dispatch).toHaveBeenCalledWith(
-            'user/updateUser',
-            userInfo
-          );
+          expect(mockUserStore.updateUser).toHaveBeenCalledWith(userInfo);
         });
       });
     });
@@ -158,9 +147,7 @@ describe('Given the `Profile` component', () => {
         });
 
         it('should dispatch the correct actions', () => {
-          expect(mockedStore.dispatch).toHaveBeenCalledWith('user/deleteUser');
-
-          expect(mockedStore.dispatch).toHaveBeenCalledWith('user/signOut');
+          expect(mockUserStore.deleteUser).toHaveBeenCalledWith();
         });
 
         it('should navigate to the correct page', () => {
@@ -174,7 +161,7 @@ describe('Given the `Profile` component', () => {
         });
 
         it('should commit the correct mutation', () => {
-          expect(mockedStore.commit).toHaveBeenCalledWith('user/toggleModal');
+          expect(mockUserStore.isProfileOpen).toBe(false);
         });
       });
     });
