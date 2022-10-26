@@ -33,7 +33,7 @@ describe('Given the user store', () => {
 
     describe('and when `getUser` is called', () => {
       const payloadMock = '1';
-      const requestURL = endpoints.getProfile.replace(':id', payloadMock);
+      const requestURL = endpoints.profile.replace(':id', payloadMock);
       const responseMock = {
         id: 1,
         name: 'User 1',
@@ -41,11 +41,14 @@ describe('Given the user store', () => {
         entries: '6',
         joined: '2021-04-09T00:00:00.000Z'
       };
+      const tokenMock = '123ABC123ABC';
 
       beforeEach(async () => {
         requestSpy = vi
           .spyOn(request, 'get')
           .mockResolvedValue({ data: responseMock });
+
+        mockUserStore.$patch({ token: tokenMock });
 
         functionSpy = vi.spyOn(mockUserStore, 'getRank');
 
@@ -53,7 +56,9 @@ describe('Given the user store', () => {
       });
 
       it('should call the `getUser` api', () => {
-        expect(requestSpy).toHaveBeenCalledWith(requestURL);
+        expect(requestSpy).toHaveBeenCalledWith(requestURL, {
+          params: { auth: mockUserStore.token }
+        });
       });
 
       it('should update the state correctly', () => {
@@ -61,9 +66,10 @@ describe('Given the user store', () => {
         expect(mockUserStore.isSignedIn).toBe(true);
       });
 
-      it('should call the next action', () => {
-        expect(functionSpy).toHaveBeenCalled();
-      });
+      //* TODO - Uncomment once the Rank call has been migrated
+      // it('should call the next action', () => {
+      //   expect(functionSpy).toHaveBeenCalled();
+      // });
 
       describe('and when the api call is unsuccessful', () => {
         const error = new Error('error');
@@ -97,9 +103,8 @@ describe('Given the user store', () => {
       };
 
       const mockedResponse = {
-        success: 'true',
-        userId: 1,
-        token: 'ABC123ABC123'
+        localId: '1',
+        idToken: 'ABC123ABC123'
       };
 
       beforeEach(async () => {
@@ -117,21 +122,28 @@ describe('Given the user store', () => {
       });
 
       it('should call the login api', () => {
-        expect(requestSpy).toHaveBeenCalledWith(requestURL, payload);
+        expect(requestSpy).toHaveBeenCalledWith(
+          requestURL,
+          {
+            ...payload,
+            returnSecureToken: true
+          },
+          { params: { key: import.meta.env.VITE_APP_FIREBASE_API_KEY } }
+        );
       });
 
       it('shoud update the state corectly', () => {
-        expect(mockUserStore.token).toStrictEqual(mockedResponse.token);
-        expect(mockUserStore.user?.id).toStrictEqual(mockedResponse.userId);
+        expect(mockUserStore.token).toStrictEqual(mockedResponse.idToken);
+        expect(mockUserStore.id).toStrictEqual(mockedResponse.localId);
       });
 
       it('should save the token in local storage', () => {
-        expect(mockedSaveToken).toHaveBeenCalledWith(mockedResponse.token);
+        expect(mockedSaveToken).toHaveBeenCalledWith(mockedResponse.idToken);
       });
 
       it('should call the next action', () => {
         expect(mockUserStore.getUser).toHaveBeenCalledWith(
-          mockedResponse.userId
+          mockedResponse.localId
         );
       });
 
@@ -196,24 +208,15 @@ describe('Given the user store', () => {
         email: 'test@test.com',
         password: 'password'
       };
+      const apiPayload = {
+        email: 'test@test.com',
+        password: 'password',
+        returnSecureToken: true
+      };
       const requestURL = endpoints.register;
       const responseMock = {
-        register: {
-          response: 'Success',
-          user: {
-            id: 2,
-            name: 'Paul',
-            email: 'theflyer1983123@gmail.com',
-            entries: '0',
-            joined: '2022-03-15T15:43:43.780Z'
-          }
-        },
-        session: {
-          success: 'true',
-          userId: 2,
-          token:
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRoZWZseWVyMTk4MzEyM0BnbWFpbC5jb20iLCJpYXQiOjE2NDczNTkwMjMsImV4cCI6MTY0NzUzMTgyM30.KLUZdREDkcFdtgkkRN1yrP9d2rvV24X_SOph4n9CYi0'
-        }
+        idToken: '123ABC123',
+        localId: '2'
       };
 
       beforeEach(async () => {
@@ -225,17 +228,18 @@ describe('Given the user store', () => {
       });
 
       it('should call the `registerUser` api', () => {
-        expect(requestSpy).toHaveBeenCalledWith(requestURL, payloadMock);
+        expect(requestSpy).toHaveBeenCalledWith(requestURL, apiPayload, {
+          params: { key: import.meta.env.VITE_APP_FIREBASE_API_KEY }
+        });
       });
 
       it('should update the state correctly', () => {
-        expect(mockUserStore.user).toStrictEqual(responseMock.register.user);
+        expect(mockUserStore.token).toStrictEqual(responseMock.idToken);
+        expect(mockUserStore.id).toStrictEqual(responseMock.localId);
       });
 
       it('should save the token in local storage', () => {
-        expect(mockedSaveToken).toHaveBeenCalledWith(
-          responseMock.session.token
-        );
+        expect(mockedSaveToken).toHaveBeenCalledWith(responseMock.idToken);
       });
 
       describe('and when the api call fails', () => {
@@ -430,13 +434,13 @@ describe('Given the user store', () => {
         pet: 'Ruby'
       };
 
-      const requestURL = `${endpoints.profile}/${UserMock.id}`;
+      const requestURL = endpoints.profile.replace(':id', mockUserStore.token);
 
       beforeEach(async () => {
         mockUserStore.$patch({ user: { ...UserMock } });
 
         requestSpy = vi
-          .spyOn(request, 'post')
+          .spyOn(request, 'put')
           .mockResolvedValue({ data: mockedResponse });
 
         functionSpy = vi.spyOn(mockUserStore, 'getUser');
@@ -445,20 +449,18 @@ describe('Given the user store', () => {
       });
 
       it('should call the api', () => {
-        expect(requestSpy).toHaveBeenCalledWith(requestURL, {
-          formInput: mockedPayload
-        });
+        expect(requestSpy).toHaveBeenCalledWith(requestURL, mockedPayload);
       });
 
       it('should call the next action', () => {
-        expect(functionSpy).toHaveBeenCalledWith(UserMock.id);
+        expect(functionSpy).toHaveBeenCalledWith(mockUserStore.token);
       });
 
       describe('and when the api call fails', () => {
         const error = new Error('error');
 
         beforeEach(async () => {
-          vi.spyOn(request, 'post').mockRejectedValue(error.message);
+          vi.spyOn(request, 'put').mockRejectedValue(error.message);
 
           errorSpy = vi.spyOn(console, 'error').mockImplementation(() => ({}));
 
@@ -472,18 +474,21 @@ describe('Given the user store', () => {
     });
 
     describe('and when `deleteUser` is called', () => {
-      const mockedResponse = {
-        response: 'Success',
-        message: 'User deleted successfully'
-      };
+      const mockedResponse = { kind: 'identitytoolkit#DeleteAccountResponse' };
 
-      const requestURL = `${endpoints.user}/${UserMock.id}`;
+      const requestURL = endpoints.profile.replace(':id', mockUserStore.id);
+
+      let deleteSpy: SpyInstance;
 
       beforeEach(async () => {
         mockUserStore.$patch({ user: { ...UserMock } });
 
         requestSpy = vi
           .spyOn(request, 'delete')
+          .mockResolvedValue({ data: null });
+
+        deleteSpy = vi
+          .spyOn(request, 'post')
           .mockResolvedValue({ data: mockedResponse });
 
         functionSpy = vi.spyOn(mockUserStore, 'signout');
@@ -492,7 +497,19 @@ describe('Given the user store', () => {
       });
 
       it('should call the api', () => {
-        expect(requestSpy).toHaveBeenCalledWith(requestURL);
+        expect(requestSpy).toHaveBeenCalledWith(requestURL, {
+          params: { auth: mockUserStore.token }
+        });
+
+        expect(deleteSpy).toHaveBeenCalledWith(
+          endpoints.delete,
+          {
+            idToken: mockUserStore.token
+          },
+          {
+            params: { key: import.meta.env.VITE_APP_FIREBASE_API_KEY }
+          }
+        );
       });
 
       it('should call the next action', () => {

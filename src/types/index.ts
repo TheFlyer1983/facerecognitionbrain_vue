@@ -1,16 +1,25 @@
 export interface LoginInfo {
   email: string;
   password: string;
-}
-
-export interface LoginResponse {
-  success: boolean;
-  userId: number;
-  token: string;
+  returnSecureToken?: boolean;
 }
 
 export interface RegisterInfo extends LoginInfo {
   name: string;
+}
+
+export interface RegisterResponse {
+  kind: string;
+  idToken: string;
+  email: string;
+  refreshToken: string;
+  expiresIn: string;
+  localId: string;
+}
+
+export interface LoginResponse extends RegisterResponse {
+  displayName: string;
+  registered: boolean;
 }
 
 export interface FaceLocation {
