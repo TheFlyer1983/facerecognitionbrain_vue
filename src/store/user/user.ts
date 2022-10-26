@@ -1,6 +1,11 @@
 import { defineStore } from 'pinia';
-import { UpdateInfo, UserState } from './userTypes';
-import { LoginInfo, RegisterInfo } from '@/types';
+import { UpdateInfo, User, UserState } from './userTypes';
+import {
+  LoginInfo,
+  LoginResponse,
+  RegisterInfo,
+  RegisterResponse
+} from '@/types';
 import request from '@/functions/request';
 import { endpoints } from '@/constants';
 import {
@@ -24,9 +29,13 @@ export const useUserStore = defineStore('user', {
       payload = { ...payload, returnSecureToken: true };
 
       try {
-        const response = await request.post(endpoints.signin, payload, {
-          params: { key: import.meta.env.VITE_APP_FIREBASE_API_KEY }
-        });
+        const response = await request.post<LoginResponse>(
+          endpoints.signin,
+          payload,
+          {
+            params: { key: import.meta.env.VITE_APP_FIREBASE_API_KEY }
+          }
+        );
 
         saveAuthTokenInSession(response.data.idToken);
         this.token = response.data.idToken;
@@ -46,7 +55,7 @@ export const useUserStore = defineStore('user', {
       const requestURL = endpoints.profile.replace(':id', userId);
 
       try {
-        const response = await request.get(requestURL, {
+        const response = await request.get<User>(requestURL, {
           params: { auth: this.token }
         });
 
@@ -69,7 +78,7 @@ export const useUserStore = defineStore('user', {
         returnSecureToken: true
       };
       try {
-        const response = await request.post(
+        const response = await request.post<RegisterResponse>(
           endpoints.register,
           registerPayload,
           {
