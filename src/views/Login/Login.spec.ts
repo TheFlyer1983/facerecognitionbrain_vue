@@ -5,7 +5,6 @@ import { useNavigation } from '@/modules/navigation';
 import { Routes } from '@/router/routes';
 
 import Login from './Login.vue';
-import { UserMock } from '@/fixtures/users';
 
 vi.mock('@/modules/navigation');
 
