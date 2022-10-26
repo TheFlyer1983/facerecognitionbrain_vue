@@ -158,7 +158,9 @@ export const useUserStore = defineStore('user', {
     async updateUser(payload: UpdateInfo) {
       const requestURL = endpoints.profile.replace(':id', this.id);
       try {
-        await request.put(requestURL, payload);
+        await request.patch(requestURL, payload, {
+          params: { auth: this.token }
+        });
 
         this.getUser(this.id as string);
       } catch (error) {

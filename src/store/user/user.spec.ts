@@ -224,6 +224,8 @@ describe('Given the user store', () => {
           .spyOn(request, 'post')
           .mockResolvedValue({ data: responseMock });
 
+        functionSpy = vi.spyOn(mockUserStore, 'createProfile');
+
         await mockUserStore.registerUser(payloadMock);
       });
 
@@ -240,6 +242,10 @@ describe('Given the user store', () => {
 
       it('should save the token in local storage', () => {
         expect(mockedSaveToken).toHaveBeenCalledWith(responseMock.idToken);
+      });
+
+      it('should call the next action', () => {
+        expect(functionSpy).toHaveBeenCalledWith(payloadMock.name);
       });
 
       describe('and when the api call fails', () => {
@@ -260,6 +266,32 @@ describe('Given the user store', () => {
 
         it('should not update the state', () => {
           expect(mockUserStore.user).toBeNull();
+        });
+      });
+    });
+
+    describe('and when `createProfile` is called', () => {
+      const profilePayload = {
+        name: 'Paul',
+        entries: 0,
+        joined: new Date('2022-10-26')
+      };
+
+      const requestURL = endpoints.profile.replace(':id', mockUserStore.id);
+
+      beforeEach(async () => {
+        vi.useFakeTimers().setSystemTime(new Date('2022-10-26'));
+
+        requestSpy = vi
+          .spyOn(request, 'put')
+          .mockResolvedValue({ data: profilePayload });
+
+        await mockUserStore.createProfile('Paul');
+      });
+
+      it('should call the api', () => {
+        expect(requestSpy).toHaveBeenCalledWith(requestURL, profilePayload, {
+          params: { auth: mockUserStore.token }
         });
       });
     });
@@ -440,7 +472,7 @@ describe('Given the user store', () => {
         mockUserStore.$patch({ user: { ...UserMock } });
 
         requestSpy = vi
-          .spyOn(request, 'put')
+          .spyOn(request, 'patch')
           .mockResolvedValue({ data: mockedResponse });
 
         functionSpy = vi.spyOn(mockUserStore, 'getUser');
@@ -449,7 +481,9 @@ describe('Given the user store', () => {
       });
 
       it('should call the api', () => {
-        expect(requestSpy).toHaveBeenCalledWith(requestURL, mockedPayload);
+        expect(requestSpy).toHaveBeenCalledWith(requestURL, mockedPayload, {
+          params: { auth: mockUserStore.token }
+        });
       });
 
       it('should call the next action', () => {
@@ -460,7 +494,7 @@ describe('Given the user store', () => {
         const error = new Error('error');
 
         beforeEach(async () => {
-          vi.spyOn(request, 'put').mockRejectedValue(error.message);
+          vi.spyOn(request, 'patch').mockRejectedValue(error.message);
 
           errorSpy = vi.spyOn(console, 'error').mockImplementation(() => ({}));
 
