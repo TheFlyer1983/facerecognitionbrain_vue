@@ -18,3 +18,19 @@ export const calculateFaceLocations = (
     };
   });
 };
+
+export const createFaceRecognitionPayload = (imageUrl: string) => ({
+  user_app_id: {
+    user_id: 'clarifai',
+    app_id: 'main'
+  },
+  inputs: [
+    {
+      data: {
+        image: {
+          url: imageUrl
+        }
+      }
+    }
+  ]
+});

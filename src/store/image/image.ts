@@ -3,6 +3,7 @@ import { useUserStore } from '../user';
 import request from '@/functions/request';
 import { ImageState } from './imageTypes';
 import { endpoints } from '@/constants';
+import { createFaceRecognitionPayload } from '@/functions/imageFunctions';
 
 export const useImageStore = defineStore('image', {
   state: (): ImageState => ({
@@ -12,13 +13,13 @@ export const useImageStore = defineStore('image', {
 
   actions: {
     async submitURL() {
-      try {
-        const response = await request.post(endpoints.imageURL, {
-          input: this.imageUrl
-        });
+      const payload = createFaceRecognitionPayload(this.imageUrl);
 
-        this.boxes = response.data;
-        this.increaseEntries();
+      try {
+        const response = await request.post(endpoints.clarifaiURL, payload);
+
+        this.boxes = response.data.outputs[0].data.regions;
+        // this.increaseEntries();
       } catch (error) {
         console.error(error);
       }
