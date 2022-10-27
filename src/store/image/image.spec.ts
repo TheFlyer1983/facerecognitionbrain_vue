@@ -4,8 +4,12 @@ import { useImageStore } from './image';
 import { useUserStore } from '../user';
 import request from '@/functions/request';
 import { endpoints } from '@/constants';
-import { boxesMock } from '@/fixtures/images';
+import { boxesMock, facesResponseMock } from '@/fixtures/images';
 import { UserMock } from '@/fixtures/users';
+import {
+  mockedImageURL,
+  mockedFaceRecognitionPayload
+} from '@/functions/imageFunctions.spec';
 
 vi.mock('@functions/request');
 
@@ -22,14 +26,14 @@ describe('Given the user store', () => {
     let requestSpy: SpyInstance;
     let errorSpy: SpyInstance;
     let functionSpy: SpyInstance;
-    const imageUrlMock = 'http://image.url';
 
     describe('and when `submitURL` is called', () => {
       beforeEach(async () => {
-        mockImageStore.$patch({ imageUrl: imageUrlMock });
+        mockImageStore.$patch({ imageUrl: mockedImageURL });
+
         requestSpy = vi
           .spyOn(request, 'post')
-          .mockResolvedValue({ data: boxesMock });
+          .mockResolvedValue({ data: facesResponseMock });
 
         functionSpy = vi.spyOn(mockImageStore, 'increaseEntries');
 
@@ -37,16 +41,17 @@ describe('Given the user store', () => {
       });
 
       it('should call the api', () => {
-        expect(requestSpy).toHaveBeenCalledWith(endpoints.imageURL, {
-          input: imageUrlMock
-        });
+        expect(requestSpy).toHaveBeenCalledWith(
+          endpoints.clarifaiURL,
+          mockedFaceRecognitionPayload
+        );
       });
 
       it('should update the state correctly', () => {
         expect(mockImageStore.boxes).toStrictEqual(boxesMock);
       });
 
-      it('should call the next action', () => {
+      it.skip('should call the next action', () => {
         expect(functionSpy).toHaveBeenCalled();
       });
 

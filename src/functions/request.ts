@@ -1,3 +1,4 @@
+import { clarifaiApiKey, endpoints } from '@/constants/api-config';
 import axios from 'axios';
 import { getAuthTokenInSession } from './storageFunctions';
 
@@ -9,7 +10,11 @@ client.interceptors.request.use(async (config) => {
   if (!token) return config;
 
   if (config.headers) {
-    config.headers.Authorization = token
+    if (config.url === endpoints.clarifaiURL) {
+      config.headers.Authorization = `Key ${clarifaiApiKey}`;
+    } else {
+      config.headers.Authorization = token;
+    }
   }
 
   return config;
