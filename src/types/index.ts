@@ -22,6 +22,11 @@ export interface LoginResponse extends RegisterResponse {
   registered: boolean;
 }
 
+export interface RankResponse {
+  message: string;
+  input: string;
+}
+
 export interface FaceLocation {
   leftCol: number;
   topRow: number;

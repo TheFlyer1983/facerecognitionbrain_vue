@@ -1,8 +1,9 @@
 export const firebaseURL = import.meta.env.VITE_APP_FIREBASE_URL;
 export const authURL = import.meta.env.VITE_APP_FIREBASE_AUTH_URL;
+export const rankURL = import.meta.env.VITE_APP_RANK_API;
 
 export const endpoints = {
-  // rank: `${apiConfig}/rank`,
+  rank: `${rankURL}/rank`,
   signin: `${authURL}:signInWithPassword`,
   profile: `${firebaseURL}/users/:id.json`,
   register: `${authURL}:signUp`,
