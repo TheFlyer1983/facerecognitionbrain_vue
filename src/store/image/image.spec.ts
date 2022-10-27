@@ -51,7 +51,7 @@ describe('Given the user store', () => {
         expect(mockImageStore.boxes).toStrictEqual(boxesMock);
       });
 
-      it.skip('should call the next action', () => {
+      it('should call the next action', () => {
         expect(functionSpy).toHaveBeenCalled();
       });
 
@@ -79,13 +79,14 @@ describe('Given the user store', () => {
     });
 
     describe('and when `increaseEntries` is called', () => {
-      const mockedResponse = { entries: 1 };
+      const mockedResponse = { entries: 2 };
+      const requestURL = endpoints.profile.replace(':id', mockUserStore.id);
       beforeEach(async () => {
         mockImageStore.$patch({ boxes: boxesMock });
         mockUserStore.$patch({ user: { ...UserMock } });
 
         requestSpy = vi
-          .spyOn(request, 'put')
+          .spyOn(request, 'patch')
           .mockResolvedValue({ data: mockedResponse });
 
         functionSpy = vi.spyOn(mockUserStore, 'getRank');
@@ -94,8 +95,8 @@ describe('Given the user store', () => {
       });
 
       it('should call the api', () => {
-        expect(requestSpy).toHaveBeenCalledWith(endpoints.image, {
-          id: mockUserStore.user?.id
+        expect(requestSpy).toHaveBeenCalledWith(requestURL, mockedResponse, {
+          params: { auth: mockUserStore.token }
         });
       });
 
@@ -113,7 +114,7 @@ describe('Given the user store', () => {
         const error = new Error('error');
 
         beforeEach(async () => {
-          vi.spyOn(request, 'put').mockRejectedValue(error.message);
+          vi.spyOn(request, 'patch').mockRejectedValue(error.message);
 
           errorSpy = vi.spyOn(console, 'error').mockImplementation(() => ({}));
 

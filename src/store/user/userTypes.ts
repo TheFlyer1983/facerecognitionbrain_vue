@@ -8,10 +8,10 @@ export interface UserState {
 }
 
 export interface User {
-  name?: string;
-  email?: string;
-  entries?: number;
-  joined?: string | number | Date;
+  name: string;
+  email: string;
+  entries: number;
+  joined: string | number | Date;
   pet?: string;
   age?: number;
 }
