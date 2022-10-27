@@ -3,6 +3,7 @@ import { UpdateInfo, User, UserState } from './userTypes';
 import {
   LoginInfo,
   LoginResponse,
+  RankResponse,
   RegisterInfo,
   RegisterResponse
 } from '@/types';
@@ -62,7 +63,7 @@ export const useUserStore = defineStore('user', {
         this.user = response.data;
         this.isSignedIn = true;
 
-        //this.getRank();
+        this.getRank();
 
         return true;
       } catch (error) {
@@ -143,8 +144,10 @@ export const useUserStore = defineStore('user', {
       const entries = this.user?.entries;
 
       try {
-        const response = await request.post(endpoints.rank, { entries });
-        this.rank = response.data;
+        const response = await request.get<RankResponse>(endpoints.rank, {
+          params: { rank: entries }
+        });
+        this.rank = response.data.input;
       } catch (error) {
         console.error(error);
       }

@@ -66,10 +66,9 @@ describe('Given the user store', () => {
         expect(mockUserStore.isSignedIn).toBe(true);
       });
 
-      //* TODO - Uncomment once the Rank call has been migrated
-      // it('should call the next action', () => {
-      //   expect(functionSpy).toHaveBeenCalled();
-      // });
+      it('should call the next action', () => {
+        expect(functionSpy).toHaveBeenCalled();
+      });
 
       describe('and when the api call is unsuccessful', () => {
         const error = new Error('error');
@@ -397,13 +396,16 @@ describe('Given the user store', () => {
     });
 
     describe('and when `getRank` is called', () => {
-      const mockedResponse = '🔸';
+      const mockedResponse = {
+        message: 'Success',
+        input: '🔸'
+      }
 
       beforeEach(async () => {
         mockUserStore.$patch({ user: { ...UserMock } });
 
         requestSpy = vi
-          .spyOn(request, 'post')
+          .spyOn(request, 'get')
           .mockResolvedValue({ data: mockedResponse });
 
         await mockUserStore.getRank();
@@ -411,12 +413,14 @@ describe('Given the user store', () => {
 
       it('should call the api', () => {
         expect(requestSpy).toHaveBeenCalledWith(endpoints.rank, {
-          entries: mockUserStore.user?.entries
+          params: {
+            rank: mockUserStore.user?.entries
+          }
         });
       });
 
       it('should update the state correctly', () => {
-        expect(mockUserStore.rank).toStrictEqual(mockedResponse);
+        expect(mockUserStore.rank).toStrictEqual(mockedResponse.input);
       });
 
       describe('and when the api call fails', () => {
@@ -425,7 +429,7 @@ describe('Given the user store', () => {
         beforeEach(async () => {
           mockUserStore.$reset();
 
-          vi.spyOn(request, 'post').mockRejectedValue(error.message);
+          vi.spyOn(request, 'get').mockRejectedValue(error.message);
 
           errorSpy = vi.spyOn(console, 'error').mockImplementation(() => ({}));
 
