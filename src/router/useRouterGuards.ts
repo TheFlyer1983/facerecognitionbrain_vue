@@ -4,7 +4,7 @@ import { Routes } from './routes';
 
 function useRouterGuards() {
   function authenticated(next: NavigationGuardNext) {
-    const token = getAuthTokenInSession();
+    const { token } = getAuthTokenInSession();
 
     return token ? next() : next({ name: Routes.Login });
   }

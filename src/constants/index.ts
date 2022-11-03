@@ -1,3 +1,1 @@
-import { endpoints } from './api-config';
-
-export { endpoints };
+export { endpoints, reAuthURL } from './api-config';

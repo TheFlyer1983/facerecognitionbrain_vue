@@ -7,9 +7,9 @@ import {
   removeAuthTokenFromSession,
   saveAuthTokenInSession
 } from '@/functions/storageFunctions';
-import { endpoints } from '@/constants';
+import { endpoints, reAuthURL } from '@/constants';
 import { LoginInfo } from '@/types';
-import { UserMock } from '@/fixtures/users';
+import { ReAuthenticationMock, UserMock } from '@/fixtures/users';
 
 vi.mock('@/functions/request');
 vi.mock('@/functions/storageFunctions');
@@ -103,6 +103,7 @@ describe('Given the user store', () => {
 
       const mockedResponse = {
         localId: '1',
+        refreshToken: 'refreshToken',
         idToken: 'ABC123ABC123'
       };
 
@@ -137,7 +138,10 @@ describe('Given the user store', () => {
       });
 
       it('should save the token in local storage', () => {
-        expect(mockedSaveToken).toHaveBeenCalledWith(mockedResponse.idToken);
+        expect(mockedSaveToken).toHaveBeenCalledWith(
+          mockedResponse.idToken,
+          mockedResponse.refreshToken
+        );
       });
 
       it('should call the next action', () => {
@@ -215,6 +219,7 @@ describe('Given the user store', () => {
       const requestURL = endpoints.register;
       const responseMock = {
         idToken: '123ABC123',
+        refreshToken: 'refreshToken',
         localId: '2'
       };
 
@@ -240,7 +245,10 @@ describe('Given the user store', () => {
       });
 
       it('should save the token in local storage', () => {
-        expect(mockedSaveToken).toHaveBeenCalledWith(responseMock.idToken);
+        expect(mockedSaveToken).toHaveBeenCalledWith(
+          responseMock.idToken,
+          responseMock.refreshToken
+        );
       });
 
       it('should call the next action', () => {
@@ -295,51 +303,21 @@ describe('Given the user store', () => {
       });
     });
 
-    describe('and when `getToken` is called', () => {
+    describe('and when `reauthenticate` is called', () => {
       const mockedToken = 'ABC123ABC123';
+      const mockedRefreshToken = 'RefreshToken';
 
-      beforeEach(() => {
-        functionSpy = vi.spyOn(mockUserStore, 'authenticated');
-
-        mockedGetToken.mockReturnValue(mockedToken);
-
-        mockUserStore.getToken();
-      });
-
-      it('should retreive the token', () => {
-        expect(mockedGetToken).toHaveBeenCalled();
-      });
-
-      it('should update the state correctly', () => {
-        expect(mockUserStore.token).toStrictEqual(mockedToken);
-      });
-
-      it('should call the next action', () => {
-        expect(functionSpy).toHaveBeenCalled();
-      });
-
-      describe('and when there is no token available', () => {
-        beforeEach(() => {
-          mockUserStore.$reset();
-
-          mockedGetToken.mockReturnValue(null);
-
-          mockUserStore.getToken();
-        });
-
-        it('should not update the state', () => {
-          expect(mockUserStore.token).toBe('');
-        });
-      });
-    });
-
-    describe('and when `authenticated` is called', () => {
-      const mockedResponse = {
-        id: 1
+      const mockedPayload = {
+        grant_type: 'refresh_token',
+        refresh_token: mockedRefreshToken
       };
+      const mockedResponse = ReAuthenticationMock;
 
       beforeEach(async () => {
-        mockUserStore.$patch({ token: 'ABC123ABC123' });
+        mockedGetToken.mockReturnValue({
+          token: mockedToken,
+          refreshToken: mockedRefreshToken
+        });
 
         requestSpy = vi
           .spyOn(request, 'post')
@@ -347,15 +325,29 @@ describe('Given the user store', () => {
 
         functionSpy = vi.spyOn(mockUserStore, 'getUser');
 
-        await mockUserStore.authenticated();
+        await mockUserStore.reauthenticate();
       });
 
       it('should call the api', () => {
-        expect(requestSpy).toHaveBeenCalledWith(endpoints.signin);
+        expect(requestSpy).toHaveBeenCalledWith(reAuthURL, mockedPayload, {
+          params: { key: import.meta.env.VITE_APP_FIREBASE_API_KEY }
+        });
+      });
+
+      it('should update the state correctly', () => {
+        expect(mockUserStore.token).toStrictEqual(mockedResponse.id_token);
+        expect(mockUserStore.id).toStrictEqual(mockedResponse.user_id);
       });
 
       it('call the next action', () => {
-        expect(functionSpy).toHaveBeenCalledWith(mockedResponse.id);
+        expect(functionSpy).toHaveBeenCalledWith(mockedResponse.user_id);
+      });
+
+      it('should save the tokens in session storeage', () => {
+        expect(mockedSaveToken).toHaveBeenCalledWith(
+          mockedResponse.id_token,
+          mockedResponse.refresh_token
+        );
       });
 
       describe('and when the api call fails', () => {
@@ -366,7 +358,7 @@ describe('Given the user store', () => {
 
           errorSpy = vi.spyOn(console, 'error').mockImplementation(() => ({}));
 
-          await mockUserStore.authenticated();
+          await mockUserStore.reauthenticate();
         });
 
         it('should throw error', () => {
@@ -376,13 +368,18 @@ describe('Given the user store', () => {
 
       describe('and when there is no token', () => {
         beforeEach(async () => {
+          mockedGetToken.mockReturnValue({
+            token: mockedToken,
+            refreshToken: ''
+          });
+
           mockUserStore.$reset();
 
           requestSpy = vi.spyOn(request, 'post');
 
           functionSpy = vi.spyOn(mockUserStore, 'getUser');
 
-          await mockUserStore.authenticated();
+          await mockUserStore.reauthenticate();
         });
 
         it('should not call the api', () => {
@@ -399,7 +396,7 @@ describe('Given the user store', () => {
       const mockedResponse = {
         message: 'Success',
         input: '🔸'
-      }
+      };
 
       beforeEach(async () => {
         mockUserStore.$patch({ user: { ...UserMock } });

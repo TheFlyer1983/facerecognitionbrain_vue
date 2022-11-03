@@ -1,6 +1,14 @@
 <script setup lang="ts">
+import { onMounted } from 'vue';
+import { useUserStore } from './store/user';
 import particlesObject from '@/assets/particles/particles.json';
 import Nav from '@/components/Nav/Nav.vue';
+
+const userStore = useUserStore();
+
+onMounted(async () => {
+  await userStore.reauthenticate();
+});
 </script>
 
 <template>

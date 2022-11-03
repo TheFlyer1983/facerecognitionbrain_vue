@@ -14,6 +14,7 @@ export interface User {
   joined: string | number | Date;
   pet?: string;
   age?: number;
+  role?: string;
 }
 
 export interface UpdateInfo {

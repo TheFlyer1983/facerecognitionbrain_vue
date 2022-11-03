@@ -17,7 +17,7 @@ vi.doMock('axios', () => {
   };
 
   return {
-    create: vi.fn(() => (mockedAxiosInstance))
+    create: vi.fn(() => mockedAxiosInstance)
   };
 });
 

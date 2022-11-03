@@ -5,7 +5,7 @@ import { getAuthTokenInSession } from './storageFunctions';
 const client = axios.create();
 
 client.interceptors.request.use(async (config) => {
-  const token = getAuthTokenInSession();
+  const { token } = getAuthTokenInSession();
 
   if (!token) return config;
 
