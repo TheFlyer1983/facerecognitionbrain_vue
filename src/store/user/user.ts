@@ -4,11 +4,12 @@ import {
   LoginInfo,
   LoginResponse,
   RankResponse,
+  ReAuthResponse,
   RegisterInfo,
   RegisterResponse
 } from '@/types';
 import request from '@/functions/request';
-import { endpoints } from '@/constants';
+import { endpoints, reAuthURL } from '@/constants';
 import {
   getAuthTokenInSession,
   removeAuthTokenFromSession,
@@ -38,7 +39,11 @@ export const useUserStore = defineStore('user', {
           }
         );
 
-        saveAuthTokenInSession(response.data.idToken);
+        saveAuthTokenInSession(
+          response.data.idToken,
+          response.data.refreshToken
+        );
+
         this.token = response.data.idToken;
         this.id = response.data.localId;
 
@@ -87,7 +92,11 @@ export const useUserStore = defineStore('user', {
           }
         );
 
-        saveAuthTokenInSession(response.data.idToken);
+        saveAuthTokenInSession(
+          response.data.idToken,
+          response.data.refreshToken
+        );
+
         this.token = response.data.idToken;
         this.id = response.data.localId;
         await this.createProfile(payload.name);
@@ -113,27 +122,37 @@ export const useUserStore = defineStore('user', {
         });
 
         this.user = response.data;
+        this.isSignedIn = true;
       } catch (error) {
         console.log(error);
       }
     },
 
-    getToken() {
-      const token = getAuthTokenInSession();
+    async reauthenticate() {
+      const { refreshToken } = getAuthTokenInSession();
 
-      if (token) {
-        this.token = token;
-
-        this.authenticated();
-      }
-    },
-
-    async authenticated() {
-      if (this.token) {
+      if (refreshToken) {
+        const payload = {
+          grant_type: 'refresh_token',
+          refresh_token: refreshToken
+        };
         try {
-          const response = await request.post(endpoints.signin);
+          const response = await request.post<ReAuthResponse>(
+            reAuthURL,
+            payload,
+            {
+              params: { key: import.meta.env.VITE_APP_FIREBASE_API_KEY }
+            }
+          );
 
-          this.getUser(response.data.id);
+          this.token = response.data.id_token;
+          this.id = response.data.user_id;
+          this.getUser(response.data.user_id);
+
+          saveAuthTokenInSession(
+            response.data.id_token,
+            response.data.refresh_token
+          );
         } catch (error) {
           console.error(error);
         }
@@ -178,13 +197,13 @@ export const useUserStore = defineStore('user', {
 
         await request.post(
           endpoints.delete,
-          { idToken: this.id },
+          { idToken: this.token },
           { params: { key: import.meta.env.VITE_APP_FIREBASE_API_KEY } }
         );
-
-        this.signout();
       } catch (error) {
         console.error(error);
+      } finally {
+        this.signout();
       }
     }
   }

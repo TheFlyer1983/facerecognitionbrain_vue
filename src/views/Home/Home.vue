@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { onBeforeMount } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/store/user';
 import Logo from '@/components/Logo/Logo.vue';
@@ -9,12 +8,6 @@ import Rank from '@/components/Rank/Rank.vue';
 import Profile from '@/components/Profile/Profile.vue';
 
 const userStore = useUserStore();
-
-onBeforeMount(() => {
-  if (!userStore.user) {
-    userStore.getToken();
-  }
-});
 
 const { user, rank: userRank, isProfileOpen } = storeToRefs(userStore);
 </script>
