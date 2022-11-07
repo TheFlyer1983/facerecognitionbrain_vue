@@ -20,7 +20,7 @@ async function onSubmitRegister(): Promise<void> {
 
   await userStore.registerUser(registerInfo);
 
-  if (userStore.user?.id) {
+  if (userStore.id) {
     navigate({ name: Routes.Home });
   }
 }

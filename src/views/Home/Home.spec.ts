@@ -48,8 +48,8 @@ describe('Given the Home component', () => {
         wrapper = render();
       });
 
-      it('should dispatch the correct action', () => {
-        expect(mockUserStore.getToken).toHaveBeenCalled();
+      it('should match the snapshot', () => {
+        expect(wrapper.element).toMatchSnapshot();
       });
     });
 

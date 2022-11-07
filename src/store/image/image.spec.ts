@@ -4,8 +4,12 @@ import { useImageStore } from './image';
 import { useUserStore } from '../user';
 import request from '@/functions/request';
 import { endpoints } from '@/constants';
-import { boxesMock } from '@/fixtures/images';
+import { boxesMock, facesResponseMock } from '@/fixtures/images';
 import { UserMock } from '@/fixtures/users';
+import {
+  mockedImageURL,
+  mockedFaceRecognitionPayload
+} from '@/functions/imageFunctions.spec';
 
 vi.mock('@functions/request');
 
@@ -22,14 +26,14 @@ describe('Given the user store', () => {
     let requestSpy: SpyInstance;
     let errorSpy: SpyInstance;
     let functionSpy: SpyInstance;
-    const imageUrlMock = 'http://image.url';
 
     describe('and when `submitURL` is called', () => {
       beforeEach(async () => {
-        mockImageStore.$patch({ imageUrl: imageUrlMock });
+        mockImageStore.$patch({ imageUrl: mockedImageURL });
+
         requestSpy = vi
           .spyOn(request, 'post')
-          .mockResolvedValue({ data: boxesMock });
+          .mockResolvedValue({ data: facesResponseMock });
 
         functionSpy = vi.spyOn(mockImageStore, 'increaseEntries');
 
@@ -37,9 +41,10 @@ describe('Given the user store', () => {
       });
 
       it('should call the api', () => {
-        expect(requestSpy).toHaveBeenCalledWith(endpoints.imageURL, {
-          input: imageUrlMock
-        });
+        expect(requestSpy).toHaveBeenCalledWith(
+          endpoints.clarifaiURL,
+          mockedFaceRecognitionPayload
+        );
       });
 
       it('should update the state correctly', () => {
@@ -74,13 +79,14 @@ describe('Given the user store', () => {
     });
 
     describe('and when `increaseEntries` is called', () => {
-      const mockedResponse = { entries: 1 };
+      const mockedResponse = { entries: 2 };
+      const requestURL = endpoints.profile.replace(':id', mockUserStore.id);
       beforeEach(async () => {
         mockImageStore.$patch({ boxes: boxesMock });
         mockUserStore.$patch({ user: { ...UserMock } });
 
         requestSpy = vi
-          .spyOn(request, 'put')
+          .spyOn(request, 'patch')
           .mockResolvedValue({ data: mockedResponse });
 
         functionSpy = vi.spyOn(mockUserStore, 'getRank');
@@ -89,8 +95,8 @@ describe('Given the user store', () => {
       });
 
       it('should call the api', () => {
-        expect(requestSpy).toHaveBeenCalledWith(endpoints.image, {
-          id: mockUserStore.user?.id
+        expect(requestSpy).toHaveBeenCalledWith(requestURL, mockedResponse, {
+          params: { auth: mockUserStore.token }
         });
       });
 
@@ -108,7 +114,7 @@ describe('Given the user store', () => {
         const error = new Error('error');
 
         beforeEach(async () => {
-          vi.spyOn(request, 'put').mockRejectedValue(error.message);
+          vi.spyOn(request, 'patch').mockRejectedValue(error.message);
 
           errorSpy = vi.spyOn(console, 'error').mockImplementation(() => ({}));
 
