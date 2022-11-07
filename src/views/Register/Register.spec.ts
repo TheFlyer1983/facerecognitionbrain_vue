@@ -48,7 +48,7 @@ describe('Given the `Register` component', () => {
         wrapper.vm.email = mockedRegisterInfo.email;
         wrapper.vm.password = mockedRegisterInfo.password;
 
-        mockUserStore.$patch({ user: { ...UserMock } });
+        mockUserStore.$patch({ user: { ...UserMock }, id: '123ABC123' });
 
         wrapper.find('[data-test="submit"]').trigger('click');
       });

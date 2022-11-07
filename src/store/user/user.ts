@@ -1,8 +1,15 @@
 import { defineStore } from 'pinia';
-import { UpdateInfo, UserState } from './userTypes';
-import { LoginInfo, RegisterInfo } from '@/types';
+import { UpdateInfo, User, UserState } from './userTypes';
+import {
+  LoginInfo,
+  LoginResponse,
+  RankResponse,
+  ReAuthResponse,
+  RegisterInfo,
+  RegisterResponse
+} from '@/types';
 import request from '@/functions/request';
-import { endpoints } from '@/constants';
+import { endpoints, reAuthURL } from '@/constants';
 import {
   getAuthTokenInSession,
   removeAuthTokenFromSession,
@@ -13,6 +20,7 @@ export const useUserStore = defineStore('user', {
   state: (): UserState => ({
     isSignedIn: false,
     isProfileOpen: false,
+    id: '',
     user: null,
     token: '',
     rank: ''
@@ -20,14 +28,26 @@ export const useUserStore = defineStore('user', {
 
   actions: {
     async login(payload: LoginInfo) {
+      payload = { ...payload, returnSecureToken: true };
+
       try {
-        const response = await request.post(endpoints.signin, payload);
+        const response = await request.post<LoginResponse>(
+          endpoints.signin,
+          payload,
+          {
+            params: { key: import.meta.env.VITE_APP_FIREBASE_API_KEY }
+          }
+        );
 
-        saveAuthTokenInSession(response.data.token as string);
-        this.token = response.data.token;
-        this.user = { ...this.user, id: response.data.userId };
+        saveAuthTokenInSession(
+          response.data.idToken,
+          response.data.refreshToken
+        );
 
-        const success = await this.getUser(response.data.userId);
+        this.token = response.data.idToken;
+        this.id = response.data.localId;
+
+        const success = await this.getUser(response.data.localId);
         if (!success) throw new Error('Error');
 
         return true;
@@ -38,10 +58,12 @@ export const useUserStore = defineStore('user', {
     },
 
     async getUser(userId: string) {
-      const requestURL = endpoints.getProfile.replace(':id', userId);
+      const requestURL = endpoints.profile.replace(':id', userId);
 
       try {
-        const response = await request.get(requestURL);
+        const response = await request.get<User>(requestURL, {
+          params: { auth: this.token }
+        });
 
         this.user = response.data;
         this.isSignedIn = true;
@@ -56,11 +78,28 @@ export const useUserStore = defineStore('user', {
     },
 
     async registerUser(payload: RegisterInfo) {
+      const registerPayload = {
+        email: payload.email,
+        password: payload.password,
+        returnSecureToken: true
+      };
       try {
-        const response = await request.post(endpoints.register, payload);
+        const response = await request.post<RegisterResponse>(
+          endpoints.register,
+          registerPayload,
+          {
+            params: { key: import.meta.env.VITE_APP_FIREBASE_API_KEY }
+          }
+        );
 
-        saveAuthTokenInSession(response.data.session.token as string);
-        this.user = response.data.register.user;
+        saveAuthTokenInSession(
+          response.data.idToken,
+          response.data.refreshToken
+        );
+
+        this.token = response.data.idToken;
+        this.id = response.data.localId;
+        await this.createProfile(payload.name);
 
         return true;
       } catch (error) {
@@ -69,22 +108,51 @@ export const useUserStore = defineStore('user', {
       }
     },
 
-    getToken() {
-      const token = getAuthTokenInSession();
+    async createProfile(name: string) {
+      const profilePayload = {
+        name,
+        entries: 0,
+        joined: new Date()
+      };
 
-      if (token) {
-        this.token = token;
+      const requestURL = endpoints.profile.replace(':id', this.id);
+      try {
+        const response = await request.put(requestURL, profilePayload, {
+          params: { auth: this.token }
+        });
 
-        this.authenticated();
+        this.user = response.data;
+        this.isSignedIn = true;
+      } catch (error) {
+        console.log(error);
       }
     },
 
-    async authenticated() {
-      if (this.token) {
-        try {
-          const response = await request.post(endpoints.signin);
+    async reauthenticate() {
+      const { refreshToken } = getAuthTokenInSession();
 
-          this.getUser(response.data.id);
+      if (refreshToken) {
+        const payload = {
+          grant_type: 'refresh_token',
+          refresh_token: refreshToken
+        };
+        try {
+          const response = await request.post<ReAuthResponse>(
+            reAuthURL,
+            payload,
+            {
+              params: { key: import.meta.env.VITE_APP_FIREBASE_API_KEY }
+            }
+          );
+
+          this.token = response.data.id_token;
+          this.id = response.data.user_id;
+          this.getUser(response.data.user_id);
+
+          saveAuthTokenInSession(
+            response.data.id_token,
+            response.data.refresh_token
+          );
         } catch (error) {
           console.error(error);
         }
@@ -95,8 +163,10 @@ export const useUserStore = defineStore('user', {
       const entries = this.user?.entries;
 
       try {
-        const response = await request.post(endpoints.rank, { entries });
-        this.rank = response.data;
+        const response = await request.get<RankResponse>(endpoints.rank, {
+          params: { rank: entries }
+        });
+        this.rank = response.data.input;
       } catch (error) {
         console.error(error);
       }
@@ -108,24 +178,32 @@ export const useUserStore = defineStore('user', {
     },
 
     async updateUser(payload: UpdateInfo) {
+      const requestURL = endpoints.profile.replace(':id', this.id);
       try {
-        await request.post(`${endpoints.profile}/${this.user?.id}`, {
-          formInput: payload
+        await request.patch(requestURL, payload, {
+          params: { auth: this.token }
         });
 
-        this.getUser(this.user?.id as string);
+        this.getUser(this.id as string);
       } catch (error) {
         console.error(error);
       }
     },
 
     async deleteUser() {
+      const requestURL = endpoints.profile.replace(':id', this.id);
       try {
-        await request.delete(`${endpoints.user}/${this.user?.id}`);
+        await request.delete(requestURL, { params: { auth: this.token } });
 
-        this.signout();
+        await request.post(
+          endpoints.delete,
+          { idToken: this.token },
+          { params: { key: import.meta.env.VITE_APP_FIREBASE_API_KEY } }
+        );
       } catch (error) {
         console.error(error);
+      } finally {
+        this.signout();
       }
     }
   }

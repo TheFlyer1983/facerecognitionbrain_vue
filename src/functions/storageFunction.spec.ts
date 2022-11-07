@@ -1,6 +1,3 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { storeKey } from 'vuex';
-
 import {
   saveAuthTokenInSession,
   getAuthTokenInSession,
@@ -8,6 +5,7 @@ import {
 } from './storageFunctions';
 
 const mockedToken = '123ABC123ABC';
+const mockedRefreshToken = 'refreshToken';
 
 const sessionStorageMock = (() => {
   let store: { [key: string]: string } = {};
@@ -38,27 +36,49 @@ describe('when the `saveAuthTokenInSession` function is called', () => {
 
     vi.resetAllMocks();
 
-    saveAuthTokenInSession(mockedToken);
+    saveAuthTokenInSession(mockedToken, mockedRefreshToken);
   });
 
   it('should save info into session storage', () => {
     expect(window.sessionStorage.getItem('token')).toStrictEqual(mockedToken);
+    expect(window.sessionStorage.getItem('refreshToken')).toStrictEqual(
+      mockedRefreshToken
+    );
   });
 });
 
-describe('when the `saveAuthTokenInSession` function is called', () => {
+describe('when the `getAuthTokenInSession` function is called', () => {
+  let result: ReturnType<typeof getAuthTokenInSession>;
   beforeEach(() => {
     window.sessionStorage.clear();
 
     vi.resetAllMocks();
 
-    saveAuthTokenInSession(mockedToken);
+    saveAuthTokenInSession(mockedToken, mockedRefreshToken);
 
-    getAuthTokenInSession();
+    result = getAuthTokenInSession();
   });
 
-  it('should save info into session storage', () => {
-    expect(window.sessionStorage.getItem('token')).toStrictEqual(mockedToken);
+  it('should get info from session storage', () => {
+    expect(result.token).toStrictEqual(mockedToken);
+    expect(result.refreshToken).toStrictEqual(mockedRefreshToken);
+  });
+
+  describe('when session values are blank', () => {
+    let result: ReturnType<typeof getAuthTokenInSession>;
+
+    beforeEach(() => {
+      window.sessionStorage.clear();
+
+      vi.resetAllMocks();
+
+      result = getAuthTokenInSession();
+    });
+
+    it('should return blank strings', () => {
+      expect(result.token).toStrictEqual('');
+      expect(result.refreshToken).toStrictEqual('');
+    });
   });
 });
 
@@ -68,12 +88,13 @@ describe('when the `removeAuthTokenFromSession` function is called', () => {
 
     vi.resetAllMocks();
 
-    saveAuthTokenInSession(mockedToken);
+    saveAuthTokenInSession(mockedToken, mockedRefreshToken);
 
     removeAuthTokenFromSession();
   });
 
   it('should remove the token from session storage', () => {
     expect(window.sessionStorage.getItem('token')).toBeFalsy();
+    expect(window.sessionStorage.getItem('refreshToken')).toBeFalsy();
   });
 });

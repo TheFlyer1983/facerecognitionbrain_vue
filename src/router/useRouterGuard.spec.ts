@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, beforeAll } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 import useRouterGuards from './useRouterGuards';
 import { getAuthTokenInSession } from '@/functions/storageFunctions';
@@ -22,8 +22,14 @@ describe('Given the `useRouterGuard` hook', () => {
     });
 
     describe('when an authentication token is available', () => {
+      const mockedToken = '123ABC123ABC';
+      const mockedRefreshToken = 'refreshToken';
+
       beforeEach(() => {
-        mockedGetAuthTokenInSession.mockReturnValue('123ABC123ABC');
+        mockedGetAuthTokenInSession.mockReturnValue({
+          token: mockedToken,
+          refreshToken: mockedRefreshToken
+        });
 
         result.authenticated(nextCallback);
       });
@@ -35,7 +41,10 @@ describe('Given the `useRouterGuard` hook', () => {
 
     describe('when an authentication token is not available', () => {
       beforeEach(() => {
-        mockedGetAuthTokenInSession.mockReturnValue('');
+        mockedGetAuthTokenInSession.mockReturnValue({
+          token: '',
+          refreshToken: 'refreshToken'
+        });
 
         result.authenticated(nextCallback);
       });
