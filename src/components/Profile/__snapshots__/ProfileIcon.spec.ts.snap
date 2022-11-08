@@ -9,12 +9,13 @@ exports[`Given the \`ProfileIcon\` component > when it is rendered > should matc
     class="dropdown-button pointer"
     data-v-96f08be6=""
   >
-    <img
-      alt="avatar"
-      class="dropdown-button-image"
+    <div
+      class="avatar d-flex justify-content-center align-items-center"
       data-v-96f08be6=""
-      src="http://tachyons.io/img/logo.jpg"
-    />
+      data-v-cd0cfdf7=""
+    >
+      P
+    </div>
   </span>
   <!--v-if-->
 </section>

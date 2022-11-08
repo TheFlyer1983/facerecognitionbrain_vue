@@ -28,11 +28,9 @@ exports[`Given the \`Profile\` component > and when the component is rendered > 
           class="pa4 black-80 w-80"
           data-v-2712ae82=""
         >
-          <img
-            alt="avatar"
-            class="h3 w3 dib"
+          <profile-avatar-stub
             data-v-2712ae82=""
-            src="http://tachyons.io/img/logo.jpg"
+            name="Paul"
           />
           <h1
             data-v-2712ae82=""
@@ -125,11 +123,9 @@ exports[`Given the \`Profile\` component > and when the component is rendered > 
           class="pa4 black-80 w-80"
           data-v-2712ae82=""
         >
-          <img
-            alt="avatar"
-            class="h3 w3 dib"
+          <profile-avatar-stub
             data-v-2712ae82=""
-            src="http://tachyons.io/img/logo.jpg"
+            name="Paul"
           />
           <h1
             data-v-2712ae82=""

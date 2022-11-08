@@ -2,16 +2,27 @@ import { shallowMount, VueWrapper } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
 import { useUserStore } from '@/store/user';
 import ProfileIcon from './ProfileIcon.vue';
+import { UserMock } from '@/fixtures/users';
 
 const pinia = createTestingPinia();
 const mockUserStore = useUserStore(pinia);
 
 describe('Given the `ProfileIcon` component', () => {
   const render = () =>
-    shallowMount(ProfileIcon, { global: { plugins: [pinia] } });
+    shallowMount(ProfileIcon, {
+      global: {
+        plugins: [pinia],
+        stubs: {
+          ProfileAvatar: false
+        }
+      }
+    });
   let wrapper: VueWrapper<InstanceType<typeof ProfileIcon>>;
 
   describe('when it is rendered', () => {
+    beforeAll(() => {
+      mockUserStore.$patch({ user: { ...UserMock } });
+    });
     beforeEach(() => {
       wrapper = render();
     });

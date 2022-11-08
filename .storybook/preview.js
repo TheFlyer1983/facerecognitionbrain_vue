@@ -1,6 +1,8 @@
 import { app } from '@storybook/vue3';
 
 import '../src/styles/main.scss';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap';
 
 export const parameters = {
   backgrounds: {

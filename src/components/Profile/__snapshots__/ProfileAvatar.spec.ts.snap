@@ -1,0 +1,10 @@
+// Vitest Snapshot v1
+
+exports[`Given the \`ProfileAvatar\` component > when it is rendered > should match the snapshot 1`] = `
+<div
+  class="avatar d-flex justify-content-center align-items-center"
+  data-v-cd0cfdf7=""
+>
+  P
+</div>
+`;

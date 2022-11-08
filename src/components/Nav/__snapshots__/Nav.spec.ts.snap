@@ -38,11 +38,9 @@ exports[`Given the Nav component > when it is rendered > should match the snapsh
       class="dropdown-button pointer"
       data-v-96f08be6=""
     >
-      <img
-        alt="avatar"
-        class="dropdown-button-image"
+      <profile-avatar-stub
         data-v-96f08be6=""
-        src="http://tachyons.io/img/logo.jpg"
+        name="Paul"
       />
     </span>
     <!--v-if-->

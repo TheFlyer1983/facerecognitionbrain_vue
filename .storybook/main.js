@@ -23,18 +23,10 @@ module.exports = {
   ) {
     config.resolve = {
       alias: {
-        '@':  `${path.resolve(__dirname, '../src')}`,
-        'vue': 'vue/dist/vue.esm-bundler.js'
+        '@': `${path.resolve(__dirname, '../src')}`,
+        vue: 'vue/dist/vue.esm-bundler.js'
       }
     };
-
-    // config.css = {
-    //   preprocessorOptions: {
-    //     scss: {
-    //       additionalData: `@import '../src/styles/main.scss';`
-    //     }
-    //   }
-    // }
 
     return config;
   }
