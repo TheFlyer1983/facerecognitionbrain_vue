@@ -6,6 +6,7 @@ import { useNavigation } from '@/modules/navigation';
 
 import Nav from './Nav.vue';
 import { Routes } from '@/router/routes';
+import { UserMock } from '@/fixtures/users';
 
 vi.mock('@/modules/navigation');
 
@@ -36,7 +37,7 @@ describe('Given the Nav component', () => {
 
   describe('when it is rendered', () => {
     beforeEach(() => {
-      mockUserStore.$patch({ isSignedIn: true });
+      mockUserStore.$patch({ isSignedIn: true, user: { ...UserMock } });
       wrapper = render();
     });
 

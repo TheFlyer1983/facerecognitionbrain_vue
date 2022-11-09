@@ -1,11 +1,15 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useUserStore } from '@/store/user';
+import ProfileAvatar from './ProfileAvatar.vue';
+import { storeToRefs } from 'pinia';
 
 const userStore = useUserStore();
 const emits = defineEmits(['signout']);
 
 const isDropdownOpen = ref(false);
+
+const { user } = storeToRefs(userStore);
 
 function toggleDropdown() {
   isDropdownOpen.value = !isDropdownOpen.value;
@@ -24,11 +28,7 @@ function signOut() {
 <template>
   <section class="dropdown">
     <span @click="toggleDropdown" class="dropdown-button pointer">
-      <img
-        src="http://tachyons.io/img/logo.jpg"
-        alt="avatar"
-        class="dropdown-button-image"
-      />
+      <ProfileAvatar :name="user?.name" v-if="user" />
     </span>
     <ul v-if="isDropdownOpen" class="dropdown-menu dropdown-menu-right">
       <li
@@ -55,14 +55,6 @@ function signOut() {
     justify-content: flex-end;
     border: none;
     font-size: inherit;
-
-    &-image {
-      border-radius: 100%;
-      border: 1px solid black;
-      display: inline-block;
-      height: 4rem;
-      width: 4rem;
-    }
   }
 
   &-menu {

@@ -7,6 +7,7 @@ import { UpdateInfo } from '@/store/user/userTypes';
 import isEmpty from 'lodash.isempty';
 import { useNavigation } from '@/modules/navigation';
 import { Routes } from '@/router/routes';
+import ProfileAvatar from './ProfileAvatar.vue';
 
 const userStore = useUserStore();
 const { navigate } = useNavigation();
@@ -58,11 +59,7 @@ async function deleteUser() {
         class="br3 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 bg-white d-flex justify-content-center"
       >
         <main class="pa4 black-80 w-80">
-          <img
-            src="http://tachyons.io/img/logo.jpg"
-            alt="avatar"
-            class="h3 w3 dib"
-          />
+          <ProfileAvatar :name="user.name" v-if="user" />
           <h1>{{ user?.name }}</h1>
           <h4>Images Submitted: {{ user?.entries }}</h4>
           <p>
