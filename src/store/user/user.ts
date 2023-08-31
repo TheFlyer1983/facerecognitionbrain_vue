@@ -15,6 +15,9 @@ import {
   removeAuthTokenFromSession,
   saveAuthTokenInSession
 } from '@/functions/storageFunctions';
+import useErrorTypes from '@/composables/errors/useErrorTypes';
+
+const { isAxiosError } = useErrorTypes();
 
 export const useUserStore = defineStore('user', {
   state: (): UserState => ({
@@ -52,8 +55,10 @@ export const useUserStore = defineStore('user', {
 
         return true;
       } catch (error) {
-        console.error(error);
-        return false;
+        if (isAxiosError(error)) {
+          console.error(error.response?.status);
+          return false;
+        }
       }
     },
 
