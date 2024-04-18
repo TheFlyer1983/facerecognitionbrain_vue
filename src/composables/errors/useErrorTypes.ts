@@ -6,7 +6,12 @@ function useErrorTypes() {
     return x.isAxiosError;
   }
 
-  return { isAxiosError };
+  //eslint-disable-next-line
+  function isError(x: any): x is Error {
+    return !!x.message;
+  }
+
+  return { isAxiosError, isError };
 }
 
 export default useErrorTypes;

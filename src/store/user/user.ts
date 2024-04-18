@@ -56,7 +56,7 @@ export const useUserStore = defineStore('user', {
         return true;
       } catch (error) {
         if (isAxiosError(error)) {
-          console.error(error.response?.status);
+          console.error(error.response);
           return false;
         }
       }
@@ -77,7 +77,11 @@ export const useUserStore = defineStore('user', {
 
         return true;
       } catch (error) {
-        console.error(error);
+        if (isAxiosError(error)) {
+          console.error(error.message);
+        } else {
+          console.error(error);
+        }
         return false;
       }
     },
