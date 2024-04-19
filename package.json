@@ -1,5 +1,5 @@
 {
-  "name": "nuxt-app",
+  "name": "facerecognitionbrain_vue",
   "private": true,
   "type": "module",
   "scripts": {
@@ -10,7 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "@nuxt/devtools": "^1.1.5",
+    "@nuxt/devtools": "^1.2.0",
     "nuxt": "^3.11.2",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"
