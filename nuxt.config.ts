@@ -6,6 +6,7 @@ export default defineNuxtConfig({
     '@nuxt/devtools',
     '@nuxt/eslint',
     '@nuxt/test-utils/module',
+    '@nuxtjs/tailwindcss',
     [
       'nuxt-typed-router',
       {
