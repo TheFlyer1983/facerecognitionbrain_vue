@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-onMounted(() => navigateTo('/register'));
+definePageMeta({
+  middleware: 'auth'
+});
 </script>
 
 <template>
-  <div>
-    
-  </div>
+  <div>Main Dashboard</div>
 </template>

@@ -1,21 +1,37 @@
 <script setup lang="ts">
+const userStore = useUserStore();
+
 const name = ref('');
 const email = ref('');
 const password = ref('');
+
+async function onSubmitRegister() {
+  const registerInfo = {
+    name: name.value,
+    email: email.value,
+    password: password.value
+  };
+
+  await userStore.registerUser(registerInfo);
+
+  if (userStore.id) {
+    navigateTo('/');
+  }
+}
 </script>
 
 <template>
-  <article class="register-article">
-    <main class="register-article-main">
-      <div class="register-article-main-measure">
-        <fieldset class="register-article-main-measure-fieldset">
-          <legend class="register-article-main-measure-fieldset--legend">
-            Register
-          </legend>
-          <div class="register-article-main-measure-fieldset__field">
+  <article
+    class="mx-auto my-16 flex w-full justify-center rounded-lg border border-black border-opacity-10 shadow-md md:w-1/2 lg:w-1/4"
+  >
+    <main class="p-8 text-black opacity-80">
+      <div class="mw-[30rem] self-center">
+        <fieldset class="mx-0 my-2.5 w-full border border-transparent px-0">
+          <legend class="mx-0 px-0 text-5xl font-semibold">Register</legend>
+          <div class="mt-4">
             <label
               for="name"
-              class="register-article-main-measure-fieldset__field--label"
+              class="block text-center text-sm font-semibold leading-6"
             >
               Name
             </label>
@@ -24,13 +40,13 @@ const password = ref('');
               v-model="name"
               type="text"
               name="name"
-              class="register-article-main-measure-fieldset__field--input"
+              class="border border-black bg-transparent p-2 hover:bg-black hover:text-white"
             />
           </div>
-          <div lass="register-article-main-measure-fieldset__field">
+          <div lass="mt-4">
             <label
               for="email-address"
-              class="register-article-main-measure-fieldset__field--label"
+              class="block text-center text-sm font-semibold leading-6"
             >
               Email
             </label>
@@ -39,13 +55,13 @@ const password = ref('');
               v-model="email"
               type="email"
               name="email-address"
-              class="register-article-main-measure-fieldset__field--input"
+              class="border border-black bg-transparent p-2 hover:bg-black hover:text-white"
             />
           </div>
-          <div lass="register-article-main-measure-fieldset__field">
+          <div lass="mt-4">
             <label
               for="password"
-              class="register-article-main-measure-fieldset__field--label"
+              class="block text-center text-sm font-semibold leading-6"
             >
               Password
             </label>
@@ -54,7 +70,7 @@ const password = ref('');
               v-model="password"
               type="password"
               name="password"
-              class="register-article-main-measure-fieldset__field--input"
+              class="border border-black bg-transparent p-2 hover:bg-black hover:text-white"
             />
           </div>
         </fieldset>
@@ -62,7 +78,7 @@ const password = ref('');
           <input
             type="submit"
             value="Register"
-            class="register-article-main-measure--submit"
+            class="m-auto flex cursor-pointer justify-center border border-black bg-transparent px-4 text-sm transition-all duration-[0.25] ease-out hover:scale-105"
             data-test="submit"
             @click="onSubmitRegister"
           />
@@ -71,117 +87,3 @@ const password = ref('');
     </main>
   </article>
 </template>
-
-<style scoped lang="scss">
-.register-article {
-  border-radius: 0.5rem;
-  border: solid 1px var(--black-10);
-  width: 100%;
-  box-shadow: 4px 4px 8px 0 rgba(0, 0, 0, 0.2);
-  margin: 4rem auto;
-  display: flex;
-  justify-content: center;
-
-  @include breakpoint-medium {
-    width: 50%;
-  }
-
-  @include breakpoint-large {
-    width: 25%;
-  }
-
-  &-main {
-    padding: 2rem;
-    color: var(--black-80);
-
-    &-measure {
-      max-width: 30em;
-
-      &-fieldset {
-        border: solid 1px transparent;
-        padding-left: 0;
-        padding-right: 0;
-        margin-left: 0;
-        margin-right: 0;
-        width: 100%;
-
-        &--legend {
-          font-size: 3rem;
-          font-weight: 600;
-          padding-left: 0;
-          padding-right: 0;
-          margin-left: 0;
-          margin-right: 0;
-        }
-
-        &__field {
-          margin-top: 1rem;
-
-          &--label {
-            display: block;
-            font-weight: 600;
-            line-height: 1.5;
-            font-size: 0.875rem;
-            text-align: center;
-          }
-
-          &--input {
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            padding: 0.5rem;
-            border: solid 1px;
-            background-color: transparent;
-
-            &:hover {
-              background-color: black;
-              color: white;
-            }
-          }
-        }
-      }
-
-      &--submit {
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        -moz-osx-font-smoothing: grayscale;
-        cursor: pointer;
-        background-color: transparent;
-        border: solid 1px black;
-        font-size: 0.875rem;
-        display: flex;
-        justify-content: center;
-        backface-visibility: hidden;
-        transform: translateZ(0);
-        transition: transform 0.25 ease-out;
-        padding-left: 1rem;
-        padding-right: 1rem;
-        margin: auto;
-
-        &:hover {
-          transform: scale(1.05);
-        }
-      }
-
-      &__register {
-        line-height: 1.5;
-        margin-top: 1rem;
-
-        &--link {
-          cursor: pointer;
-          display: block;
-          opacity: 1;
-          transition: opacity 0.15s ease-in;
-          font-size: 0.875rem;
-          color: black;
-          text-decoration: none;
-
-          &:hover {
-            opacity: 0.5;
-            transition: opacity 0.15s ease-in;
-          }
-        }
-      }
-    }
-  }
-}
-</style>
