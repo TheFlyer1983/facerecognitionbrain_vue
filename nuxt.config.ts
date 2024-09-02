@@ -4,6 +4,34 @@ export default defineNuxtConfig({
     '@nuxt/devtools',
     '@nuxt/eslint',
     '@nuxt/test-utils/module',
-    '@nuxtjs/tailwindcss'
-  ]
+    [
+      '@pinia/nuxt',
+      {
+        autoImports: ['defineStore', 'storeToRefs']
+      }
+    ],
+    '@nuxtjs/tailwindcss',
+    [
+      'nuxt-typed-router',
+      {
+        plugins: true
+      }
+    ],
+    'nuxt-particles'
+  ],
+
+  components: [{ path: '~/components', pathPrefix: false }],
+
+  imports: {
+    dirs: ['stores', 'types']
+  },
+
+  particles: {
+    mode: 'full',
+    lazy: true
+  },
+
+  css: ['~/assets/css/main.pcss'],
+
+  compatibilityDate: '2024-08-23'
 });
