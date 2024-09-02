@@ -33,16 +33,5 @@ export default defineNuxtConfig({
 
   css: ['~/assets/css/main.pcss'],
 
-  // vite: {
-  //   css: {
-  //     preprocessorOptions: {
-  //       css: {
-  //         charset: false,
-  //         additionalData: `@import '~/assets/scss/main.pcss';`
-  //       }
-  //     }
-  //   }
-  // },
-
   compatibilityDate: '2024-08-23'
 });
