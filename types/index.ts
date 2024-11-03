@@ -4,6 +4,11 @@ export type LoginInfo = {
   returnSecureToken?: true;
 };
 
+export type LoginResponse = RegisterResponse & {
+  displayName: string;
+  registered: boolean;
+}
+
 export type RegisterInfo = LoginInfo & {
   name: string;
 };

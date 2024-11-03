@@ -1,7 +1,7 @@
-export default defineNuxtRouteMiddleware(() => {
+export default defineNuxtRouteMiddleware((to) => {
   const userStore = useUserStore();
 
-  if (!userStore.id) {
-    return navigateTo('/register');
+  if (!userStore.id && to.path !== '/register') {
+    return navigateTo('/login');
   }
 });
