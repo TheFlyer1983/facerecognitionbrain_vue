@@ -3,5 +3,6 @@ export const firebaseURL = import.meta.env.VITE_FIREBASE_URL
 
 export const endpoints = {
   register: `${firebaseAuth}:signUp`,
+  signin: `${firebaseAuth}:signInWithPassword`,
   profile: `${firebaseURL}/users/:id.json`
 };

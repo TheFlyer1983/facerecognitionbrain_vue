@@ -1,18 +1,15 @@
 <script setup lang="ts">
 const userStore = useUserStore();
 
-const name = ref('');
 const email = ref('');
 const password = ref('');
 
-async function onSubmitRegister() {
-  const registerInfo = {
-    name: name.value,
+async function onSubmitSignIn(): Promise<void> {
+  const loginInfo = {
     email: email.value,
     password: password.value
   };
-
-  await userStore.registerUser(registerInfo);
+  await userStore.login(loginInfo);
 
   if (userStore.id) {
     navigateTo('/');
@@ -23,26 +20,11 @@ async function onSubmitRegister() {
 <template>
   <UiLoginBox>
     <template #form>
-      <legend class="mx-0 px-0 text-5xl font-semibold">Register</legend>
+      <legend class="mx-auto px-0 text-5xl font-semibold">Sign In</legend>
       <div class="mt-4">
         <label
-          for="name"
-          class="block text-center text-sm font-semibold leading-6"
-        >
-          Name
-        </label>
-        <input
-          id="name"
-          v-model="name"
-          type="text"
-          name="name"
-          class="border border-black bg-transparent p-2 hover:bg-black hover:text-white"
-        />
-      </div>
-      <div lass="mt-4">
-        <label
           for="email-address"
-          class="block text-center text-sm font-semibold leading-6"
+          class="block text-center text-sm font-semibold"
         >
           Email
         </label>
@@ -54,11 +36,8 @@ async function onSubmitRegister() {
           class="border border-black bg-transparent p-2 hover:bg-black hover:text-white"
         />
       </div>
-      <div lass="mt-4">
-        <label
-          for="password"
-          class="block text-center text-sm font-semibold leading-6"
-        >
+      <div class="mt-4">
+        <label for="password" class="block text-center text-sm font-semibold">
           Password
         </label>
         <input
@@ -73,11 +52,20 @@ async function onSubmitRegister() {
     <template #button>
       <input
         type="submit"
-        value="Register"
+        value="Sign in"
         class="flex cursor-pointer justify-center border border-black bg-transparent px-4 text-sm transition-all duration-[0.25] ease-out hover:scale-105"
         data-test="submit"
-        @click="onSubmitRegister"
+        @click="onSubmitSignIn"
       />
+    </template>
+    <template #link>
+      <p
+        class="cursor-pointer block opacity-100 transition-opacity duraction-[0.15] ease-in text-sm text-black no-underline hover:opacity-50 hover:transition-opacity hover:duration-[0.15] hover:ease-in"
+        data-test="register"
+        @click="navigateTo('/register')"
+      >
+        Register
+      </p>
     </template>
   </UiLoginBox>
 </template>
