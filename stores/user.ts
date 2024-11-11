@@ -100,5 +100,17 @@ export const useUserStore = defineStore('UserStore', () => {
       console.log(error);
     }
   }
-  return { id, token, registerUser, login };
+
+  function signout() {
+    removeAuthTokenFromSession();
+    reset();
+  }
+
+  function reset() {
+    token.value = null;
+    id.value = null;
+    user.value = null;
+    isSignedIn.value = false;
+  }
+  return { id, token, registerUser, login, isSignedIn, signout };
 });
