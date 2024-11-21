@@ -5,5 +5,8 @@ definePageMeta({
 </script>
 
 <template>
-  <div>Main Dashboard</div>
+  <div>
+    <BrainLogo />
+    <div>Main Dashboard</div>
+  </div>
 </template>
