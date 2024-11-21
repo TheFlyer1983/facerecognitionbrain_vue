@@ -13,7 +13,7 @@ function signOut() {
 <template>
   <nav class="flex justify-end">
     <template v-if="isSignedIn">
-      <ProfileIcon @signout="signOut" />
+      <!-- <ProfileIcon @signout="signOut" /> -->
     </template>
     <template v-else>
       <p
