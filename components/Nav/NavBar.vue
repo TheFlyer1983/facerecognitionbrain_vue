@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { storeToRefs } from 'pinia';
-
 const userStore = useUserStore();
-const { isSignedIn } = storeToRefs(userStore);
 
+// Todo: when adding profile menu
 function signOut() {
   userStore.signout();
   navigateTo('/login');
@@ -12,8 +10,9 @@ function signOut() {
 
 <template>
   <nav class="flex justify-end">
-    <template v-if="isSignedIn">
+    <template v-if="userStore.isSignedIn">
       <!-- <ProfileIcon @signout="signOut" /> -->
+       <p @click="signOut">Signed In</p>
     </template>
     <template v-else>
       <p

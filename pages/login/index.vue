@@ -12,7 +12,7 @@ async function onSubmitSignIn(): Promise<void> {
   await userStore.login(loginInfo);
 
   if (userStore.id) {
-    navigateTo('/');
+    navigateTo('/home');
   }
 }
 </script>

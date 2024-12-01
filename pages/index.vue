@@ -1,12 +1,16 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 definePageMeta({
   middleware: 'auth'
+});
+const userStore = useUserStore();
+
+onMounted(() => {
+  if (userStore.isSignedIn) {
+    navigateTo('/home');
+  }
 });
 </script>
 
 <template>
-  <div>
-    <BrainLogo />
-    <div>Main Dashboard</div>
-  </div>
+  <div></div>
 </template>

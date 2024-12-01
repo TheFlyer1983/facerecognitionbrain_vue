@@ -15,7 +15,7 @@ async function onSubmitRegister() {
   await userStore.registerUser(registerInfo);
 
   if (userStore.id) {
-    navigateTo('/');
+    navigateTo('/home');
   }
 }
 </script>
