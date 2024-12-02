@@ -2,15 +2,17 @@
 const particlesJson = computed(
   () => new URL(`/assets/particles/particles.json`, import.meta.url).href
 );
+
+// const userStore = useUserStore();
+
+// onMounted(async () => {
+//   await userStore.reauthenticate();
+// })
 </script>
 
 <template>
   <NuxtLayout>
-    <NuxtParticles
-      id="tsparticles"
-      :url="particlesJson"
-      class="particles"
-    />
+    <NuxtParticles id="tsparticles" :url="particlesJson" class="particles" />
     <NuxtPage />
   </NuxtLayout>
 </template>

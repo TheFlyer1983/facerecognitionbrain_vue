@@ -1,8 +1,13 @@
-import { endpoints } from '~/constants/api';
+import { endpoints, reAuthURL } from '~/constants/api';
 
 export const useUserStore = defineStore('UserStore', () => {
   const { $api } = useNuxtApp();
-  const { saveAuthTokenInSession } = useTokenStorage();
+  const {
+    saveAuthTokenInSession,
+    getAuthTokenInSession,
+    removeAuthTokenFromSession
+  } = useTokenStorage();
+  const { isAxiosError } = useErrorTypes();
   const token = ref<string | null>(null);
   const id = ref<string | null>(null);
   const user = ref<User | null>(null);
@@ -106,11 +111,57 @@ export const useUserStore = defineStore('UserStore', () => {
     reset();
   }
 
+  async function reauthenticate() {
+    try {
+      const { refreshToken } = await getAuthTokenInSession();
+
+      if (!refreshToken) {
+        throw new Error('Unable to get the refresh token');
+      }
+      const payload = {
+        grant_type: 'refresh_token',
+        refresh_token: refreshToken
+      };
+
+      const response = await $api().post<ReAuthResponse>(reAuthURL, payload, {
+        params: { key: import.meta.env.VITE_APP_FIREBASE_API_KEY }
+      });
+
+      token.value = response.data.id_token;
+      id.value = response.data.user_id;
+      await getUser(response.data.user_id);
+
+      saveAuthTokenInSession(
+        response.data.id_token,
+        response.data.refresh_token
+      );
+    } catch (error) {
+      console.error(error);
+
+      if (
+        isAxiosError(error) &&
+        error.status === 400 &&
+        error.response?.data.error.message === 'USER_DISABLED'
+      ) {
+        console.error('Session Expired');
+        signout();
+      }
+    }
+  }
+
   function reset() {
     token.value = null;
     id.value = null;
     user.value = null;
     isSignedIn.value = false;
   }
-  return { id, token, registerUser, login, isSignedIn, signout };
+  return {
+    id,
+    token,
+    registerUser,
+    login,
+    reauthenticate,
+    isSignedIn,
+    signout
+  };
 });
