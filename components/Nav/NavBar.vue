@@ -11,8 +11,7 @@ function signOut() {
 <template>
   <nav class="flex justify-end">
     <template v-if="userStore.isSignedIn">
-      <!-- <ProfileIcon @signout="signOut" /> -->
-      <p @click="signOut">Signed In</p>
+      <ProfileIcon @signout="signOut" />
     </template>
     <template v-else>
       <p

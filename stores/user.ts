@@ -12,6 +12,7 @@ export const useUserStore = defineStore('UserStore', () => {
   const id = ref<string | null>(null);
   const user = ref<User | null>(null);
   const isSignedIn = ref(false);
+  const isProfileOpen = ref(false);
 
   async function login(payload: LoginInfo) {
     payload = { ...payload, returnSecureToken: true };
@@ -162,6 +163,8 @@ export const useUserStore = defineStore('UserStore', () => {
     login,
     reauthenticate,
     isSignedIn,
-    signout
+    signout,
+    isProfileOpen,
+    user
   };
 });
