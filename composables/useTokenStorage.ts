@@ -1,5 +1,6 @@
 export const useTokenStorage = () => {
-  
+  const { data, execute } = useFetch('/api/storage');
+
   function saveAuthTokenInSession(token: string, refreshToken: string) {
     $fetch('/api/storage', {
       method: 'POST',
@@ -11,7 +12,7 @@ export const useTokenStorage = () => {
   }
 
   async function getAuthTokenInSession() {
-    const { data } = await useFetch('/api/storage');
+    await execute();
     const token = data.value?.token;
     const refreshToken = data.value?.refreshToken;
 

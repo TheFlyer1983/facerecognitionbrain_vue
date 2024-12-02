@@ -7,7 +7,7 @@ export type LoginInfo = {
 export type LoginResponse = RegisterResponse & {
   displayName: string;
   registered: boolean;
-}
+};
 
 export type RegisterInfo = LoginInfo & {
   name: string;
@@ -30,7 +30,7 @@ export type ReAuthResponse = {
   id_token: string;
   user_id: string;
   project_id: string;
-}
+};
 
 export type User = {
   name: string;
@@ -40,10 +40,10 @@ export type User = {
   pet?: string;
   age?: number;
   role?: string;
-}
+};
 
 export type ApiErrors = {
   error: {
-    message: 'TOKEN_EXPIRED' | "USER_DISABLED"
-  }
-}
+    message: 'TOKEN_EXPIRED' | 'USER_DISABLED';
+  };
+};

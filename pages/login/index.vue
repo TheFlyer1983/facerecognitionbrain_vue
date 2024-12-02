@@ -60,7 +60,7 @@ async function onSubmitSignIn(): Promise<void> {
     </template>
     <template #link>
       <p
-        class="cursor-pointer block opacity-100 transition-opacity duraction-[0.15] ease-in text-sm text-black no-underline hover:opacity-50 hover:transition-opacity hover:duration-[0.15] hover:ease-in"
+        class="duraction-[0.15] block cursor-pointer text-sm text-black no-underline opacity-100 transition-opacity ease-in hover:opacity-50 hover:transition-opacity hover:duration-[0.15] hover:ease-in"
         data-test="register"
         @click="navigateTo('/register')"
       >
