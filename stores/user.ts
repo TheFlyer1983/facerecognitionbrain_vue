@@ -150,6 +150,39 @@ export const useUserStore = defineStore('UserStore', () => {
     }
   }
 
+  async function updateUser(payload: UpdateInfo) {
+    if (!id.value) return
+    const requestURL = endpoints.profile.replace(':id', id.value);
+    try {
+      await $api().patch(requestURL, payload, {
+        params: { auth: token.value }
+      });
+
+      getUser(id.value);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async function deleteUser() {
+    if (!id.value) return;
+
+    const requestURL = endpoints.profile.replace(':id', id.value);
+    try {
+      await $api().delete(requestURL, { params: { auth: token.value } });
+
+      await $api().post(
+        endpoints.delete,
+        { idToken: token.value },
+        { params: { key: import.meta.env.VITE_APP_FIREBASE_API_KEY } }
+      );
+    } catch (error) {
+      console.error(error);
+    } finally {
+      signout();
+    }
+  }
+
   function reset() {
     token.value = null;
     id.value = null;
@@ -165,6 +198,8 @@ export const useUserStore = defineStore('UserStore', () => {
     isSignedIn,
     signout,
     isProfileOpen,
-    user
+    user,
+    updateUser,
+    deleteUser
   };
 });

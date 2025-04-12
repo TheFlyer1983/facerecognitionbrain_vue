@@ -5,5 +5,6 @@ export const reAuthURL = import.meta.env.VITE_FIREBASE_REAUTH_URL;
 export const endpoints = {
   register: `${firebaseAuth}:signUp`,
   signin: `${firebaseAuth}:signInWithPassword`,
-  profile: `${firebaseURL}/users/:id.json`
+  profile: `${firebaseURL}/users/:id.json`,
+  delete: `${firebaseAuth}:delete`
 };

@@ -18,7 +18,8 @@ export default defineNuxtConfig({
         plugins: true
       }
     ],
-    'nuxt-particles'
+    'nuxt-particles',
+    'dayjs-nuxt'
   ],
 
   components: [{ path: '~/components', pathPrefix: false }],
@@ -40,6 +41,31 @@ export default defineNuxtConfig({
         driver: 'fs',
         base: './.data/kv'
       }
+    }
+  },
+
+  app: {
+    head: {
+      meta: [
+        { charset: 'utf-8' },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        { hid: 'description', name: 'description', content: '' },
+        { name: 'format-detection', content: 'telephone=no' }
+      ]
+      // link: [
+      //   { rel: 'icon', href: '/favicon.ico' },
+      //   {
+      //     rel: 'stylesheet',
+      //     href: 'https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap'
+      //   }
+      // ]
+    }
+  },
+
+  vite: {
+    optimizeDeps: {
+      include: ['lodash/isEmpty'],
+      holdUntilCrawlEnd: true
     }
   },
 
