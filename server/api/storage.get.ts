@@ -1,8 +1,8 @@
 export default defineEventHandler(async () => {
-  const storage = useStorage('data');
+  const storage = useStorage<string>('data');
 
-  const token = await storage.getItem<string>('token');
-  const refreshToken = await storage.getItem<string>('refresh-token');
+  const token = await storage.getItem('token');
+  const refreshToken = await storage.getItem('refresh-token');
 
   return { token, refreshToken };
 });
