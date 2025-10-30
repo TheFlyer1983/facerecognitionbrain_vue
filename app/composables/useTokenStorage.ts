@@ -1,5 +1,7 @@
 export const useTokenStorage = () => {
-  const { data, execute } = useFetch('/api/storage');
+  const { data, execute } = useFetch('/api/storage', {
+    deep: true
+  });
 
   function saveAuthTokenInSession(token: string, refreshToken: string) {
     $fetch('/api/storage', {

@@ -1,4 +1,4 @@
-import { endpoints, reAuthURL } from '~/constants/api';
+import { endpoints, reAuthURL } from '~~/constants/api';
 
 export const useUserStore = defineStore('UserStore', () => {
   const { $api } = useNuxtApp();

@@ -24,7 +24,7 @@ export default defineNuxtConfig({
   components: [{ path: '~/components', pathPrefix: false }],
 
   imports: {
-    dirs: ['stores', 'types']
+    dirs: ['stores', '~~/types']
   },
 
   particles: {
@@ -48,7 +48,6 @@ export default defineNuxtConfig({
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { hid: 'description', name: 'description', content: '' },
         { name: 'format-detection', content: 'telephone=no' }
       ]
       // link: [
