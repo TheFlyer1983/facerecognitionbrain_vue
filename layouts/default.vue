@@ -15,7 +15,7 @@
 <template>
   <div>
     <NavBar />
-    <slot />
+    <slot></slot>
   </div>
 </template>
 
