@@ -18,7 +18,6 @@ export default defineNuxtConfig({
         plugins: true
       }
     ],
-    'nuxt-particles',
     'dayjs-nuxt'
   ],
 
