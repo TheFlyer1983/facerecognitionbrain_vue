@@ -1,0 +1,17 @@
+<script setup lang="ts">
+import type { User, UserState } from '@@/types/user';
+import type { NonNullableObject } from '@@/types';
+
+defineProps<{
+  user: NonNullableObject<User>;
+  userRank: UserState['rank'];
+}>();
+</script>
+
+<template>
+  <div class="rank d-flex flex-column align-items-center text-center text-white text-2xl">
+    <div>{{ user.name }}, your current entry count is...</div>
+    <div class="text-5xl">{{ user.entries }}</div>
+    <div>Rank Badge: {{ userRank }}</div>
+  </div>
+</template>

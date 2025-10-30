@@ -27,11 +27,6 @@ export default defineNuxtConfig({
     dirs: ['stores', '~~/types']
   },
 
-  particles: {
-    mode: 'full',
-    lazy: true
-  },
-
   css: ['~/assets/css/main.pcss'],
 
   nitro: {
