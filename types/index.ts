@@ -32,18 +32,17 @@ export type ReAuthResponse = {
   project_id: string;
 };
 
-export type User = {
-  name: string;
-  email: string;
-  entries: number;
-  joined: string | number | Date;
-  pet?: string;
-  age?: number;
-  role?: string;
+export type RankResponse = {
+  input: string;
+  message?: string;
 };
 
 export type ApiErrors = {
   error: {
     message: 'TOKEN_EXPIRED' | 'USER_DISABLED';
   };
+};
+
+export type NonNullableObject<T extends Record<string, any>> = {
+  [P in keyof T]: NonNullable<T[P]>;
 };

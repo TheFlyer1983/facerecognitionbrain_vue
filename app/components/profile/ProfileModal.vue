@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { UpdateInfo } from '@/types/user';
+import type { UpdateInfo } from '@@/types/user';
 import isEmpty from 'lodash.isempty';
 import ProfileAvatar from './ProfileAvatar.vue';
 

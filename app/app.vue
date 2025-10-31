@@ -12,8 +12,9 @@ const particlesJson = computed(
 
 <template>
   <NuxtLayout>
-    <NuxtParticles id="tsparticles" :url="particlesJson" class="particles" />
-    <NuxtPage />
+    <div class="particles py-3">
+      <NuxtPage />
+    </div>
   </NuxtLayout>
 </template>
 

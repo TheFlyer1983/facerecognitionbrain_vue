@@ -1,4 +1,6 @@
-import { endpoints, reAuthURL } from '~/constants/api';
+import { endpoints, reAuthURL } from '~~/constants/api';
+import type { RankResponse } from '~~/types';
+import type { UserState } from '~~/types/user';
 
 export const useUserStore = defineStore('UserStore', () => {
   const { $api } = useNuxtApp();
@@ -7,12 +9,13 @@ export const useUserStore = defineStore('UserStore', () => {
     getAuthTokenInSession,
     removeAuthTokenFromSession
   } = useTokenStorage();
-  const { isAxiosError } = useErrorTypes();
+  const { isAxiosError, isError } = useErrorTypes();
   const token = ref<string | null>(null);
   const id = ref<string | null>(null);
   const user = ref<User | null>(null);
   const isSignedIn = ref(false);
   const isProfileOpen = ref(false);
+  const rank = ref<UserState['rank']>(null);
 
   async function login(payload: LoginInfo) {
     payload = { ...payload, returnSecureToken: true };
@@ -52,7 +55,7 @@ export const useUserStore = defineStore('UserStore', () => {
       user.value = response.data;
       isSignedIn.value = true;
 
-      // getRank();
+      await getRank();
 
       return true;
     } catch (error) {
@@ -150,8 +153,25 @@ export const useUserStore = defineStore('UserStore', () => {
     }
   }
 
+  async function getRank() {
+    const entries = user.value?.entries || 0;
+
+    try {
+      const response = await $fetch<RankResponse>('/api/rank/rank', {
+        method: 'GET',
+        query: { rank: entries }
+      });
+
+      rank.value = response.input;
+    } catch (error) {
+      if (isError(error)) {
+        console.error(error.data?.message);
+      }
+    }
+  }
+
   async function updateUser(payload: UpdateInfo) {
-    if (!id.value) return
+    if (!id.value) return;
     const requestURL = endpoints.profile.replace(':id', id.value);
     try {
       await $api().patch(requestURL, payload, {
@@ -200,6 +220,8 @@ export const useUserStore = defineStore('UserStore', () => {
     isProfileOpen,
     user,
     updateUser,
-    deleteUser
+    deleteUser,
+    rank,
+    getRank
   };
 });
