@@ -162,7 +162,6 @@ export const useUserStore = defineStore('UserStore', () => {
         query: { rank: entries }
       });
 
-      console.log(response);
       rank.value = response.input;
     } catch (error) {
       if (isError(error)) {
