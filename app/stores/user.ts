@@ -9,7 +9,7 @@ export const useUserStore = defineStore('UserStore', () => {
     getAuthTokenInSession,
     removeAuthTokenFromSession
   } = useTokenStorage();
-  const { isAxiosError } = useErrorTypes();
+  const { isAxiosError, isError } = useErrorTypes();
   const token = ref<string | null>(null);
   const id = ref<string | null>(null);
   const user = ref<User | null>(null);
@@ -159,11 +159,15 @@ export const useUserStore = defineStore('UserStore', () => {
     try {
       const response = await $fetch<RankResponse>('/api/rank/rank', {
         method: 'GET',
-        query: { rank: entries }
+        query: { rank: 'entries' }
       });
-      rank.value = response.body.input;
+
+      console.log(response);
+      rank.value = response.input;
     } catch (error) {
-      console.error(error.message);
+      if (isError(error)) {
+        console.error(error.data?.message);
+      }
     }
   }
 

@@ -33,20 +33,9 @@ export type ReAuthResponse = {
 };
 
 export type RankResponse = {
-  statusCode: number;
-  headers: Record<string, string>;
-  body: { input: string; message?: string };
+  input: string;
+  message?: string;
 };
-
-// export type User = {
-//   name: string;
-//   email: string;
-//   entries: number;
-//   joined: string | number | Date;
-//   pet?: string;
-//   age?: number;
-//   role?: string;
-// };
 
 export type ApiErrors = {
   error: {

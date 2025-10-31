@@ -7,16 +7,13 @@ export default defineEventHandler(async (event) => {
     const rankEmoji = emojis[rank >= emojis.length ? emojis.length - 1 : rank];
 
     return {
-      statusCode: 200,
-      headers: { 'Content-Type': 'application/json' },
-      body: {
-        input: rankEmoji
-      }
+      input: rankEmoji
     };
   } else {
     throw createError({
       statusCode: 400,
-      statusMessage: 'Invalid rank parameter! Rank should be a number.'
+      statusMessage: 'Bad Request',
+      message: 'Invalid rank parameter! Rank should be a number.',
     });
   }
 });
