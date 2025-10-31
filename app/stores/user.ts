@@ -159,7 +159,7 @@ export const useUserStore = defineStore('UserStore', () => {
     try {
       const response = await $fetch<RankResponse>('/api/rank/rank', {
         method: 'GET',
-        query: { rank: 'entries' }
+        query: { rank: entries }
       });
 
       console.log(response);
