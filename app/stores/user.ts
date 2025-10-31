@@ -56,7 +56,6 @@ export const useUserStore = defineStore('UserStore', () => {
       isSignedIn.value = true;
 
       await getRank();
-      console.log(rank.value);
 
       return true;
     } catch (error) {
@@ -164,7 +163,7 @@ export const useUserStore = defineStore('UserStore', () => {
       });
       rank.value = response.body.input;
     } catch (error) {
-      console.error(error);
+      console.error(error.message);
     }
   }
 

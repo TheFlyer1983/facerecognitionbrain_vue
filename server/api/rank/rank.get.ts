@@ -1,8 +1,9 @@
 const emojis = ['😄', '😃', '😀', '😊', '😉', '😍', '🔸', '🔹', '🚀'];
-
+Error;
 export default defineEventHandler(async (event) => {
   const rank = Number(getQuery(event).rank);
-  if (rank) {
+  console.log('Rank requested:', rank);
+  if (!isNaN(rank)) {
     const rankEmoji = emojis[rank >= emojis.length ? emojis.length - 1 : rank];
 
     return {
@@ -13,12 +14,9 @@ export default defineEventHandler(async (event) => {
       }
     };
   } else {
-    return {
+    throw createError({
       statusCode: 400,
-      headers: { 'Content-Type': 'application/json' },
-      body: {
-        error: 'Invalid rank parameter'
-      }
-    };
+      statusMessage: 'Invalid rank parameter! Rank should be a number.'
+    });
   }
 });
