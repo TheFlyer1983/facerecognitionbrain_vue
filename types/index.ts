@@ -43,6 +43,13 @@ export type ApiErrors = {
   };
 };
 
+export interface FaceLocation {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+}
+
 export type NonNullableObject<T extends Record<string, any>> = {
   [P in keyof T]: NonNullable<T[P]>;
 };
