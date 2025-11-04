@@ -6,5 +6,7 @@ export const endpoints = {
   register: `${firebaseAuth}:signUp`,
   signin: `${firebaseAuth}:signInWithPassword`,
   profile: `${firebaseURL}/users/:id.json`,
-  delete: `${firebaseAuth}:delete`
+  delete: `${firebaseAuth}:delete`,
+  clarifaiURL:
+    'https://api.clarifai.com/v2/models/face-detection/versions/6dc7e46bc9124c5c8824be4822abe105/outputs'
 };
