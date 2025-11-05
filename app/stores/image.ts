@@ -8,7 +8,7 @@ export const useImageStore = defineStore('image', () => {
   const imageUrl = ref<string | null>(null);
   const boxes = ref<ImageState['boxes']>([]);
 
-  watch(imageUrl, (newUrl) => {
+  watch(imageUrl, () => {
     boxes.value = [];
   });
 
