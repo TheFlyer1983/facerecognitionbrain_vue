@@ -6,5 +6,6 @@ export const endpoints = {
   register: `${firebaseAuth}:signUp`,
   signin: `${firebaseAuth}:signInWithPassword`,
   profile: `${firebaseURL}/users/:id.json`,
-  delete: `${firebaseAuth}:delete`
+  delete: `${firebaseAuth}:delete`,
+  facePlusPlus: 'https://api-us.faceplusplus.com/facepp/v3/detect'
 };

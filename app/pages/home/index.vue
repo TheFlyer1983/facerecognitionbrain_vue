@@ -12,7 +12,8 @@ const { user, rank: userRank } = storeToRefs(userStore);
   <div>
     <BrainLogo />
     <RankComponent :user :userRank v-if="user" />
-    <div>Main Dashboard</div>
+    <ImageLinkForm />
+    <FaceRecognition />
     <Teleport to="body">
       <LazyProfileModal v-if="userStore.isProfileOpen" />
     </Teleport>
