@@ -1,5 +1,6 @@
 /// <reference types="vite/types/importMeta.d.ts" />
 import type { ImageResponse } from '~~/types/image';
+import {endpoints} from '~~/constants/api';
 
 export default defineEventHandler(async (event) => {
   const ApiKey = import.meta.env.VITE_APP_FACE_PLUS_PLUS_API_KEY;
@@ -11,7 +12,7 @@ export default defineEventHandler(async (event) => {
 
   try {
     const response = await $fetch<ImageResponse>(
-      'https://api-us.faceplusplus.com/facepp/v3/detect',
+      endpoints.facePlusPlus,
       {
         method: 'POST',
         query: {
@@ -25,7 +26,7 @@ export default defineEventHandler(async (event) => {
   } catch (error) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'Bad Request', //'Face++ API request failed',
+      statusMessage: 'Bad Request',
       message: 'Invalid Image URL'
     });
   }
