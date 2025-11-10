@@ -222,6 +222,7 @@ export const useUserStore = defineStore('UserStore', () => {
     updateUser,
     deleteUser,
     rank,
-    getRank
+    getRank,
+    reset
   };
 });

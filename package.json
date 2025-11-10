@@ -10,33 +10,38 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@nuxt/devtools": "^3.0.0",
+    "@nuxt/devtools": "^3.0.1",
     "@nuxtjs/tailwindcss": "^6.14.0",
-    "@pinia/nuxt": "^0.11.2",
+    "@pinia/nuxt": "^0.11.3",
+    "@pinia/testing": "^1.0.3",
     "@types/lodash.isempty": "^4.4.9",
-    "axios": "^1.13.1",
+    "axios": "^1.13.2",
     "dayjs-nuxt": "2.1.11",
     "lodash.isempty": "^4.4.0",
-    "nuxt": "^4.2.0",
+    "nuxt": "^4.2.1",
     "nuxt-typed-router": "^4.0.2",
     "typescript": "^5.9.3",
-    "vue": "^3.5.22",
+    "vue": "^3.5.24",
     "vue-router": "^4.6.3"
   },
   "devDependencies": {
     "@nuxt/eslint": "^1.10.0",
     "@nuxt/test-utils": "^3.20.1",
     "@tailwindcss/typography": "^0.5.19",
+    "@vitest/coverage-v8": "4.0.8",
+    "@vitest/ui": "4.0.8",
     "@vue/test-utils": "^2.4.6",
-    "eslint": "^9.38.0",
+    "eslint": "^9.39.1",
     "eslint-config-prettier": "^10.1.8",
     "happy-dom": "^20.0.10",
     "playwright-core": "^1.56.1",
     "prettier": "^3.6.2",
     "prettier-plugin-tailwindcss": "^0.7.1",
-    "vitest": "^4.0.5"
+    "vitest": "^4.0.8"
   }
 }

@@ -1,0 +1,5 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Pages Index > and the component mounts > matches the snapshot 1`] = `<div />`;
+
+exports[`Pages Index > and the component mounts while logged in > matches the snapshot 1`] = `<div />`;

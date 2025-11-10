@@ -1,0 +1,38 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`App.vue > matches the snapshot 1`] = `
+<div
+  data-v-433a9abd=""
+  data-v-938b83b0=""
+>
+  <nav
+    class="flex justify-end"
+    data-v-433a9abd=""
+  >
+    
+    <p
+      class="hover:opactiy-50 mb-4 mt-0 cursor-pointer p-4 text-[1.5rem] text-black underline opacity-100 transition-opacity duration-[0.15s] ease-in hover:transition-opacity hover:duration-[0.15s] hover:ease-in"
+      data-test="signin"
+    >
+       Sign In 
+    </p>
+    <p
+      class="hover:opactiy-50 mb-4 mt-0 cursor-pointer p-4 text-[1.5rem] text-black underline opacity-100 transition-opacity duration-[0.15s] ease-in hover:transition-opacity hover:duration-[0.15s] hover:ease-in"
+      data-test="register"
+    >
+       Register 
+    </p>
+    
+  </nav>
+  
+  <div
+    class="particles py-3"
+    data-v-938b83b0=""
+  >
+    <div
+      data-v-938b83b0=""
+    />
+  </div>
+  
+</div>
+`;

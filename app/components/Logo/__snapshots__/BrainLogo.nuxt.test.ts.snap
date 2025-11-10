@@ -1,0 +1,21 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`BrainLogo component > matches the snapshot 1`] = `
+<div
+  class="m-8 mt-0 text-center"
+>
+  <div
+    class="h-[150px] w-[150px] rounded bg-gradient-to-r from-[#ff5edf] to-[#04c8de] shadow-[0_0_8px_2px_rgba(0,0,0,0.2)]"
+  >
+    <div
+      class="p-4"
+    >
+      <img
+        alt="logo"
+        class="flex justify-self-center pt-[5px]"
+        src="http://localhost:3000/assets/img/brain.png"
+      />
+    </div>
+  </div>
+</div>
+`;

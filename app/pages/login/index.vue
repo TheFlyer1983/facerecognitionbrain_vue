@@ -9,10 +9,11 @@ async function onSubmitSignIn(): Promise<void> {
     email: email.value,
     password: password.value
   };
+
   await userStore.login(loginInfo);
 
   if (userStore.id) {
-    navigateTo('/home');
+    await navigateTo('/home');
   }
 }
 </script>
@@ -33,6 +34,7 @@ async function onSubmitSignIn(): Promise<void> {
           v-model="email"
           type="email"
           name="email-address"
+          data-test="email"
           class="border border-black bg-transparent p-2 hover:bg-black hover:text-white"
         />
       </div>
@@ -45,6 +47,7 @@ async function onSubmitSignIn(): Promise<void> {
           v-model="password"
           type="password"
           name="password"
+          data-test="email"
           class="border border-black bg-transparent p-2 hover:bg-black hover:text-white"
         />
       </div>

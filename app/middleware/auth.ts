@@ -5,9 +5,11 @@ export default defineNuxtRouteMiddleware(async () => {
     return;
   }
 
+  console.log('Just about to run reauthenticate')
   await userStore.reauthenticate();
 
   if (!userStore.id) {
+    console.log('hitting')
     return navigateTo('/login');
   }
 });
