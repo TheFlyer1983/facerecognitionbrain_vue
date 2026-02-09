@@ -116,6 +116,7 @@ export const useUserStore = defineStore('UserStore', () => {
   }
 
   async function reauthenticate() {
+    console.log('hitting');
     try {
       const { refreshToken } = await getAuthTokenInSession();
 

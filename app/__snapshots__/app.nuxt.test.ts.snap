@@ -2,12 +2,12 @@
 
 exports[`App.vue > matches the snapshot 1`] = `
 <div
-  data-v-433a9abd=""
-  data-v-938b83b0=""
+  data-v-8ff0109a=""
+  data-v-ac9cdbe0=""
 >
   <nav
     class="flex justify-end"
-    data-v-433a9abd=""
+    data-v-ac9cdbe0=""
   >
     
     <p
@@ -27,10 +27,10 @@ exports[`App.vue > matches the snapshot 1`] = `
   
   <div
     class="particles py-3"
-    data-v-938b83b0=""
+    data-v-8ff0109a=""
   >
     <div
-      data-v-938b83b0=""
+      data-v-8ff0109a=""
     />
   </div>
   

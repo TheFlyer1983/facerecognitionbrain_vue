@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
 import { defineVitestProject } from '@nuxt/test-utils/config';
 
@@ -15,24 +16,24 @@ export default defineConfig({
         test: {
           name: 'nuxt',
           include: ['**/**/*.nuxt.{test,spec}.ts'],
-          environment: 'viteEnvironment'
+          environment: 'nuxt',
+          environmentOptions: {
+            rootDir: fileURLToPath(new URL('.', import.meta.url)),
+            domEnvironment: 'happy-dom',
+            mock: {
+              indexedDb: true
+            }
+          }
         }
       })
     ],
-    globals: true,
     coverage: {
+      enabled: true,
       provider: 'v8',
       reporter: ['text', 'html'],
       include: ['app/**/**.{vue,ts}', 'server/**/**.{vue,ts}'],
       exclude: ['app/**/node_modules/**', 'app/**/dist/**'],
       extensions: ['.ts', '.vue']
-    },
-    environmentOptions: {
-      nuxt: {
-        mock: {
-          indexedDb: true
-        }
-      }
     }
   }
 });

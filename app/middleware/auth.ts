@@ -1,6 +1,8 @@
-export default defineNuxtRouteMiddleware(async () => {
+export default defineNuxtRouteMiddleware(async (from) => {
   const userStore = useUserStore();
-
+  console.log('In auth middleware', userStore.id);
+  console.log('From route:', from.fullPath);
+  
   if (userStore.id) {
     return;
   }
@@ -9,7 +11,6 @@ export default defineNuxtRouteMiddleware(async () => {
   await userStore.reauthenticate();
 
   if (!userStore.id) {
-    console.log('hitting')
     return navigateTo('/login');
   }
 });

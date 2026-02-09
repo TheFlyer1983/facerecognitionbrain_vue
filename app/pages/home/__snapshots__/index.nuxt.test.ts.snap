@@ -1,0 +1,218 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Given the Home page > and the component mounts while logged in > matches the snapshot 1`] = `
+<div>
+  <div
+    class="m-8 mt-0 text-center"
+  >
+    <div
+      class="h-[150px] w-[150px] rounded bg-gradient-to-r from-[#ff5edf] to-[#04c8de] shadow-[0_0_8px_2px_rgba(0,0,0,0.2)]"
+    >
+      <div
+        class="p-4"
+      >
+        <img
+          alt="logo"
+          class="flex justify-self-center pt-[5px]"
+          src="http://localhost:3000/@fs/assets/img/brain.png"
+        />
+      </div>
+    </div>
+  </div>
+  <div
+    class="flex flex-col items-center text-center text-white text-2xl"
+  >
+    <div>
+      Test User, your current entry count is...
+    </div>
+    <div
+      class="text-5xl"
+    >
+      5
+    </div>
+    <div>
+      Rank Badge: beginner
+    </div>
+  </div>
+  <div
+    class="flex flex-col"
+  >
+    <p
+      class="mx-auto text-2xl"
+    >
+       This Magic Brain will detect faces in your pictures. Give it a try. 
+    </p>
+    <div
+      class="mx-auto"
+    >
+      <div
+        class="bg-size[40px_60px] mx-auto flex w-[700px] rounded-lg bg-[#fb1] p-8 shadow-[4px_4px_8px_0px_rgba(0,_0,_0,_0.2)]"
+      >
+        <input
+          class="mx-auto w-[70%] p-2 text-xl"
+          type="text"
+        />
+        <button
+          class="cursor-pointer w-[30%] bg-[#A463F2] p-2 text-xl text-white no-underline transition-colors duration-[0.15s] ease-in hover:scale-105 hover:transform hover:duration-[0.25s] hover:ease-out"
+          data-test="submit"
+        >
+           Detect 
+        </button>
+      </div>
+    </div>
+  </div>
+  <div
+    class="flex justify-center"
+  >
+    <div
+      class="relative mt-2"
+    >
+      <!--v-if-->
+      
+      
+    </div>
+  </div>
+  <!--teleport start-->
+  <!--teleport end-->
+</div>
+`;
+
+exports[`Given the Home page > and the component mounts while logged out > matches the snapshot 1`] = `
+<div>
+  <div
+    class="m-8 mt-0 text-center"
+  >
+    <div
+      class="h-[150px] w-[150px] rounded bg-gradient-to-r from-[#ff5edf] to-[#04c8de] shadow-[0_0_8px_2px_rgba(0,0,0,0.2)]"
+    >
+      <div
+        class="p-4"
+      >
+        <img
+          alt="logo"
+          class="flex justify-self-center pt-[5px]"
+          src="http://localhost:3000/@fs/assets/img/brain.png"
+        />
+      </div>
+    </div>
+  </div>
+  <!--v-if-->
+  <div
+    class="flex flex-col"
+  >
+    <p
+      class="mx-auto text-2xl"
+    >
+       This Magic Brain will detect faces in your pictures. Give it a try. 
+    </p>
+    <div
+      class="mx-auto"
+    >
+      <div
+        class="bg-size[40px_60px] mx-auto flex w-[700px] rounded-lg bg-[#fb1] p-8 shadow-[4px_4px_8px_0px_rgba(0,_0,_0,_0.2)]"
+      >
+        <input
+          class="mx-auto w-[70%] p-2 text-xl"
+          type="text"
+        />
+        <button
+          class="cursor-pointer w-[30%] bg-[#A463F2] p-2 text-xl text-white no-underline transition-colors duration-[0.15s] ease-in hover:scale-105 hover:transform hover:duration-[0.25s] hover:ease-out"
+          data-test="submit"
+        >
+           Detect 
+        </button>
+      </div>
+    </div>
+  </div>
+  <div
+    class="flex justify-center"
+  >
+    <div
+      class="relative mt-2"
+    >
+      <!--v-if-->
+      
+      
+    </div>
+  </div>
+  <!--teleport start-->
+  <!--teleport end-->
+</div>
+`;
+
+exports[`Given the Home page > when the profile modal is opened > matches the snapshot 1`] = `
+<div>
+  <div
+    class="m-8 mt-0 text-center"
+  >
+    <div
+      class="h-[150px] w-[150px] rounded bg-gradient-to-r from-[#ff5edf] to-[#04c8de] shadow-[0_0_8px_2px_rgba(0,0,0,0.2)]"
+    >
+      <div
+        class="p-4"
+      >
+        <img
+          alt="logo"
+          class="flex justify-self-center pt-[5px]"
+          src="http://localhost:3000/@fs/assets/img/brain.png"
+        />
+      </div>
+    </div>
+  </div>
+  <div
+    class="flex flex-col items-center text-center text-white text-2xl"
+  >
+    <div>
+      Test User, your current entry count is...
+    </div>
+    <div
+      class="text-5xl"
+    >
+      5
+    </div>
+    <div>
+      Rank Badge: beginner
+    </div>
+  </div>
+  <div
+    class="flex flex-col"
+  >
+    <p
+      class="mx-auto text-2xl"
+    >
+       This Magic Brain will detect faces in your pictures. Give it a try. 
+    </p>
+    <div
+      class="mx-auto"
+    >
+      <div
+        class="bg-size[40px_60px] mx-auto flex w-[700px] rounded-lg bg-[#fb1] p-8 shadow-[4px_4px_8px_0px_rgba(0,_0,_0,_0.2)]"
+      >
+        <input
+          class="mx-auto w-[70%] p-2 text-xl"
+          type="text"
+        />
+        <button
+          class="cursor-pointer w-[30%] bg-[#A463F2] p-2 text-xl text-white no-underline transition-colors duration-[0.15s] ease-in hover:scale-105 hover:transform hover:duration-[0.25s] hover:ease-out"
+          data-test="submit"
+        >
+           Detect 
+        </button>
+      </div>
+    </div>
+  </div>
+  <div
+    class="flex justify-center"
+  >
+    <div
+      class="relative mt-2"
+    >
+      <!--v-if-->
+      
+      
+    </div>
+  </div>
+  <!--teleport start-->
+  <!--teleport end-->
+</div>
+`;
