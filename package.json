@@ -36,6 +36,7 @@
     "@vitest/coverage-v8": "4.0.8",
     "@vitest/ui": "4.0.8",
     "@vue/test-utils": "^2.4.6",
+    "axios-mock-adapter": "^2.1.0",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "happy-dom": "^20.3.3",

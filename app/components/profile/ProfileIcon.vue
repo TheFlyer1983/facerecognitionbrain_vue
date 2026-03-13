@@ -24,7 +24,11 @@ function signOut() {
 
 <template>
   <section class="relative m-4">
-    <span class="flex cursor-pointer justify-center" @click="toggleDropdown">
+    <span
+      class="flex cursor-pointer justify-center"
+      @click="toggleDropdown"
+      data-test="profile-avatar"
+    >
       <ProfileAvatar v-if="user" :name="user?.name" />
     </span>
     <ul

@@ -1,5 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { mountSuspended } from '@nuxt/test-utils/runtime';
+import { mountSuspended, mockNuxtImport } from '@nuxt/test-utils/runtime';
 import NavBar from './NavBar.vue';
 import { createTestingPinia } from '@pinia/testing';
 import { useUserStore } from '~/stores/user';

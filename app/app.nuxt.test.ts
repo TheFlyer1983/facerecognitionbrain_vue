@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest';
 import App from './app.vue';
 import { mountSuspended } from '@nuxt/test-utils/runtime';
 
-describe('App.vue', async() => { 
-  const component = await mountSuspended(App, {route: '/'});
+describe('App.vue', async () => {
+  const component = await mountSuspended(App, { route: '/login' });
 
   it('mounts the app component', () => {
     expect(component.exists()).toBe(true);
