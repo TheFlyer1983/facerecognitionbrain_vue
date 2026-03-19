@@ -15,7 +15,8 @@
     "test:coverage": "vitest run --coverage",
     "lint": "eslint .",
     "prettier": "prettier . --check",
-    "prettier:fix": "prettier . --write"
+    "prettier:fix": "prettier . --write",
+    "typecheck": "nuxt typecheck"
   },
   "dependencies": {
     "@nuxt/devtools": "^3.1.1",
