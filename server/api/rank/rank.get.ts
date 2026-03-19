@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
     throw createError({
       statusCode: 400,
       statusMessage: 'Bad Request',
-      message: 'Invalid rank parameter! Rank should be a number.',
+      message: 'Invalid rank parameter! Rank should be a number.'
     });
   }
 });

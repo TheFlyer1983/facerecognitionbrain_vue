@@ -23,7 +23,10 @@ describe('Given the UiModal component', () => {
   });
 
   describe('when the component is rendered with a slot', async () => {
-    const component = await mountSuspended(UiModal, { route: '/', slots: { default: '<p data-test="slot">Hello World</p>' } });
+    const component = await mountSuspended(UiModal, {
+      route: '/',
+      slots: { default: '<p data-test="slot">Hello World</p>' }
+    });
 
     it('should render the slot', () => {
       expect(component.find('[data-test="slot"]').exists()).toBe(true);

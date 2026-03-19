@@ -47,7 +47,9 @@ describe('Given the ProfileModal component', () => {
 
     expect(component.text()).toContain('Test User');
     expect(component.text()).toContain('Images Submitted: 5');
-    expect(component.findComponent({ name: 'ProfileAvatar' }).exists()).toBe(true);
+    expect(component.findComponent({ name: 'ProfileAvatar' }).exists()).toBe(
+      true
+    );
   });
 
   it('updates changed fields and closes modal when save is clicked', async () => {

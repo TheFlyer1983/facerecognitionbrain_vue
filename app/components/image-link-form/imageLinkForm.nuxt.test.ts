@@ -16,7 +16,10 @@ const mockImageStore = useImageStore(pinia);
 
 describe('Given the ImageLinkForm component', () => {
   describe('when the component is rendered', async () => {
-    const component = await mountSuspended(ImageLinkForm, { route: '/', global: { plugins: [pinia] } });
+    const component = await mountSuspended(ImageLinkForm, {
+      route: '/',
+      global: { plugins: [pinia] }
+    });
 
     it('mounts the ImageLinkForm component', () => {
       expect(component.exists()).toBe(true);
@@ -28,11 +31,11 @@ describe('Given the ImageLinkForm component', () => {
 
     it('submit button exists', () => {
       expect(component.find('[data-test="submit"]').exists()).toBe(true);
-    })
+    });
 
     it('input field exists', () => {
       expect(component.find('[data-test="input"]').exists()).toBe(true);
-    })
+    });
 
     describe('when the submit button is clicked', () => {
       const submitButton = component.find('[data-test="submit"]');
@@ -44,7 +47,7 @@ describe('Given the ImageLinkForm component', () => {
       it('should emit the submit event', () => {
         expect(mockImageStore.submitURL).toHaveBeenCalledOnce();
       });
-    })
+    });
 
     describe('when the input field is changed', () => {
       const inputField = component.find('[data-test="input"]');

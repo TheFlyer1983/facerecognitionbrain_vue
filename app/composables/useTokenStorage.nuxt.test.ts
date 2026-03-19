@@ -3,12 +3,12 @@ import { mockNuxtImport } from '@nuxt/test-utils/runtime';
 type TokenData = {
   token?: string;
   refreshToken?: string;
-}
+};
 
 type UseFetchMockReturn = {
   data: { value: TokenData };
   execute: ReturnType<typeof vi.fn>;
-}
+};
 
 const { executeMock, fetchMock, useFetchMock } = vi.hoisted(() => ({
   executeMock: vi.fn(),

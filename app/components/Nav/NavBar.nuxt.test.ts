@@ -84,7 +84,7 @@ describe('Given the NavBar component', async () => {
         beforeEach(() => {
           component.find('[data-test="signin"]').trigger('click');
         });
-        
+
         it('navigates to the login page', () => {
           expect(navigateToMock).toHaveBeenCalledWith('/login');
         });

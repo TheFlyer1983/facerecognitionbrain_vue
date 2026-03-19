@@ -13,4 +13,4 @@ export function getAuthTokenInSession() {
 export function removeAuthTokenFromSession() {
   window.sessionStorage.removeItem('token');
   window.sessionStorage.removeItem('refreshToken');
-};
+}

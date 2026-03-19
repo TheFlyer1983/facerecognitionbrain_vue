@@ -1,11 +1,4 @@
-import {
-  it,
-  expect,
-  describe,
-  vi,
-  beforeAll,
-  afterAll
-} from 'vitest';
+import { it, expect, describe, vi, beforeAll, afterAll } from 'vitest';
 import { mountSuspended, mockNuxtImport } from '@nuxt/test-utils/runtime';
 import LoginPage from './index.vue';
 import { createTestingPinia } from '@pinia/testing';
