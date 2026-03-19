@@ -18,6 +18,7 @@ async function submitURL() {
         class="bg-size[40px_60px] mx-auto flex w-[700px] rounded-lg bg-[#fb1] p-8 shadow-[4px_4px_8px_0px_rgba(0,_0,_0,_0.2)]"
       >
         <input
+          data-test="input"
           type="text"
           v-model="imageUrl"
           class="mx-auto w-[70%] p-2 text-xl"

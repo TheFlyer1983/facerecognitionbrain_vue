@@ -50,6 +50,7 @@ exports[`Given the Home page > and the component mounts while logged in > matche
       >
         <input
           class="mx-auto w-[70%] p-2 text-xl"
+          data-test="input"
           type="text"
         />
         <button
@@ -113,6 +114,7 @@ exports[`Given the Home page > and the component mounts while logged out > match
       >
         <input
           class="mx-auto w-[70%] p-2 text-xl"
+          data-test="input"
           type="text"
         />
         <button
@@ -190,6 +192,7 @@ exports[`Given the Home page > when the profile modal is opened > matches the sn
       >
         <input
           class="mx-auto w-[70%] p-2 text-xl"
+          data-test="input"
           type="text"
         />
         <button
