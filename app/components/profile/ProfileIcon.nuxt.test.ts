@@ -1,4 +1,4 @@
-import { mountSuspended, mockNuxtImport } from '@nuxt/test-utils/runtime';
+import { mountSuspended } from '@nuxt/test-utils/runtime';
 import ProfileIcon from './ProfileIcon.vue';
 import { createTestingPinia } from '@pinia/testing';
 import { useUserStore } from '~/stores/user';

@@ -1,22 +1,9 @@
-import { describe, it, expect, beforeEach, vi, afterAll } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { mountSuspended, mockNuxtImport } from '@nuxt/test-utils/runtime';
 import PagesIndex from './index.vue';
-import { createTestingPinia } from '@pinia/testing';
-
-// const pinia = createTestingPinia({
-//   createSpy: vi.fn,
-//   stubActions: false,
-//   initialState: {
-//     UserStore: {
-//       isSignedIn: true,
-//       id: 'user123'
-//     }
-//   }
-// });
 
 const component = await mountSuspended<typeof PagesIndex>(PagesIndex, {
-  route: '/',
-  // global: { plugins: [pinia] }
+  route: '/'
 });
 
 const { navigateToMock } = vi.hoisted(() => ({

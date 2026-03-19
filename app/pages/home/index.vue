@@ -11,7 +11,7 @@ const { user, rank: userRank } = storeToRefs(userStore);
 <template>
   <div>
     <BrainLogo />
-    <RankComponent :user :userRank v-if="user" />
+    <RankComponent v-if="user" :user :user-rank />
     <ImageLinkForm />
     <FaceRecognition />
     <Teleport to="body">

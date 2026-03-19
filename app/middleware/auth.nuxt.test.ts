@@ -1,4 +1,3 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { mockNuxtImport } from '@nuxt/test-utils/runtime';
 import auth from '~/middleware/auth';
 
@@ -8,8 +7,10 @@ const { navigateToMock } = vi.hoisted(() => ({
 
 mockNuxtImport('navigateTo', () => navigateToMock);
 
-const mockRoute = { fullPath: '/home' } as any;
-const mockFromRoute = { fullPath: '/' } as any;
+type AuthRouteArg = Parameters<typeof auth>[0];
+
+const mockRoute = { fullPath: '/home' } as AuthRouteArg;
+const mockFromRoute = { fullPath: '/' } as AuthRouteArg;
 
 describe('Given the auth middleware', () => {
   const store = useUserStore();
@@ -38,7 +39,7 @@ describe('Given the auth middleware', () => {
           store.id = 'reauthed-user';
         });
 
-        const result = await auth(mockRoute, mockFromRoute);
+        await auth(mockRoute, mockFromRoute);
         expect(store.reauthenticate).toHaveBeenCalled();
         expect(navigateToMock).not.toHaveBeenCalled();
       });

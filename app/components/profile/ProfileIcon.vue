@@ -26,8 +26,8 @@ function signOut() {
   <section class="relative m-4">
     <span
       class="flex cursor-pointer justify-center"
-      @click="toggleDropdown"
       data-test="profile-avatar"
+      @click="toggleDropdown"
     >
       <ProfileAvatar v-if="user" :name="user?.name" />
     </span>

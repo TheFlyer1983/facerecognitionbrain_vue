@@ -1,5 +1,5 @@
 const emojis = ['😄', '😃', '😀', '😊', '😉', '😍', '🔸', '🔹', '🚀'];
-Error;
+
 export default defineEventHandler(async (event) => {
   const rank = Number(getQuery(event).rank);
 

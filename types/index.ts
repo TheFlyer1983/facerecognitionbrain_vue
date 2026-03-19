@@ -43,6 +43,6 @@ export type ApiErrors = {
   };
 };
 
-export type NonNullableObject<T extends Record<string, any>> = {
+export type NonNullableObject<T extends Record<string, unknown>> = {
   [P in keyof T]: NonNullable<T[P]>;
 };

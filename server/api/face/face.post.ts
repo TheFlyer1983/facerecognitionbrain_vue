@@ -23,7 +23,7 @@ export default defineEventHandler(async (event) => {
       }
     );
     return response;
-  } catch (error) {
+  } catch {
     throw createError({
       statusCode: 400,
       statusMessage: 'Bad Request',
