@@ -21,7 +21,7 @@ exports[`Given the ImageLinkForm component > when the component is rendered > ma
         type="text"
       />
       <button
-        class="cursor-pointer w-[30%] bg-[#A463F2] p-2 text-xl text-white no-underline transition-colors duration-[0.15s] ease-in hover:scale-105 hover:transform hover:duration-[0.25s] hover:ease-out"
+        class="w-[30%] cursor-pointer bg-[#A463F2] p-2 text-xl text-white no-underline transition-colors duration-[0.15s] ease-in hover:scale-105 hover:transform hover:duration-[0.25s] hover:ease-out"
         data-test="submit"
       >
          Detect 

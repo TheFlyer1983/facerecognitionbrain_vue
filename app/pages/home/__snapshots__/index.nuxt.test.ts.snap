@@ -20,7 +20,7 @@ exports[`Given the Home page > and the component mounts while logged in > matche
     </div>
   </div>
   <div
-    class="flex flex-col items-center text-center text-white text-2xl"
+    class="flex flex-col items-center text-center text-2xl text-white"
   >
     <div>
       Test User, your current entry count is...
@@ -54,7 +54,7 @@ exports[`Given the Home page > and the component mounts while logged in > matche
           type="text"
         />
         <button
-          class="cursor-pointer w-[30%] bg-[#A463F2] p-2 text-xl text-white no-underline transition-colors duration-[0.15s] ease-in hover:scale-105 hover:transform hover:duration-[0.25s] hover:ease-out"
+          class="w-[30%] cursor-pointer bg-[#A463F2] p-2 text-xl text-white no-underline transition-colors duration-[0.15s] ease-in hover:scale-105 hover:transform hover:duration-[0.25s] hover:ease-out"
           data-test="submit"
         >
            Detect 
@@ -118,7 +118,7 @@ exports[`Given the Home page > and the component mounts while logged out > match
           type="text"
         />
         <button
-          class="cursor-pointer w-[30%] bg-[#A463F2] p-2 text-xl text-white no-underline transition-colors duration-[0.15s] ease-in hover:scale-105 hover:transform hover:duration-[0.25s] hover:ease-out"
+          class="w-[30%] cursor-pointer bg-[#A463F2] p-2 text-xl text-white no-underline transition-colors duration-[0.15s] ease-in hover:scale-105 hover:transform hover:duration-[0.25s] hover:ease-out"
           data-test="submit"
         >
            Detect 
@@ -162,7 +162,7 @@ exports[`Given the Home page > when the profile modal is opened > matches the sn
     </div>
   </div>
   <div
-    class="flex flex-col items-center text-center text-white text-2xl"
+    class="flex flex-col items-center text-center text-2xl text-white"
   >
     <div>
       Test User, your current entry count is...
@@ -196,7 +196,7 @@ exports[`Given the Home page > when the profile modal is opened > matches the sn
           type="text"
         />
         <button
-          class="cursor-pointer w-[30%] bg-[#A463F2] p-2 text-xl text-white no-underline transition-colors duration-[0.15s] ease-in hover:scale-105 hover:transform hover:duration-[0.25s] hover:ease-out"
+          class="w-[30%] cursor-pointer bg-[#A463F2] p-2 text-xl text-white no-underline transition-colors duration-[0.15s] ease-in hover:scale-105 hover:transform hover:duration-[0.25s] hover:ease-out"
           data-test="submit"
         >
            Detect 
