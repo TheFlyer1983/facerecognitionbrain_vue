@@ -1,4 +1,6 @@
 import { mockNuxtImport } from '@nuxt/test-utils/runtime';
+import { createTestingPinia } from '@pinia/testing';
+import { setActivePinia } from 'pinia';
 import auth from '~/middleware/auth';
 
 const { navigateToMock } = vi.hoisted(() => ({
@@ -13,9 +15,15 @@ const mockRoute = { fullPath: '/home' } as AuthRouteArg;
 const mockFromRoute = { fullPath: '/' } as AuthRouteArg;
 
 describe('Given the auth middleware', () => {
-  const store = useUserStore();
+  let store: ReturnType<typeof useUserStore>;
 
   beforeEach(() => {
+    const pinia = createTestingPinia({
+      createSpy: vi.fn,
+      stubActions: false
+    });
+    setActivePinia(pinia);
+    store = useUserStore();
     navigateToMock.mockClear();
     store.id = null;
   });

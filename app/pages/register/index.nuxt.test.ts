@@ -1,4 +1,3 @@
-import { it, expect, describe, vi, beforeAll, afterAll } from 'vitest';
 import { mountSuspended, mockNuxtImport } from '@nuxt/test-utils/runtime';
 import { createTestingPinia } from '@pinia/testing';
 import { useUserStore } from '~/stores/user';
@@ -10,101 +9,109 @@ const { navigateToMock } = vi.hoisted(() => ({
 
 mockNuxtImport('navigateTo', () => navigateToMock);
 
-const pinia = createTestingPinia({
-  createSpy: vi.fn,
-  stubActions: ['registerUser']
-});
-const mockUserStore = useUserStore(pinia);
-
 const mockedRegisterInfo = {
   name: 'Test User',
   password: 'password123',
   email: 'test@test.com'
 };
 
-describe('Register Page', async () => {
-  const component = await mountSuspended(RegisterPage, {
-    global: {
-      plugins: [pinia]
-    },
-    route: '/register'
+describe('Register Page', () => {
+  const render = async () => {
+    const pinia = createTestingPinia({
+      createSpy: vi.fn,
+      stubActions: ['registerUser']
+    });
+    const component = await mountSuspended(RegisterPage, {
+      global: {
+        plugins: [pinia]
+      },
+      route: '/register'
+    });
+    return { component, store: useUserStore(pinia) };
+  };
+
+  beforeEach(() => {
+    navigateToMock.mockClear();
   });
 
   describe('when the component is rendered', () => {
-    it('can mount the component', () => {
+    it('can mount the component', async () => {
+      const { component } = await render();
       expect(component.exists()).toBe(true);
       expect(component.html()).toContain('Register');
     });
 
-    it('should match the snapshot', () => {
+    it('should match the snapshot', async () => {
+      const { component } = await render();
       expect(component.element).toMatchSnapshot();
     });
   });
 
-  describe.skip('When the sign in link is clicked', () => {
-    const signInLink = component.find('[data-test="login"]');
-    it('should exist', () => {
+  describe('When the sign in link is clicked', () => {
+    it('should exist', async () => {
+      const { component } = await render();
+      const signInLink = component.find('[data-test="login"]');
       expect(signInLink.exists()).toBe(true);
     });
 
-    it('should navigate to the register page', async () => {
+    it('should navigate to the login page', async () => {
+      const { component } = await render();
+      const signInLink = component.find('[data-test="login"]');
       await signInLink.trigger('click');
       expect(navigateToMock).toHaveBeenCalledWith('/login');
     });
   });
 
   describe('When the submit button is clicked', () => {
-    const submitButton = component.find('[data-test="submit"]');
-    it('should exist', () => {
+    it('should exist', async () => {
+      const { component } = await render();
+      const submitButton = component.find('[data-test="submit"]');
       expect(submitButton.exists()).toBe(true);
     });
 
     describe('with valid register information', () => {
-      beforeAll(() => {
+      it('should call the login function with the login information', async () => {
+        const { component, store } = await render();
         component.find('[id="name"]').setValue('Test User');
         component.find('[id="email-address"]').setValue('test@test.com');
         component.find('[id="password"]').setValue('password123');
+        store.$patch({ id: 'user123' });
+        const submitButton = component.find('[data-test="submit"]');
 
-        mockUserStore.$patch({ id: 'user123' });
-      });
-
-      afterAll(() => {
-        vi.clearAllMocks();
-        mockUserStore.reset();
-      });
-
-      it('should call the login function with the login information', async () => {
         await submitButton.trigger('click');
-        expect(mockUserStore.registerUser).toHaveBeenCalledWith(
-          mockedRegisterInfo
-        );
+        expect(store.registerUser).toHaveBeenCalledWith(mockedRegisterInfo);
       });
 
       it('should navigate to the home page upon successful login', async () => {
+        const { component, store } = await render();
+        component.find('[id="name"]').setValue('Test User');
+        component.find('[id="email-address"]').setValue('test@test.com');
+        component.find('[id="password"]').setValue('password123');
+        store.$patch({ id: 'user123' });
+        const submitButton = component.find('[data-test="submit"]');
+        await submitButton.trigger('click');
         expect(navigateToMock).toHaveBeenCalledWith('/home');
       });
     });
 
     describe('with invalid register information', () => {
-      beforeAll(async () => {
+      it('should call the login function with the login information', async () => {
+        const { component, store } = await render();
         component.find('[id="name"]').setValue('Test User');
         component.find('[id="email-address"]').setValue('test@test.com');
         component.find('[id="password"]').setValue('password123');
-      });
-
-      afterAll(() => {
-        vi.clearAllMocks();
-        mockUserStore.reset();
-      });
-
-      it('should call the login function with the login information', async () => {
+        const submitButton = component.find('[data-test="submit"]');
         await submitButton.trigger('click');
-        expect(mockUserStore.registerUser).toHaveBeenCalledWith(
-          mockedRegisterInfo
-        );
+        expect(store.registerUser).toHaveBeenCalledWith(mockedRegisterInfo);
       });
 
       it('should not navigate', async () => {
+        const { component } = await render();
+        component.find('[id="name"]').setValue('Test User');
+        component.find('[id="email-address"]').setValue('test@test.com');
+        component.find('[id="password"]').setValue('password123');
+        const submitButton = component.find('[data-test="submit"]');
+        await submitButton.trigger('click');
         expect(navigateToMock).not.toHaveBeenCalledWith('/home');
       });
     });

@@ -1,3 +1,4 @@
 <!-- Testing -->
 
-No need to import Vitest globals (describe, it, expect, beforeEach, vi, etc...)
+- Do not import Vitest globals in test files.
+- Use global Vitest APIs directly (`describe`, `it`, `expect`, `beforeEach`, `vi`, etc.).

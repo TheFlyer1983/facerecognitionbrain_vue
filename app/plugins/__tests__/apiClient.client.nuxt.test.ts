@@ -1,10 +1,12 @@
 import MockAdapter from 'axios-mock-adapter';
 
 describe('Given the apiClient plugin', () => {
-  const store = useUserStore();
-  const { $api } = useNuxtApp();
+  let store: ReturnType<typeof useUserStore>;
+  let $api: ReturnType<typeof useNuxtApp>['$api'];
 
   beforeEach(() => {
+    store = useUserStore();
+    ({ $api } = useNuxtApp());
     store.token = null;
   });
 

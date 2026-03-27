@@ -1,0 +1,84 @@
+import { mountSuspended, mockNuxtImport } from '@nuxt/test-utils/runtime';
+import FaceRecognition from './FaceRecognition.vue';
+
+vi.mock('~/middleware/auth', () => ({
+  default: vi.fn(() => {})
+}));
+
+const { imageStoreMock } = vi.hoisted(() => ({
+  imageStoreMock: {
+    imageUrl: {
+      value: null as string | null,
+      __v_isRef: true
+    },
+    boxes: [] as Array<{
+      face_token: string;
+      face_rectangle: { top: number; left: number; height: number; width: number };
+    }>
+  }
+}));
+
+mockNuxtImport('useImageStore', () => {
+  return () => imageStoreMock;
+});
+
+describe('FaceRecognition', () => {
+  const render = async (state?: {
+    imageUrl?: string | null;
+    boxes?: Array<{
+      face_token: string;
+      face_rectangle: { top: number; left: number; height: number; width: number };
+    }>;
+  }) => {
+    imageStoreMock.imageUrl.value = state?.imageUrl ?? null;
+    imageStoreMock.boxes = state?.boxes ?? [];
+
+    return mountSuspended(FaceRecognition, {
+      route: '/home'
+    });
+  };
+
+  it('mounts successfully', async () => {
+    const component = await render();
+
+    expect(component.exists()).toBe(true);
+  });
+
+  it('does not render an image when imageUrl is empty', async () => {
+    const component = await render({ imageUrl: null });
+
+    expect(component.find('#inputImage').exists()).toBe(false);
+  });
+
+  it('renders the input image when imageUrl exists', async () => {
+    const component = await render({ imageUrl: 'https://img.test/face.jpg' });
+    const image = component.find('#inputImage');
+
+    expect(image.exists()).toBe(true);
+    expect(image.attributes('src')).toBe('https://img.test/face.jpg');
+  });
+
+  it('renders one face box per detected face with position styles', async () => {
+    const component = await render({
+      imageUrl: 'https://img.test/face.jpg',
+      boxes: [
+        {
+          face_token: 'face-1',
+          face_rectangle: { top: 10, left: 20, height: 30, width: 40 }
+        },
+        {
+          face_token: 'face-2',
+          face_rectangle: { top: 1, left: 2, height: 3, width: 4 }
+        }
+      ]
+    });
+
+    const boxes = component.findAll('span.absolute');
+
+    expect(boxes).toHaveLength(2);
+    expect(boxes[0]?.attributes('style')).toContain('top: 10px');
+    expect(boxes[0]?.attributes('style')).toContain('left: 20px');
+    expect(boxes[0]?.attributes('style')).toContain('height: 30px');
+    expect(boxes[0]?.attributes('style')).toContain('width: 40px');
+  });
+});

@@ -3,107 +3,98 @@ import NavBar from './NavBar.vue';
 import { createTestingPinia } from '@pinia/testing';
 import { useUserStore } from '~/stores/user';
 
-describe('Given the NavBar component', async () => {
-  const pinia = createTestingPinia({
-    createSpy: vi.fn,
-    stubActions: true,
-    initialState: {
-      UserStore: {
-        isSignedIn: true
+const { navigateToMock } = vi.hoisted(() => ({
+  navigateToMock: vi.fn()
+}));
+
+mockNuxtImport('navigateTo', () => navigateToMock);
+
+describe('Given the NavBar component', () => {
+  const render = async (isSignedIn = true) => {
+    const pinia = createTestingPinia({
+      createSpy: vi.fn,
+      stubActions: true,
+      initialState: {
+        UserStore: {
+          isSignedIn
+        }
       }
-    }
-  });
+    });
 
-  const { navigateToMock } = vi.hoisted(() => ({
-    navigateToMock: vi.fn()
-  }));
+    const component = await mountSuspended(NavBar, {
+      route: '/',
+      global: { plugins: [pinia] }
+    });
 
-  mockNuxtImport('navigateTo', () => navigateToMock);
+    return { component, store: useUserStore(pinia) };
+  };
 
-  const mockUserStore = useUserStore(pinia);
-  const component = await mountSuspended(NavBar, {
-    route: '/',
-    global: { plugins: [pinia] }
+  beforeEach(() => {
+    navigateToMock.mockClear();
   });
 
   describe('when the component is rendered', () => {
-    it('mounts the NavBar component', () => {
+    it('mounts the NavBar component', async () => {
+      const { component } = await render();
       expect(component.exists()).toBe(true);
     });
 
-    it('matches the snapshot', () => {
+    it('matches the snapshot', async () => {
+      const { component } = await render();
       expect(component.element).toMatchSnapshot();
     });
   });
 
   describe('when the user is logged in', () => {
-    it('should render the ProfileIcon', () => {
+    it('should render the ProfileIcon', async () => {
+      const { component } = await render();
       expect(component.findComponent({ name: 'ProfileIcon' }).exists()).toBe(
         true
       );
     });
 
     describe('and the profile icon is clicked', () => {
-      beforeEach(() => {
+      it('should render the ProfileModal', async () => {
+        const { component } = await render();
         component.findComponent({ name: 'ProfileIcon' }).trigger('click');
-      });
-
-      it('should render the ProfileModal', () => {
         expect(component.findComponent({ name: 'ProfileIcon' }).exists()).toBe(
           true
         );
       });
 
-      describe('and the sign out button is clicked', () => {
-        beforeEach(() => {
-          component.findComponent({ name: 'ProfileIcon' }).vm.$emit('signout');
-        });
-
-        it('sign the user out', () => {
-          expect(mockUserStore.signout).toHaveBeenCalledOnce();
-        });
-
-        it('navigates to the login page', () => {
-          expect(navigateToMock).toHaveBeenCalledWith('/login');
-        });
+      it('signs the user out and navigates to login', async () => {
+        const { component, store } = await render();
+        component.findComponent({ name: 'ProfileIcon' }).vm.$emit('signout');
+        expect(store.signout).toHaveBeenCalledOnce();
+        expect(navigateToMock).toHaveBeenCalledWith('/login');
       });
     });
   });
 
   describe('when the user is logged out', () => {
-    beforeEach(() => {
-      mockUserStore.isSignedIn = false;
-    });
-
     describe('it should render the SignIn link', () => {
-      it('renders the SignIn link', () => {
+      it('renders the SignIn link', async () => {
+        const { component } = await render(false);
         expect(component.find('[data-test="signin"]').exists()).toBe(true);
       });
 
-      describe('and the sign in link is clicked', () => {
-        beforeEach(() => {
+      it('navigates to the login page when sign in link is clicked', async () => {
+        const { component } = await render(false);
           component.find('[data-test="signin"]').trigger('click');
-        });
-
-        it('navigates to the login page', () => {
-          expect(navigateToMock).toHaveBeenCalledWith('/login');
-        });
+        expect(navigateToMock).toHaveBeenCalledWith('/login');
       });
     });
 
     describe('it should render the Register link', () => {
-      it('renders the Register link', () => {
+      it('renders the Register link', async () => {
+        const { component } = await render(false);
         expect(component.find('[data-test="register"]').exists()).toBe(true);
       });
 
-      describe('and the register link is clicked', () => {
-        beforeEach(() => {
+      it('navigates to the register page when register link is clicked', async () => {
+        const { component } = await render(false);
           component.find('[data-test="register"]').trigger('click');
-        });
-
-        it('navigates to the register page', () => {
-          expect(navigateToMock).toHaveBeenCalledWith('/register');
-        });
+        expect(navigateToMock).toHaveBeenCalledWith('/register');
       });
     });
   });

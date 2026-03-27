@@ -1,10 +1,5 @@
-import { describe, it, expect, vi } from 'vitest';
 import { mountSuspended, mockNuxtImport } from '@nuxt/test-utils/runtime';
 import PagesIndex from './index.vue';
-
-const component = await mountSuspended<typeof PagesIndex>(PagesIndex, {
-  route: '/'
-});
 
 const { navigateToMock } = vi.hoisted(() => ({
   navigateToMock: vi.fn()
@@ -12,8 +7,17 @@ const { navigateToMock } = vi.hoisted(() => ({
 
 mockNuxtImport('navigateTo', () => navigateToMock);
 
-describe('Pages Index', async () => {
-  describe('and the component mounts', async () => {
+describe('Pages Index', () => {
+  describe('and the component mounts', () => {
+    let component: Awaited<ReturnType<typeof mountSuspended<typeof PagesIndex>>>;
+
+    beforeEach(async () => {
+      navigateToMock.mockClear();
+      component = await mountSuspended<typeof PagesIndex>(PagesIndex, {
+        route: '/'
+      });
+    });
+
     it('the page exists', () => {
       expect(component.exists()).toBe(true);
     });

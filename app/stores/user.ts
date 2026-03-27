@@ -1,6 +1,6 @@
-import { endpoints, reAuthURL } from '~~/constants/api';
-import type { RankResponse } from '~~/types';
-import type { UserState } from '~~/types/user';
+import { endpoints, reAuthURL } from '../../constants/api';
+import type { RankResponse } from '../../types';
+import type { UserState } from '../../types/user';
 
 export const useUserStore = defineStore('UserStore', () => {
   const { $api } = useNuxtApp();

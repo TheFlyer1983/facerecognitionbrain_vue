@@ -1,4 +1,3 @@
-import { describe, it, expect, vi } from 'vitest';
 import { mountSuspended } from '@nuxt/test-utils/runtime';
 import Home from './index.vue';
 import { createTestingPinia } from '@pinia/testing';
@@ -7,25 +6,48 @@ vi.mock('~/middleware/auth', () => ({
   default: vi.fn()
 }));
 
-describe('Given the Home page', async () => {
-  describe('and the component mounts while logged in', async () => {
+describe('Given the Home page', () => {
+  const render = async (
+    initialState: {
+      isSignedIn: boolean;
+      id: string | null;
+      token: string | null;
+      user: { name: string; entries: number } | null;
+      rank: string | null;
+      isProfileOpen?: boolean;
+    } = {
+      isSignedIn: false,
+      id: null,
+      token: null,
+      user: null,
+      rank: null
+    }
+  ) => {
     const pinia = createTestingPinia({
       createSpy: vi.fn,
       stubActions: true,
       initialState: {
-        UserStore: {
-          isSignedIn: true,
-          id: 'user123',
-          token: 'valid-token',
-          user: { name: 'Test User', entries: 5 },
-          rank: 'beginner'
-        }
+        UserStore: initialState
       }
     });
 
-    const component = await mountSuspended<typeof Home>(Home, {
+    return mountSuspended<typeof Home>(Home, {
       route: '/home',
       global: { plugins: [pinia] }
+    });
+  };
+
+  describe('and the component mounts while logged in', () => {
+    let component: Awaited<ReturnType<typeof render>>;
+
+    beforeEach(async () => {
+      component = await render({
+        isSignedIn: true,
+        id: 'user123',
+        token: 'valid-token',
+        user: { name: 'Test User', entries: 5 },
+        rank: 'beginner'
+      });
     });
 
     it('the page exists', () => {
@@ -43,25 +65,18 @@ describe('Given the Home page', async () => {
     });
   });
 
-  describe('when the profile modal is opened', async () => {
-    const pinia = createTestingPinia({
-      createSpy: vi.fn,
-      stubActions: true,
-      initialState: {
-        UserStore: {
-          isSignedIn: true,
-          id: 'user123',
-          token: 'valid-token',
-          user: { name: 'Test User', entries: 5 },
-          rank: 'beginner',
-          isProfileOpen: true
-        }
-      }
-    });
+  describe('when the profile modal is opened', () => {
+    let component: Awaited<ReturnType<typeof render>>;
 
-    const component = await mountSuspended<typeof Home>(Home, {
-      route: '/home',
-      global: { plugins: [pinia] }
+    beforeEach(async () => {
+      component = await render({
+        isSignedIn: true,
+        id: 'user123',
+        token: 'valid-token',
+        user: { name: 'Test User', entries: 5 },
+        rank: 'beginner',
+        isProfileOpen: true
+      });
     });
 
     it('matches the snapshot', () => {
@@ -75,15 +90,11 @@ describe('Given the Home page', async () => {
     });
   });
 
-  describe('and the component mounts while logged out', async () => {
-    const pinia = createTestingPinia({
-      createSpy: vi.fn,
-      stubActions: true
-    });
+  describe('and the component mounts while logged out', () => {
+    let component: Awaited<ReturnType<typeof render>>;
 
-    const component = await mountSuspended<typeof Home>(Home, {
-      route: '/home',
-      global: { plugins: [pinia] }
+    beforeEach(async () => {
+      component = await render();
     });
 
     it('the page exists', () => {
