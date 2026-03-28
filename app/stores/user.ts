@@ -208,6 +208,8 @@ export const useUserStore = defineStore('UserStore', () => {
     id.value = null;
     user.value = null;
     isSignedIn.value = false;
+    isProfileOpen.value = false;
+    rank.value = null;
   }
   return {
     id,

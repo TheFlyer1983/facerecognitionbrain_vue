@@ -223,6 +223,8 @@ describe('useUserStore', () => {
     store.id = 'user-1';
     store.user = { name: 'Paul', entries: 3 } as never;
     store.isSignedIn = true;
+    store.isProfileOpen = true;
+    store.rank = '🐣';
 
     store.signout();
 
@@ -231,6 +233,8 @@ describe('useUserStore', () => {
     expect(store.id).toBeNull();
     expect(store.user).toBeNull();
     expect(store.isSignedIn).toBe(false);
+    expect(store.isProfileOpen).toBe(false);
+    expect(store.rank).toBeNull();
   });
 
   it('reauthenticates and refreshes session successfully', async () => {
