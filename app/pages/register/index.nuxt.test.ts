@@ -72,9 +72,9 @@ describe('Register Page', () => {
     describe('with valid register information', () => {
       it('should call the register function with the register information', async () => {
         const { component, store } = await render();
-        component.find('[id="name"]').setValue('Test User');
-        component.find('[id="email-address"]').setValue('test@test.com');
-        component.find('[id="password"]').setValue('password123');
+        await component.find('[id="name"]').setValue('Test User');
+        await component.find('[id="email-address"]').setValue('test@test.com');
+        await component.find('[id="password"]').setValue('password123');
         store.$patch({ id: 'user123' });
         const submitButton = component.find('[data-test="submit"]');
 
@@ -84,9 +84,9 @@ describe('Register Page', () => {
 
       it('should navigate to the home page upon successful registration', async () => {
         const { component, store } = await render();
-        component.find('[id="name"]').setValue('Test User');
-        component.find('[id="email-address"]').setValue('test@test.com');
-        component.find('[id="password"]').setValue('password123');
+        await component.find('[id="name"]').setValue('Test User');
+        await component.find('[id="email-address"]').setValue('test@test.com');
+        await component.find('[id="password"]').setValue('password123');
         store.$patch({ id: 'user123' });
         const submitButton = component.find('[data-test="submit"]');
         await submitButton.trigger('click');
@@ -97,9 +97,9 @@ describe('Register Page', () => {
     describe('when registration fails', () => {
       it('should call the register function with the register information', async () => {
         const { component, store } = await render();
-        component.find('[id="name"]').setValue('Test User');
-        component.find('[id="email-address"]').setValue('test@test.com');
-        component.find('[id="password"]').setValue('password123');
+        await component.find('[id="name"]').setValue('Test User');
+        await component.find('[id="email-address"]').setValue('test@test.com');
+        await component.find('[id="password"]').setValue('password123');
         const submitButton = component.find('[data-test="submit"]');
         await submitButton.trigger('click');
         expect(store.registerUser).toHaveBeenCalledWith(mockedRegisterInfo);
@@ -107,12 +107,12 @@ describe('Register Page', () => {
 
       it('should not navigate', async () => {
         const { component } = await render();
-        component.find('[id="name"]').setValue('Test User');
-        component.find('[id="email-address"]').setValue('test@test.com');
-        component.find('[id="password"]').setValue('password123');
+        await component.find('[id="name"]').setValue('Test User');
+        await component.find('[id="email-address"]').setValue('test@test.com');
+        await component.find('[id="password"]').setValue('password123');
         const submitButton = component.find('[data-test="submit"]');
         await submitButton.trigger('click');
-        expect(navigateToMock).not.toHaveBeenCalledWith('/home');
+        expect(navigateToMock).not.toHaveBeenCalled();
       });
     });
   });

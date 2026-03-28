@@ -9,6 +9,10 @@ describe('server/api/rank/rank.get', () => {
     vi.stubGlobal('createError', (err: unknown) => err);
   });
 
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
   it('returns emoji for valid rank', async () => {
     vi.stubGlobal(
       'getQuery',

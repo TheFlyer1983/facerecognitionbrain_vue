@@ -111,7 +111,6 @@ export const useUserStore = defineStore('UserStore', () => {
   }
 
   function signout() {
-    removeAuthTokenFromSession();
     reset();
   }
 
@@ -204,6 +203,7 @@ export const useUserStore = defineStore('UserStore', () => {
   }
 
   function reset() {
+    removeAuthTokenFromSession();
     token.value = null;
     id.value = null;
     user.value = null;
