@@ -11,7 +11,10 @@ describe('server/api/storage.post', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.stubGlobal('defineEventHandler', (fn: unknown) => fn);
-    vi.stubGlobal('useStorage', vi.fn(() => storageMock));
+    vi.stubGlobal(
+      'useStorage',
+      vi.fn(() => storageMock)
+    );
     vi.stubGlobal(
       'readBody',
       vi.fn(async () => ({ token: 'token-1', refreshToken: 'refresh-1' }))

@@ -57,7 +57,9 @@ describe('Given the NavBar component', () => {
       it('should open the profile dropdown menu', async () => {
         const { component } = await render();
         await component.find('[data-test="profile-avatar"]').trigger('click');
-        expect(component.find('[data-test="view-profile"]').exists()).toBe(true);
+        expect(component.find('[data-test="view-profile"]').exists()).toBe(
+          true
+        );
       });
 
       it('signs the user out and navigates to login', async () => {

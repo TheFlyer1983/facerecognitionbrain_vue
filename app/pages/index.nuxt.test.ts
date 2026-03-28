@@ -9,7 +9,9 @@ mockNuxtImport('navigateTo', () => navigateToMock);
 
 describe('Pages Index', () => {
   describe('and the component mounts', () => {
-    let component: Awaited<ReturnType<typeof mountSuspended<typeof PagesIndex>>>;
+    let component: Awaited<
+      ReturnType<typeof mountSuspended<typeof PagesIndex>>
+    >;
 
     beforeEach(async () => {
       navigateToMock.mockClear();

@@ -81,7 +81,7 @@ async function onSubmitRegister() {
     </template>
     <template #link>
       <p
-        class="duration-[0.15] block cursor-pointer text-sm text-black no-underline opacity-100 transition-opacity ease-in hover:opacity-50 hover:transition-opacity hover:duration-[0.15] hover:ease-in"
+        class="block cursor-pointer text-sm text-black no-underline opacity-100 transition-opacity duration-[0.15] ease-in hover:opacity-50 hover:transition-opacity hover:duration-[0.15] hover:ease-in"
         data-test="login"
         @click="navigateTo('/login')"
       >

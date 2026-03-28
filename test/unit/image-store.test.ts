@@ -75,7 +75,12 @@ describe('useImageStore', () => {
   it('clears boxes when imageUrl changes', async () => {
     const store = await makeStore();
     fetchMock.mockResolvedValue({
-      faces: [{ face_token: 'face-1', face_rectangle: { top: 1, left: 2, height: 3, width: 4 } }]
+      faces: [
+        {
+          face_token: 'face-1',
+          face_rectangle: { top: 1, left: 2, height: 3, width: 4 }
+        }
+      ]
     });
     store.imageUrl = 'https://img.test/a.jpg';
     await store.submitURL();
@@ -89,7 +94,12 @@ describe('useImageStore', () => {
   it('increases entries and refreshes rank when user context exists', async () => {
     const store = await makeStore();
     fetchMock.mockResolvedValue({
-      faces: [{ face_token: 'face-1', face_rectangle: { top: 1, left: 2, height: 3, width: 4 } }]
+      faces: [
+        {
+          face_token: 'face-1',
+          face_rectangle: { top: 1, left: 2, height: 3, width: 4 }
+        }
+      ]
     });
     userStoreMock.user = { entries: 1 };
     userStoreMock.id = 'user-1';

@@ -46,7 +46,9 @@ describe('useUserStore', () => {
       isAxiosError: isAxiosErrorMock,
       isError: isErrorMock
     }));
-    getAuthTokenInSessionMock.mockResolvedValue({ refreshToken: 'refresh-token' });
+    getAuthTokenInSessionMock.mockResolvedValue({
+      refreshToken: 'refresh-token'
+    });
     isAxiosErrorMock.mockReturnValue(false);
     isErrorMock.mockReturnValue(false);
   });
@@ -84,7 +86,10 @@ describe('useUserStore', () => {
       }),
       expect.any(Object)
     );
-    expect(saveAuthTokenInSessionMock).toHaveBeenCalledWith('token-1', 'refresh-1');
+    expect(saveAuthTokenInSessionMock).toHaveBeenCalledWith(
+      'token-1',
+      'refresh-1'
+    );
     expect(store.token).toBe('token-1');
     expect(store.id).toBe('user-1');
     expect(store.isSignedIn).toBe(true);
@@ -125,7 +130,10 @@ describe('useUserStore', () => {
     });
 
     expect(result).toBe(false);
-    expect(saveAuthTokenInSessionMock).toHaveBeenCalledWith('token-1', 'refresh-1');
+    expect(saveAuthTokenInSessionMock).toHaveBeenCalledWith(
+      'token-1',
+      'refresh-1'
+    );
     expect(errorSpy).toHaveBeenCalled();
     errorSpy.mockRestore();
   });
@@ -249,7 +257,10 @@ describe('useUserStore', () => {
     expect(store.token).toBe('token-3');
     expect(store.id).toBe('user-3');
     expect(store.isSignedIn).toBe(true);
-    expect(saveAuthTokenInSessionMock).toHaveBeenCalledWith('token-3', 'refresh-3');
+    expect(saveAuthTokenInSessionMock).toHaveBeenCalledWith(
+      'token-3',
+      'refresh-3'
+    );
   });
 
   it('handles missing refresh token in reauthenticate', async () => {
@@ -356,9 +367,12 @@ describe('useUserStore', () => {
       { name: 'Updated' },
       { params: { auth: 'token-4' } }
     );
-    expect(getMock).toHaveBeenCalledWith(endpoints.profile.replace(':id', 'user-4'), {
-      params: { auth: 'token-4' }
-    });
+    expect(getMock).toHaveBeenCalledWith(
+      endpoints.profile.replace(':id', 'user-4'),
+      {
+        params: { auth: 'token-4' }
+      }
+    );
   });
 
   it('logs when updateUser request fails', async () => {
@@ -391,9 +405,12 @@ describe('useUserStore', () => {
 
     await store.deleteUser();
 
-    expect(deleteMock).toHaveBeenCalledWith(endpoints.profile.replace(':id', 'user-5'), {
-      params: { auth: 'token-5' }
-    });
+    expect(deleteMock).toHaveBeenCalledWith(
+      endpoints.profile.replace(':id', 'user-5'),
+      {
+        params: { auth: 'token-5' }
+      }
+    );
     expect(postMock).toHaveBeenCalledWith(
       endpoints.delete,
       { idToken: 'token-5' },

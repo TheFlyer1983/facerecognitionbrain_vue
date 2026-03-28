@@ -13,7 +13,12 @@ const { imageStoreMock } = vi.hoisted(() => ({
     },
     boxes: [] as Array<{
       face_token: string;
-      face_rectangle: { top: number; left: number; height: number; width: number };
+      face_rectangle: {
+        top: number;
+        left: number;
+        height: number;
+        width: number;
+      };
     }>
   }
 }));
@@ -27,7 +32,12 @@ describe('FaceRecognition', () => {
     imageUrl?: string | null;
     boxes?: Array<{
       face_token: string;
-      face_rectangle: { top: number; left: number; height: number; width: number };
+      face_rectangle: {
+        top: number;
+        left: number;
+        height: number;
+        width: number;
+      };
     }>;
   }) => {
     imageStoreMock.imageUrl.value = state?.imageUrl ?? null;

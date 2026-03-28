@@ -9,7 +9,10 @@ describe('server/api/storage.delete', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.stubGlobal('defineEventHandler', (fn: unknown) => fn);
-    vi.stubGlobal('useStorage', vi.fn(() => storageMock));
+    vi.stubGlobal(
+      'useStorage',
+      vi.fn(() => storageMock)
+    );
   });
 
   it('clears storage', async () => {

@@ -8,7 +8,10 @@ describe('server/api/face/face.post', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.stubGlobal('defineEventHandler', (fn: unknown) => fn);
-    vi.stubGlobal('readBody', vi.fn(async () => ({ imageUrl: 'https://img.test/a.jpg' })));
+    vi.stubGlobal(
+      'readBody',
+      vi.fn(async () => ({ imageUrl: 'https://img.test/a.jpg' }))
+    );
     vi.stubGlobal('$fetch', fetchMock);
     vi.stubGlobal('createError', (err: unknown) => err);
   });

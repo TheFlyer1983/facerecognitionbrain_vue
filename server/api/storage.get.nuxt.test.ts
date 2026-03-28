@@ -9,7 +9,10 @@ describe('server/api/storage.get', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.stubGlobal('defineEventHandler', (fn: unknown) => fn);
-    vi.stubGlobal('useStorage', vi.fn(() => storageMock));
+    vi.stubGlobal(
+      'useStorage',
+      vi.fn(() => storageMock)
+    );
   });
 
   it('returns token and refresh token', async () => {
