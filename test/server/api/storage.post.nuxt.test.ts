@@ -1,6 +1,7 @@
 export {};
 
-const loadHandler = async () => (await import('./storage.post')).default;
+const loadHandler = async () =>
+  (await import('../../../server/api/storage.post')).default;
 
 describe('server/api/storage.post', () => {
   const setItemMock = vi.fn();

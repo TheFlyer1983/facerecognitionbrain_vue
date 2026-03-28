@@ -1,4 +1,5 @@
-const loadHandler = async () => (await import('./storage.get')).default;
+const loadHandler = async () =>
+  (await import('../../../server/api/storage.get')).default;
 
 describe('server/api/storage.get', () => {
   const getItemMock = vi.fn();

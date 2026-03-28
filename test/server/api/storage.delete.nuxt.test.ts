@@ -1,4 +1,5 @@
-const loadHandler = async () => (await import('./storage.delete')).default;
+const loadHandler = async () =>
+  (await import('../../../server/api/storage.delete')).default;
 
 describe('server/api/storage.delete', () => {
   const clearMock = vi.fn();

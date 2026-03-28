@@ -1,6 +1,7 @@
 export {};
 
-const loadHandler = async () => (await import('./face.post')).default;
+const loadHandler = async () =>
+  (await import('../../../../server/api/face/face.post')).default;
 
 describe('server/api/face/face.post', () => {
   const fetchMock = vi.fn();
