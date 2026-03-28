@@ -31,6 +31,12 @@ describe('storageFunctions', () => {
     expect(result).toEqual({ token: '', refreshToken: '' });
   });
 
+  it('returns empty string for missing token fields individually', () => {
+    window.sessionStorage.setItem('token', 'token-1');
+    const result = getAuthTokenInSession();
+    expect(result).toEqual({ token: 'token-1', refreshToken: '' });
+  });
+
   it('removes auth and refresh tokens from session storage', () => {
     window.sessionStorage.setItem('token', 'token-1');
     window.sessionStorage.setItem('refreshToken', 'refresh-1');

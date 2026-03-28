@@ -130,10 +130,8 @@ describe('useUserStore', () => {
     });
 
     expect(result).toBe(false);
-    expect(saveAuthTokenInSessionMock).toHaveBeenCalledWith(
-      'token-1',
-      'refresh-1'
-    );
+    expect(saveAuthTokenInSessionMock).not.toHaveBeenCalled();
+    expect(removeAuthTokenFromSessionMock).toHaveBeenCalled();
     expect(errorSpy).toHaveBeenCalled();
     errorSpy.mockRestore();
   });

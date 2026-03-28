@@ -1,11 +1,12 @@
 export const firebaseAuth = import.meta.env.VITE_FIREBASE_AUTH_URL;
 export const firebaseURL = import.meta.env.VITE_FIREBASE_URL;
 export const reAuthURL = import.meta.env.VITE_FIREBASE_REAUTH_URL;
+export const facePlusPlus = 'https://api-us.faceplusplus.com/facepp/v3/detect';
 
 export const endpoints = {
   register: `${firebaseAuth}:signUp`,
   signin: `${firebaseAuth}:signInWithPassword`,
   profile: `${firebaseURL}/users/:id.json`,
   delete: `${firebaseAuth}:delete`,
-  facePlusPlus: 'https://api-us.faceplusplus.com/facepp/v3/detect'
+  facePlusPlus
 };

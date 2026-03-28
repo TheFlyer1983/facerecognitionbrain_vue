@@ -90,7 +90,7 @@ describe('Register Page', () => {
         store.$patch({ id: 'user123' });
         const submitButton = component.find('[data-test="submit"]');
         await submitButton.trigger('click');
-        expect(navigateToMock).toHaveBeenCalledWith('/home');
+        expect(navigateToMock).toHaveBeenCalledWith('/');
       });
     });
 

@@ -36,7 +36,7 @@ exports[`Register Page > when the component is rendered > should match the snaps
           />
         </div>
         <div
-          lass="mt-4"
+          class="mt-4"
         >
           <label
             class="block text-center text-sm font-semibold leading-6"
@@ -52,7 +52,7 @@ exports[`Register Page > when the component is rendered > should match the snaps
           />
         </div>
         <div
-          lass="mt-4"
+          class="mt-4"
         >
           <label
             class="block text-center text-sm font-semibold leading-6"

@@ -44,7 +44,7 @@ describe('Given the ImageLinkForm component', () => {
     });
 
     describe('when the submit button is clicked', () => {
-      it('should emit the submit event', async () => {
+      it('should call submitURL when submit is clicked', async () => {
         const { component, store } = await render();
         const submitButton = component.find('[data-test="submit"]');
         await submitButton.trigger('click');

@@ -1,13 +1,14 @@
 export {};
 
+import { stubServerHandlerGlobals } from '../../../setupGlobals';
+
 const loadHandler = async () =>
   (await import('../../../../server/api/rank/rank.get')).default;
 
 describe('server/api/rank/rank.get', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.stubGlobal('defineEventHandler', (fn: unknown) => fn);
-    vi.stubGlobal('createError', (err: unknown) => err);
+    stubServerHandlerGlobals();
   });
 
   afterEach(() => {

@@ -15,7 +15,7 @@ async function onSubmitRegister() {
   await userStore.registerUser(registerInfo);
 
   if (userStore.id) {
-    navigateTo('/home');
+    navigateTo('/');
   }
 }
 </script>
@@ -39,7 +39,7 @@ async function onSubmitRegister() {
           class="border border-black bg-transparent p-2 hover:bg-black hover:text-white"
         />
       </div>
-      <div lass="mt-4">
+      <div class="mt-4">
         <label
           for="email-address"
           class="block text-center text-sm font-semibold leading-6"
@@ -54,7 +54,7 @@ async function onSubmitRegister() {
           class="border border-black bg-transparent p-2 hover:bg-black hover:text-white"
         />
       </div>
-      <div lass="mt-4">
+      <div class="mt-4">
         <label
           for="password"
           class="block text-center text-sm font-semibold leading-6"

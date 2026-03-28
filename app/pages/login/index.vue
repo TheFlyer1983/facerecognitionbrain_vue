@@ -13,7 +13,7 @@ async function onSubmitSignIn(): Promise<void> {
   await userStore.login(loginInfo);
 
   if (userStore.id) {
-    await navigateTo('/home');
+    await navigateTo('/');
   }
 }
 </script>
@@ -63,7 +63,7 @@ async function onSubmitSignIn(): Promise<void> {
     </template>
     <template #link>
       <p
-        class="duraction-[0.15] block cursor-pointer text-sm text-black no-underline opacity-100 transition-opacity ease-in hover:opacity-50 hover:transition-opacity hover:duration-[0.15] hover:ease-in"
+        class="block cursor-pointer text-sm text-black no-underline opacity-100 transition-opacity duration-[0.15] ease-in hover:opacity-50 hover:transition-opacity hover:duration-[0.15] hover:ease-in"
         data-test="register"
         @click="navigateTo('/register')"
       >

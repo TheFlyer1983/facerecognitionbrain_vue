@@ -70,8 +70,8 @@ describe('Login Page', () => {
     describe('with valid login information', () => {
       it('should call the login function with the login information', async () => {
         const { component, store } = await render();
-        component.find('[id="email-address"]').setValue('test@test.com');
-        component.find('[id="password"]').setValue('password123');
+        await component.find('[id="email-address"]').setValue('test@test.com');
+        await component.find('[id="password"]').setValue('password123');
         store.$patch({ id: 'user123' });
         const submitButton = component.find('[data-test="submit"]');
 
@@ -86,7 +86,7 @@ describe('Login Page', () => {
         store.$patch({ id: 'user123' });
         const submitButton = component.find('[data-test="submit"]');
         await submitButton.trigger('click');
-        expect(navigateToMock).toHaveBeenCalledWith('/home');
+        expect(navigateToMock).toHaveBeenCalledWith('/');
       });
     });
 
@@ -106,7 +106,7 @@ describe('Login Page', () => {
         component.find('[id="password"]').setValue('password123');
         const submitButton = component.find('[data-test="submit"]');
         await submitButton.trigger('click');
-        expect(navigateToMock).not.toHaveBeenCalledWith('/home');
+        expect(navigateToMock).not.toHaveBeenCalled();
       });
     });
   });

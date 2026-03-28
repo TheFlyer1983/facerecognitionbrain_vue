@@ -1,3 +1,6 @@
+import { facePlusPlus } from '../../../../constants/api';
+import { stubServerHandlerGlobals } from '../../../setupGlobals';
+
 export {};
 
 const loadHandler = async () =>
@@ -8,13 +11,12 @@ describe('server/api/face/face.post', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.stubGlobal('defineEventHandler', (fn: unknown) => fn);
+    stubServerHandlerGlobals();
     vi.stubGlobal(
       'readBody',
       vi.fn(async () => ({ imageUrl: 'https://img.test/a.jpg' }))
     );
     vi.stubGlobal('$fetch', fetchMock);
-    vi.stubGlobal('createError', (err: unknown) => err);
   });
 
   it('returns face api response on success', async () => {
@@ -25,7 +27,7 @@ describe('server/api/face/face.post', () => {
     const result = await handler({} as never);
 
     expect(fetchMock).toHaveBeenCalledWith(
-      'https://api-us.faceplusplus.com/facepp/v3/detect',
+      facePlusPlus,
       expect.objectContaining({
         method: 'POST',
         query: expect.objectContaining({

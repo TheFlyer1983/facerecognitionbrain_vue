@@ -32,7 +32,7 @@ describe('Given the Home page', () => {
     });
 
     return mountSuspended<typeof Home>(Home, {
-      route: '/home',
+      route: '/',
       global: { plugins: [pinia] }
     });
   };

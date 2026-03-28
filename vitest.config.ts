@@ -18,7 +18,7 @@ export default defineConfig({
         test: {
           globals: true,
           name: 'unit',
-          include: ['test/{e2e,unit}/*.{test,spec}.ts'],
+          include: ['test/{e2e,unit}/**/*.{test,spec}.ts'],
           environment: 'node'
         }
       },

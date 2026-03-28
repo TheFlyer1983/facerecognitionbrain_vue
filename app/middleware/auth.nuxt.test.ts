@@ -11,7 +11,7 @@ mockNuxtImport('navigateTo', () => navigateToMock);
 
 type AuthRouteArg = Parameters<typeof auth>[0];
 
-const mockRoute = { fullPath: '/home' } as AuthRouteArg;
+const mockRoute = { fullPath: '/' } as AuthRouteArg;
 const mockFromRoute = { fullPath: '/' } as AuthRouteArg;
 
 describe('Given the auth middleware', () => {

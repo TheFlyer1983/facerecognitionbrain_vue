@@ -29,13 +29,16 @@ export const useUserStore = defineStore('UserStore', () => {
         }
       );
 
-      saveAuthTokenInSession(response.data.idToken, response.data.refreshToken);
-
       token.value = response.data.idToken;
       id.value = response.data.localId;
 
       const success = await getUser(response.data.localId);
-      if (!success) throw new Error('Error');
+      if (!success) {
+        reset();
+        return false;
+      }
+
+      saveAuthTokenInSession(response.data.idToken, response.data.refreshToken);
 
       return true;
     } catch (error) {

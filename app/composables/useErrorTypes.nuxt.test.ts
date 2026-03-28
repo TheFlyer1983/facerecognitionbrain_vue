@@ -10,7 +10,6 @@ describe('Given the useErrorTypes composable', () => {
       expect(isAxiosError({ isAxiosError: false })).toBe(false);
       expect(isAxiosError('oops')).toBe(false);
       expect(isAxiosError({})).toBe(false);
-      expect(isAxiosError({ isAxiosError: false })).toBe(false);
     });
   });
 

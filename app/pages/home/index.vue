@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 definePageMeta({
-  middleware: 'auth'
+  middleware: 'auth',
+  path: '/'
 });
 
 const userStore = useUserStore();

@@ -44,7 +44,7 @@ describe('FaceRecognition', () => {
     imageStoreMock.boxes = state?.boxes ?? [];
 
     return mountSuspended(FaceRecognition, {
-      route: '/home'
+      route: '/'
     });
   };
 

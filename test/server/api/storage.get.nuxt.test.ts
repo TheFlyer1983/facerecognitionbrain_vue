@@ -1,3 +1,5 @@
+import { stubServerHandlerGlobals } from '../../setupGlobals';
+
 const loadHandler = async () =>
   (await import('../../../server/api/storage.get')).default;
 
@@ -9,7 +11,7 @@ describe('server/api/storage.get', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.stubGlobal('defineEventHandler', (fn: unknown) => fn);
+    stubServerHandlerGlobals();
     vi.stubGlobal(
       'useStorage',
       vi.fn(() => storageMock)
