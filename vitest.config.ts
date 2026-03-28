@@ -29,10 +29,12 @@ export default defineConfig({
           include: ['**/**/*.nuxt.{test,spec}.ts'],
           environment: 'nuxt',
           environmentOptions: {
-            rootDir: fileURLToPath(new URL('.', import.meta.url)),
-            domEnvironment: 'happy-dom',
-            mock: {
-              indexedDb: true
+            nuxt: {
+              rootDir: fileURLToPath(new URL('.', import.meta.url)),
+              domEnvironment: 'happy-dom',
+              mock: {
+                indexedDb: true
+              }
             }
           }
         }
@@ -42,8 +44,8 @@ export default defineConfig({
       enabled: true,
       provider: 'v8',
       reporter: ['text', 'html'],
-      include: ['app/**/**.{vue,ts}', 'server/**/**.{vue,ts}'],
-      exclude: ['app/**/node_modules/**', 'app/**/dist/**']
+      include: ['app/**/*.{vue,ts}', 'server/**/*.{vue,ts}'],
+      exclude: ['**/*.d.ts', 'app/**/node_modules/**', 'app/**/dist/**']
     }
   }
 });

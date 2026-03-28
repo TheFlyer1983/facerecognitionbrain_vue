@@ -36,4 +36,24 @@ describe('server/api/rank/rank.get', () => {
       statusMessage: 'Bad Request'
     });
   });
+
+  it('throws bad request for negative rank', async () => {
+    vi.stubGlobal('getQuery', vi.fn(() => ({ rank: '-1' })));
+
+    const handler = await loadHandler();
+    await expect(handler({} as never)).rejects.toMatchObject({
+      statusCode: 400,
+      statusMessage: 'Bad Request'
+    });
+  });
+
+  it('throws bad request for non-integer rank', async () => {
+    vi.stubGlobal('getQuery', vi.fn(() => ({ rank: '2.5' })));
+
+    const handler = await loadHandler();
+    await expect(handler({} as never)).rejects.toMatchObject({
+      statusCode: 400,
+      statusMessage: 'Bad Request'
+    });
+  });
 });

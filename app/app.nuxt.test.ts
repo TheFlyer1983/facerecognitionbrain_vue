@@ -6,7 +6,7 @@ describe('App.vue', () => {
 
   beforeEach(async () => {
     component = await mountSuspended(App, { route: '/login' });
-  }); // = await mountSuspended(App, { route: '/login' });
+  });
 
   it('mounts the app component', () => {
     expect(component.exists()).toBe(true);

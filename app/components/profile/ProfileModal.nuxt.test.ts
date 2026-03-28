@@ -97,7 +97,7 @@ describe('Given the ProfileModal component', () => {
 
     expect(store.updateUser).toHaveBeenCalledWith({
       name: 'Updated Name',
-      age: '31',
+      age: 31,
       pet: 'Cat'
     });
   });

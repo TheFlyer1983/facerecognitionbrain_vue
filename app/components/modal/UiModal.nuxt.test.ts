@@ -16,7 +16,7 @@ describe('Given the UiModal component', () => {
     describe('when the backdrop is clicked', () => {
       beforeEach(async () => {
         const element = component.find('[data-test="close-modal"]');
-        element.trigger('click');
+        await element.trigger('click');
       });
 
       it('should emit the close-modal event', () => {

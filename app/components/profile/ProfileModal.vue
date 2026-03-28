@@ -98,7 +98,7 @@ async function deleteUser() {
           <input
             id="age"
             v-model="age"
-            type="text"
+            type="number"
             name="user-age"
             class="w-full border border-black p-2"
             :placeholder="agePlaceHolderText"

@@ -1,4 +1,4 @@
-export default defineNuxtRouteMiddleware(async (from) => {
+export default defineNuxtRouteMiddleware(async () => {
   const userStore = useUserStore();
 
   if (userStore.id) {

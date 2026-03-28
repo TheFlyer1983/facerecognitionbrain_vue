@@ -70,7 +70,7 @@ describe('Register Page', () => {
     });
 
     describe('with valid register information', () => {
-      it('should call the login function with the login information', async () => {
+      it('should call the register function with the register information', async () => {
         const { component, store } = await render();
         component.find('[id="name"]').setValue('Test User');
         component.find('[id="email-address"]').setValue('test@test.com');
@@ -82,7 +82,7 @@ describe('Register Page', () => {
         expect(store.registerUser).toHaveBeenCalledWith(mockedRegisterInfo);
       });
 
-      it('should navigate to the home page upon successful login', async () => {
+      it('should navigate to the home page upon successful registration', async () => {
         const { component, store } = await render();
         component.find('[id="name"]').setValue('Test User');
         component.find('[id="email-address"]').setValue('test@test.com');
@@ -94,8 +94,8 @@ describe('Register Page', () => {
       });
     });
 
-    describe('with invalid register information', () => {
-      it('should call the login function with the login information', async () => {
+    describe('when registration fails', () => {
+      it('should call the register function with the register information', async () => {
         const { component, store } = await render();
         component.find('[id="name"]').setValue('Test User');
         component.find('[id="email-address"]').setValue('test@test.com');

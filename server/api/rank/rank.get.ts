@@ -3,7 +3,7 @@ const emojis = ['😄', '😃', '😀', '😊', '😉', '😍', '🔸', '🔹', 
 export default defineEventHandler(async (event) => {
   const rank = Number(getQuery(event).rank);
 
-  if (!isNaN(rank)) {
+  if (!isNaN(rank) && Number.isInteger(rank) && rank >= 0) {
     const rankEmoji = emojis[rank >= emojis.length ? emojis.length - 1 : rank];
 
     return {

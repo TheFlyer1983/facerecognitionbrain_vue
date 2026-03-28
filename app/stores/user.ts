@@ -92,7 +92,7 @@ export const useUserStore = defineStore('UserStore', () => {
   async function createProfile(name: string) {
     const profilePayload = {
       name,
-      enties: 0,
+      entries: 0,
       joined: new Date()
     };
 
@@ -116,7 +116,6 @@ export const useUserStore = defineStore('UserStore', () => {
   }
 
   async function reauthenticate() {
-    console.log('hitting');
     try {
       const { refreshToken } = await getAuthTokenInSession();
 

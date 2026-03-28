@@ -47,7 +47,7 @@ async function onSubmitSignIn(): Promise<void> {
           v-model="password"
           type="password"
           name="password"
-          data-test="email"
+          data-test="password"
           class="border border-black bg-transparent p-2 hover:bg-black hover:text-white"
         />
       </div>

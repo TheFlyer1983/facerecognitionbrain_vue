@@ -52,7 +52,7 @@ exports[`App.vue > matches the snapshot 1`] = `
             </label>
             <input
               class="border border-black bg-transparent p-2 hover:bg-black hover:text-white"
-              data-test="email"
+              data-test="password"
               id="password"
               name="password"
               type="password"

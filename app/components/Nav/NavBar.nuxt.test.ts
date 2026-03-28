@@ -54,12 +54,10 @@ describe('Given the NavBar component', () => {
     });
 
     describe('and the profile icon is clicked', () => {
-      it('should render the ProfileModal', async () => {
+      it('should open the profile dropdown menu', async () => {
         const { component } = await render();
-        component.findComponent({ name: 'ProfileIcon' }).trigger('click');
-        expect(component.findComponent({ name: 'ProfileIcon' }).exists()).toBe(
-          true
-        );
+        await component.find('[data-test="profile-avatar"]').trigger('click');
+        expect(component.find('[data-test="view-profile"]').exists()).toBe(true);
       });
 
       it('signs the user out and navigates to login', async () => {
@@ -80,7 +78,7 @@ describe('Given the NavBar component', () => {
 
       it('navigates to the login page when sign in link is clicked', async () => {
         const { component } = await render(false);
-          component.find('[data-test="signin"]').trigger('click');
+        await component.find('[data-test="signin"]').trigger('click');
         expect(navigateToMock).toHaveBeenCalledWith('/login');
       });
     });
@@ -93,7 +91,7 @@ describe('Given the NavBar component', () => {
 
       it('navigates to the register page when register link is clicked', async () => {
         const { component } = await render(false);
-          component.find('[data-test="register"]').trigger('click');
+        await component.find('[data-test="register"]').trigger('click');
         expect(navigateToMock).toHaveBeenCalledWith('/register');
       });
     });

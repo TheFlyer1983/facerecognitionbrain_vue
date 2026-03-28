@@ -163,7 +163,7 @@ describe('useUserStore', () => {
       endpoints.profile.replace(':id', 'user-2'),
       expect.objectContaining({
         name: 'New User',
-        enties: 0
+        entries: 0
       }),
       { params: { auth: 'token-2' } }
     );
