@@ -11,15 +11,18 @@ const { imageStoreMock } = vi.hoisted(() => ({
       value: null as string | null,
       __v_isRef: true
     },
-    boxes: [] as Array<{
-      face_token: string;
-      face_rectangle: {
-        top: number;
-        left: number;
-        height: number;
-        width: number;
-      };
-    }>
+    boxes: {
+      value: [] as Array<{
+        face_token: string;
+        face_rectangle: {
+          top: number;
+          left: number;
+          height: number;
+          width: number;
+        };
+      }>,
+      __v_isRef: true
+    }
   }
 }));
 
@@ -90,5 +93,9 @@ describe('FaceRecognition', () => {
     expect(boxes[0]?.attributes('style')).toContain('left: 20px');
     expect(boxes[0]?.attributes('style')).toContain('height: 30px');
     expect(boxes[0]?.attributes('style')).toContain('width: 40px');
+    expect(boxes[1]?.attributes('style')).toContain('top: 1px');
+    expect(boxes[1]?.attributes('style')).toContain('left: 2px');
+    expect(boxes[1]?.attributes('style')).toContain('height: 3px');
+    expect(boxes[1]?.attributes('style')).toContain('width: 4px');
   });
 });

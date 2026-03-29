@@ -43,6 +43,7 @@ export const useUserStore = defineStore('UserStore', () => {
       return true;
     } catch (error) {
       console.error(error);
+      reset();
       return false;
     }
   }

@@ -1,7 +1,7 @@
 export const firebaseAuth = import.meta.env.VITE_FIREBASE_AUTH_URL;
 export const firebaseURL = import.meta.env.VITE_FIREBASE_URL;
 export const reAuthURL = import.meta.env.VITE_FIREBASE_REAUTH_URL;
-export const facePlusPlus = 'https://api-us.faceplusplus.com/facepp/v3/detect';
+export const facePlusPlus = import.meta.env.VITE_APP_FACE_PLUS_PLUS_URL;
 
 export const endpoints = {
   register: `${firebaseAuth}:signUp`,
