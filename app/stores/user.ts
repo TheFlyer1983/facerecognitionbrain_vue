@@ -34,7 +34,7 @@ export const useUserStore = defineStore('UserStore', () => {
 
       const success = await getUser(response.data.localId);
       if (!success) {
-        reset();
+        await reset();
         return false;
       }
 
@@ -43,7 +43,7 @@ export const useUserStore = defineStore('UserStore', () => {
       return true;
     } catch (error) {
       console.error(error);
-      reset();
+      await reset();
       return false;
     }
   }
@@ -114,8 +114,8 @@ export const useUserStore = defineStore('UserStore', () => {
     }
   }
 
-  function signout() {
-    reset();
+  async function signout() {
+    await reset();
   }
 
   async function reauthenticate() {
@@ -151,7 +151,7 @@ export const useUserStore = defineStore('UserStore', () => {
         error.response?.data.error.message === 'USER_DISABLED'
       ) {
         console.error('Session Expired');
-        signout();
+        await signout();
       }
     }
   }
@@ -202,18 +202,23 @@ export const useUserStore = defineStore('UserStore', () => {
     } catch (error) {
       console.error(error);
     } finally {
-      signout();
+      await signout();
     }
   }
 
-  function reset() {
-    removeAuthTokenFromSession();
-    token.value = null;
-    id.value = null;
-    user.value = null;
-    isSignedIn.value = false;
-    isProfileOpen.value = false;
-    rank.value = null;
+  async function reset() {
+    try {
+      await removeAuthTokenFromSession();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      token.value = null;
+      id.value = null;
+      user.value = null;
+      isSignedIn.value = false;
+      isProfileOpen.value = false;
+      rank.value = null;
+    }
   }
   return {
     id,

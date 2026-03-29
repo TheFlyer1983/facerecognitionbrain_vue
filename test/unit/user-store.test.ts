@@ -224,7 +224,7 @@ describe('useUserStore', () => {
     store.isProfileOpen = true;
     store.rank = '🐣';
 
-    store.signout();
+    await store.signout();
 
     expect(removeAuthTokenFromSessionMock).toHaveBeenCalled();
     expect(store.token).toBeNull();
