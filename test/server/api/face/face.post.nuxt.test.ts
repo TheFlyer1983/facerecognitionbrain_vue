@@ -1,8 +1,6 @@
 import { facePlusPlus } from '../../../../constants/api';
 import { stubServerHandlerGlobals } from '../../../setupGlobals';
 
-export {};
-
 const loadHandler = async () =>
   (await import('../../../../server/api/face/face.post')).default;
 

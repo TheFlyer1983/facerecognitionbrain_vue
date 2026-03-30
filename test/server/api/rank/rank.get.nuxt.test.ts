@@ -1,5 +1,3 @@
-export {};
-
 import { stubServerHandlerGlobals } from '../../../setupGlobals';
 
 const loadHandler = async () =>
