@@ -1,6 +1,6 @@
-import { endpoints, reAuthURL } from '~~/constants/api';
-import type { RankResponse } from '~~/types';
-import type { UserState } from '~~/types/user';
+import { endpoints, reAuthURL } from '../../constants/api';
+import type { RankResponse } from '../../types';
+import type { UserState } from '../../types/user';
 
 export const useUserStore = defineStore('UserStore', () => {
   const { $api } = useNuxtApp();
@@ -29,17 +29,21 @@ export const useUserStore = defineStore('UserStore', () => {
         }
       );
 
-      saveAuthTokenInSession(response.data.idToken, response.data.refreshToken);
-
       token.value = response.data.idToken;
       id.value = response.data.localId;
 
       const success = await getUser(response.data.localId);
-      if (!success) throw new Error('Error');
+      if (!success) {
+        await reset();
+        return false;
+      }
+
+      saveAuthTokenInSession(response.data.idToken, response.data.refreshToken);
 
       return true;
     } catch (error) {
       console.error(error);
+      await reset();
       return false;
     }
   }
@@ -92,7 +96,7 @@ export const useUserStore = defineStore('UserStore', () => {
   async function createProfile(name: string) {
     const profilePayload = {
       name,
-      enties: 0,
+      entries: 0,
       joined: new Date()
     };
 
@@ -110,9 +114,8 @@ export const useUserStore = defineStore('UserStore', () => {
     }
   }
 
-  function signout() {
-    removeAuthTokenFromSession();
-    reset();
+  async function signout() {
+    await reset();
   }
 
   async function reauthenticate() {
@@ -148,7 +151,7 @@ export const useUserStore = defineStore('UserStore', () => {
         error.response?.data.error.message === 'USER_DISABLED'
       ) {
         console.error('Session Expired');
-        signout();
+        await signout();
       }
     }
   }
@@ -199,15 +202,23 @@ export const useUserStore = defineStore('UserStore', () => {
     } catch (error) {
       console.error(error);
     } finally {
-      signout();
+      await signout();
     }
   }
 
-  function reset() {
-    token.value = null;
-    id.value = null;
-    user.value = null;
-    isSignedIn.value = false;
+  async function reset() {
+    try {
+      await removeAuthTokenFromSession();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      token.value = null;
+      id.value = null;
+      user.value = null;
+      isSignedIn.value = false;
+      isProfileOpen.value = false;
+      rank.value = null;
+    }
   }
   return {
     id,
@@ -222,6 +233,7 @@ export const useUserStore = defineStore('UserStore', () => {
     updateUser,
     deleteUser,
     rank,
-    getRank
+    getRank,
+    reset
   };
 });

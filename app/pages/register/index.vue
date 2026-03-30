@@ -15,7 +15,7 @@ async function onSubmitRegister() {
   await userStore.registerUser(registerInfo);
 
   if (userStore.id) {
-    navigateTo('/home');
+    navigateTo('/');
   }
 }
 </script>
@@ -39,7 +39,7 @@ async function onSubmitRegister() {
           class="border border-black bg-transparent p-2 hover:bg-black hover:text-white"
         />
       </div>
-      <div lass="mt-4">
+      <div class="mt-4">
         <label
           for="email-address"
           class="block text-center text-sm font-semibold leading-6"
@@ -54,7 +54,7 @@ async function onSubmitRegister() {
           class="border border-black bg-transparent p-2 hover:bg-black hover:text-white"
         />
       </div>
-      <div lass="mt-4">
+      <div class="mt-4">
         <label
           for="password"
           class="block text-center text-sm font-semibold leading-6"
@@ -78,6 +78,15 @@ async function onSubmitRegister() {
         data-test="submit"
         @click="onSubmitRegister"
       />
+    </template>
+    <template #link>
+      <p
+        class="block cursor-pointer text-sm text-black no-underline opacity-100 transition-opacity duration-[0.15] ease-in hover:opacity-50 hover:transition-opacity hover:duration-[0.15] hover:ease-in"
+        data-test="login"
+        @click="navigateTo('/login')"
+      >
+        Sign In
+      </p>
     </template>
   </UiLoginBox>
 </template>

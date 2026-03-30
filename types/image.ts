@@ -6,7 +6,7 @@ export interface ImageState {
 export interface ImageResponse {
   request_id: string;
   time_used: number;
-  faces: Face[]
+  faces: Face[];
   image_id: string;
   face_num: number;
 }

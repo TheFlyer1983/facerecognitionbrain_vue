@@ -9,7 +9,7 @@ export default defineNuxtPlugin(() => {
         const client = axios.create();
 
         client.interceptors.request.use(async (config) => {
-          if (userStore.token) {
+          if (!userStore.token) {
             return config;
           }
 

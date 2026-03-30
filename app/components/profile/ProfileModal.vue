@@ -98,7 +98,7 @@ async function deleteUser() {
           <input
             id="age"
             v-model="age"
-            type="text"
+            type="number"
             name="user-age"
             class="w-full border border-black p-2"
             :placeholder="agePlaceHolderText"
@@ -117,12 +117,14 @@ async function deleteUser() {
           <div class="mt-4 flex justify-evenly">
             <button
               class="max-w-[40%] grow cursor-pointer border border-[#0003] bg-[#96ccff] p-2 font-bold hover:text-white"
+              data-test="save-profile"
               @click="updateProfile"
             >
               Save
             </button>
             <button
               class="max-w-[40%] grow cursor-pointer border border-[#0003] bg-[#ff725c] p-2 font-bold hover:text-white"
+              data-test="cancel-profile"
               @click="closeModal"
             >
               Cancel
@@ -142,6 +144,7 @@ async function deleteUser() {
       </main>
       <div
         class="mt-4 cursor-pointer text-5xl hover:text-gray-400"
+        data-test="close-profile"
         @click="closeModal"
       >
         &times;

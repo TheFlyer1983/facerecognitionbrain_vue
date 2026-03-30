@@ -1,0 +1,19 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Given the NavBar component > when the component is rendered > matches the snapshot 1`] = `
+<nav
+  class="flex justify-end"
+>
+  <section
+    class="relative m-4"
+  >
+    <span
+      class="flex cursor-pointer justify-center"
+      data-test="profile-avatar"
+    >
+      <!--v-if-->
+    </span>
+    <!--v-if-->
+  </section>
+</nav>
+`;

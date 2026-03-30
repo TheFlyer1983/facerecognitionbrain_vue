@@ -1,5 +1,5 @@
 // import { useUserStore } from './user';
-import { endpoints } from '@@/constants/api';
+import { endpoints } from '../../constants/api';
 
 export const useImageStore = defineStore('image', () => {
   const { $api } = useNuxtApp();
