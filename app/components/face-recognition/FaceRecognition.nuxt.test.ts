@@ -1,20 +1,11 @@
 import { mountSuspended, mockNuxtImport } from '@nuxt/test-utils/runtime';
 import { reactive, ref } from 'vue';
+import type { Face } from '~~/types/image';
 import FaceRecognition from './FaceRecognition.vue';
 
 vi.mock('~/middleware/auth', () => ({
   default: vi.fn(() => {})
 }));
-
-type FaceBox = {
-  face_token: string;
-  face_rectangle: {
-    top: number;
-    left: number;
-    height: number;
-    width: number;
-  };
-};
 
 const { useImageStoreMock } = vi.hoisted(() => ({
   useImageStoreMock: vi.fn()
@@ -27,12 +18,13 @@ mockNuxtImport('useImageStore', () => {
 describe('FaceRecognition', () => {
   const render = async (state?: {
     imageUrl?: string | null;
-    boxes?: FaceBox[];
+    boxes?: Face[];
   }) => {
     useImageStoreMock.mockReturnValue(
       reactive({
         imageUrl: ref(state?.imageUrl ?? null),
-        boxes: ref(state?.boxes ?? ([] as FaceBox[]))
+        boxes: ref(state?.boxes ?? []),
+        submitURL: vi.fn()
       })
     );
 
