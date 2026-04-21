@@ -2,19 +2,24 @@ import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
 import { defineVitestProject } from '@nuxt/test-utils/config';
 
+const aliases = {
+  '~~': fileURLToPath(new URL('.', import.meta.url)),
+  '@@': fileURLToPath(new URL('.', import.meta.url)),
+  '~': fileURLToPath(new URL('./app', import.meta.url)),
+  '@': fileURLToPath(new URL('./app', import.meta.url))
+};
+
 export default defineConfig({
   resolve: {
-    alias: {
-      '~~': fileURLToPath(new URL('.', import.meta.url)),
-      '@@': fileURLToPath(new URL('.', import.meta.url)),
-      '~': fileURLToPath(new URL('./app', import.meta.url)),
-      '@': fileURLToPath(new URL('./app', import.meta.url))
-    }
+    alias: aliases
   },
   test: {
     globals: true,
     projects: [
       {
+        resolve: {
+          alias: aliases
+        },
         test: {
           globals: true,
           name: 'unit',
@@ -22,11 +27,26 @@ export default defineConfig({
           environment: 'node'
         }
       },
+      {
+        resolve: {
+          alias: aliases
+        },
+        test: {
+          globals: true,
+          name: 'server',
+          include: ['test/server/**/*.{test,spec}.ts'],
+          environment: 'node'
+        }
+      },
       await defineVitestProject({
+        resolve: {
+          alias: aliases
+        },
         test: {
           globals: true,
           name: 'nuxt',
           include: ['**/**/*.nuxt.{test,spec}.ts'],
+          setupFiles: ['test/setup.nuxt.ts'],
           environment: 'nuxt',
           environmentOptions: {
             nuxt: {

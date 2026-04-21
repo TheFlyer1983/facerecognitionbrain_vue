@@ -1,6 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  ssr: false,
   modules: [
     '@nuxt/devtools',
     '@nuxt/eslint',
@@ -29,12 +28,15 @@ export default defineNuxtConfig({
 
   css: ['~/assets/css/main.pcss'],
 
-  nitro: {
-    storage: {
-      data: {
-        driver: 'fs',
-        base: './.data/kv'
-      }
+  runtimeConfig: {
+    facePlusPlusApiKey: import.meta.env.NUXT_APP_FACE_PLUS_PLUS_API_KEY,
+    facePlusPlusApiSecret: import.meta.env.NUXT_APP_FACE_PLUS_PLUS_API_SECRET,
+    facePlusPlusUrl: import.meta.env.NUXT_APP_FACE_PLUS_PLUS_URL,
+    public: {
+      firebaseAuth: import.meta.env.NUXT_FIREBASE_AUTH_URL,
+      firebaseApiKey: import.meta.env.NUXT_FIREBASE_API_KEY,
+      firebaseDatabase: import.meta.env.NUXT_FIREBASE_URL,
+      firebaseReauth: import.meta.env.NUXT_FIREBASE_REAUTH_URL
     }
   },
 

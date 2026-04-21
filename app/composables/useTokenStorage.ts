@@ -1,34 +1,32 @@
 export const useTokenStorage = () => {
-  const { data, execute } = useFetch('/api/storage', {
-    deep: true
-  });
-
-  function saveAuthTokenInSession(token: string, refreshToken: string) {
-    $fetch('/api/storage', {
+  async function saveRefreshTokenInSession(refreshToken: string) {
+    await $fetch('/api/auth/session', {
       method: 'POST',
       body: {
-        token,
         refreshToken
-      }
+      },
+      credentials: 'include'
     });
   }
 
   async function getAuthTokenInSession() {
-    await execute();
-    const token = data.value?.token;
-    const refreshToken = data.value?.refreshToken;
+    const headers = import.meta.server ? useRequestHeaders(['cookie']) : undefined;
 
-    return { token, refreshToken };
+    return await $fetch('/api/auth/session', {
+      credentials: 'include',
+      headers
+    });
   }
 
   async function removeAuthTokenFromSession() {
-    $fetch('/api/storage', {
-      method: 'DELETE'
+    await $fetch('/api/auth/session', {
+      method: 'DELETE',
+      credentials: 'include'
     });
   }
 
   return {
-    saveAuthTokenInSession,
+    saveRefreshTokenInSession,
     getAuthTokenInSession,
     removeAuthTokenFromSession
   };

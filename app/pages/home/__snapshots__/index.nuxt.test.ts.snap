@@ -14,7 +14,7 @@ exports[`Given the Home page > and the component mounts while logged in > matche
         <img
           alt="logo"
           class="flex justify-self-center pt-[5px]"
-          src="http://localhost:3000/@fs/assets/img/brain.png"
+          src="/app/assets/img/brain.png"
         />
       </div>
     </div>
@@ -92,7 +92,7 @@ exports[`Given the Home page > and the component mounts while logged out > match
         <img
           alt="logo"
           class="flex justify-self-center pt-[5px]"
-          src="http://localhost:3000/@fs/assets/img/brain.png"
+          src="/app/assets/img/brain.png"
         />
       </div>
     </div>
@@ -156,7 +156,7 @@ exports[`Given the Home page > when the profile modal is opened > matches the sn
         <img
           alt="logo"
           class="flex justify-self-center pt-[5px]"
-          src="http://localhost:3000/@fs/assets/img/brain.png"
+          src="/app/assets/img/brain.png"
         />
       </div>
     </div>

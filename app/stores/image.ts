@@ -1,8 +1,8 @@
-// import { useUserStore } from './user';
-import { endpoints } from '../../constants/api';
-
 export const useImageStore = defineStore('image', () => {
   const { $api } = useNuxtApp();
+  const {
+    public: { firebaseDatabase }
+  } = useRuntimeConfig();
   const userStore = useUserStore();
 
   const imageUrl = ref<string | null>(null);
@@ -31,7 +31,7 @@ export const useImageStore = defineStore('image', () => {
   async function increaseEntries() {
     if (!userStore.user || !userStore.id) return;
 
-    const requestURL = endpoints.profile.replace(':id', userStore.id);
+    const requestURL = `${firebaseDatabase}/users/${userStore.id}.json`;
 
     try {
       const response = await $api().patch(

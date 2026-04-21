@@ -2,11 +2,11 @@
 
 import { createPinia, defineStore, setActivePinia } from 'pinia';
 import { nextTick, ref, watch } from 'vue';
-import { endpoints } from '../../constants/api';
 
 const fetchMock = vi.fn();
 const patchMock = vi.fn();
 const getRankMock = vi.fn();
+const firebaseDbUrl = 'https://firebase-db.test';
 const userStoreMock = {
   user: null as { entries: number } | null,
   id: null as string | null,
@@ -21,12 +21,19 @@ describe('useImageStore', () => {
   };
 
   beforeEach(() => {
+    vi.resetModules();
     vi.clearAllMocks();
+    import.meta.env.NUXT_FIREBASE_URL = firebaseDbUrl;
     setActivePinia(createPinia());
     vi.stubGlobal('defineStore', defineStore);
     vi.stubGlobal('ref', ref);
     vi.stubGlobal('watch', watch);
     vi.stubGlobal('$fetch', fetchMock);
+    vi.stubGlobal('useRuntimeConfig', () => ({
+      public: {
+        firebaseDatabase: firebaseDbUrl
+      }
+    }));
     vi.stubGlobal('useNuxtApp', () => ({
       $api: () => ({
         patch: patchMock
@@ -110,7 +117,7 @@ describe('useImageStore', () => {
     await store.submitURL();
 
     expect(patchMock).toHaveBeenCalledWith(
-      endpoints.profile.replace(':id', 'user-1'),
+      `${firebaseDbUrl}/users/user-1.json`,
       { entries: 2 },
       { params: { auth: 'token-1' } }
     );

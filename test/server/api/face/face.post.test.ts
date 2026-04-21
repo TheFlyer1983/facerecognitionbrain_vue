@@ -1,4 +1,3 @@
-import { facePlusPlus } from '../../../../constants/api';
 import { stubServerHandlerGlobals } from '../../../setupGlobals';
 
 const loadHandler = async () =>
@@ -6,15 +5,27 @@ const loadHandler = async () =>
 
 describe('server/api/face/face.post', () => {
   const fetchMock = vi.fn();
+  const facePlusPlusUrl = 'https://face.test/detect';
 
   beforeEach(() => {
+    vi.resetModules();
     vi.clearAllMocks();
+    import.meta.env.NUXT_APP_FACE_PLUS_PLUS_URL = facePlusPlusUrl;
     stubServerHandlerGlobals();
+    vi.stubGlobal('useRuntimeConfig', () => ({
+      facePlusPlusApiKey: 'face-key',
+      facePlusPlusApiSecret: 'face-secret',
+      facePlusPlusUrl
+    }));
     vi.stubGlobal(
       'readBody',
       vi.fn(async () => ({ imageUrl: 'https://img.test/a.jpg' }))
     );
     vi.stubGlobal('$fetch', fetchMock);
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
   });
 
   it('returns face api response on success', async () => {
@@ -25,7 +36,7 @@ describe('server/api/face/face.post', () => {
     const result = await handler({} as never);
 
     expect(fetchMock).toHaveBeenCalledWith(
-      facePlusPlus,
+      facePlusPlusUrl,
       expect.objectContaining({
         method: 'POST',
         query: expect.objectContaining({
