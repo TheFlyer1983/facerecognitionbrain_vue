@@ -29,14 +29,14 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.pcss'],
 
   runtimeConfig: {
-    facePlusPlusApiKey: import.meta.env.NUXT_APP_FACE_PLUS_PLUS_API_KEY,
-    facePlusPlusApiSecret: import.meta.env.NUXT_APP_FACE_PLUS_PLUS_API_SECRET,
-    facePlusPlusUrl: import.meta.env.NUXT_APP_FACE_PLUS_PLUS_URL,
+    facePlusPlusApiKey: '',
+    facePlusPlusApiSecret: '',
+    facePlusPlusUrl: '',
     public: {
-      firebaseAuth: import.meta.env.NUXT_FIREBASE_AUTH_URL,
-      firebaseApiKey: import.meta.env.NUXT_FIREBASE_API_KEY,
-      firebaseDatabase: import.meta.env.NUXT_FIREBASE_URL,
-      firebaseReauth: import.meta.env.NUXT_FIREBASE_REAUTH_URL
+      firebaseAuth: '',
+      firebaseApiKey: '',
+      firebaseDatabase: '',
+      firebaseReauth: ''
     }
   },
 

@@ -10,6 +10,7 @@ describe('server/api/auth/session.get', () => {
   const getCookieMock = vi.fn();
   const fetchMock = vi.fn();
   const setCookieMock = vi.fn();
+  const deleteCookieMock = vi.fn();
 
   beforeEach(() => {
     vi.resetModules();
@@ -25,6 +26,7 @@ describe('server/api/auth/session.get', () => {
     vi.stubGlobal('getCookie', getCookieMock);
     vi.stubGlobal('$fetch', fetchMock);
     vi.stubGlobal('setCookie', setCookieMock);
+    vi.stubGlobal('deleteCookie', deleteCookieMock);
   });
 
   afterEach(() => {
@@ -77,13 +79,34 @@ describe('server/api/auth/session.get', () => {
     expect(result).toEqual({ token: 'token-1', userId: 'user-1' });
   });
 
-  it('returns a null session when Firebase rejects the refresh token', async () => {
+  it('clears the refresh token when Firebase rejects it with an auth error', async () => {
+    const event = {} as never;
     getCookieMock.mockReturnValueOnce('refresh-1');
-    fetchMock.mockRejectedValueOnce(new Error('refresh failed'));
+    const error = Object.assign(new Error('refresh failed'), {
+      data: {
+        error: {
+          code: 400,
+          message: 'MISSING_REFRESH_TOKEN',
+          status: 'INVALID_ARGUMENT'
+        }
+      }
+    });
+    fetchMock.mockRejectedValueOnce(error);
 
     const handler = await loadHandler();
-    const result = await handler({} as never);
+    const result = await handler(event);
 
+    expect(deleteCookieMock).toHaveBeenCalledWith(event, 'refreshToken');
     expect(result).toEqual({ token: null, userId: null });
+  });
+
+  it('rethrows non-auth infrastructure failures', async () => {
+    getCookieMock.mockReturnValueOnce('refresh-1');
+    fetchMock.mockRejectedValueOnce(new Error('network down'));
+
+    const handler = await loadHandler();
+
+    await expect(handler({} as never)).rejects.toThrow('network down');
+    expect(deleteCookieMock).not.toHaveBeenCalled();
   });
 });

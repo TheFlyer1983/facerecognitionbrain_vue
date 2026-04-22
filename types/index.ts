@@ -43,6 +43,20 @@ export type ApiErrors = {
   };
 };
 
+export type FirebaseReauthError = {
+  error: {
+    code: number;
+    message:
+      | 'TOKEN_EXPIRED'
+      | 'INVALID_REFRESH_TOKEN'
+      | 'MISSING_REFRESH_TOKEN'
+      | 'USER_DISABLED'
+      | 'USER_NOT_FOUND'
+      | 'INVALID_GRANT';
+    status: string;
+  };
+};
+
 export type NonNullableObject<T extends Record<string, unknown>> = {
   [P in keyof T]: NonNullable<T[P]>;
 };

@@ -10,7 +10,6 @@ describe('server/api/face/face.post', () => {
   beforeEach(() => {
     vi.resetModules();
     vi.clearAllMocks();
-    import.meta.env.NUXT_APP_FACE_PLUS_PLUS_URL = facePlusPlusUrl;
     stubServerHandlerGlobals();
     vi.stubGlobal('useRuntimeConfig', () => ({
       facePlusPlusApiKey: 'face-key',
@@ -47,14 +46,150 @@ describe('server/api/face/face.post', () => {
     expect(result).toEqual(mockResponse);
   });
 
-  it('throws bad request when face api request fails', async () => {
-    fetchMock.mockRejectedValue(new Error('request failed'));
+  it('returns bad request when Face++ rejects an invalid image URL', async () => {
+    const error = Object.assign(new Error('request failed'), {
+      status: 400,
+      data: {
+        request_id: 'request-1',
+        time_used: 86,
+        error_message: 'INVALID_IMAGE_URL'
+      }
+    });
+    fetchMock.mockRejectedValue(error);
     const handler = await loadHandler();
 
     await expect(handler({} as never)).rejects.toMatchObject({
       statusCode: 400,
       statusMessage: 'Bad Request',
-      message: 'Invalid Image URL'
+      message: 'INVALID_IMAGE_URL'
+    });
+  });
+
+  it('returns too many requests when Face++ rate limits', async () => {
+    const error = Object.assign(new Error('rate limited'), {
+      status: 429,
+      data: {
+        request_id: 'request-2',
+        time_used: 42,
+        error_message: 'CONCURRENCY_LIMIT_EXCEEDED'
+      }
+    });
+    fetchMock.mockRejectedValue(error);
+    const handler = await loadHandler();
+
+    await expect(handler({} as never)).rejects.toMatchObject({
+      statusCode: 429,
+      statusMessage: 'Too Many Requests',
+      message: 'CONCURRENCY_LIMIT_EXCEEDED'
+    });
+  });
+
+  it('maps Face++ auth failures to bad gateway', async () => {
+    const error = Object.assign(new Error('forbidden'), {
+      status: 403,
+      data: {
+        request_id: 'request-3',
+        time_used: 12,
+        error_message: 'AUTHORIZATION_ERROR'
+      }
+    });
+    fetchMock.mockRejectedValue(error);
+    const handler = await loadHandler();
+
+    await expect(handler({} as never)).rejects.toMatchObject({
+      statusCode: 502,
+      statusMessage: 'Bad Gateway',
+      message: 'AUTHORIZATION_ERROR'
+    });
+  });
+
+  it('maps Face++ 401 authentication errors to bad gateway', async () => {
+    const error = Object.assign(new Error('unauthorized'), {
+      status: 401,
+      data: {
+        error_message: 'AUTHENTICATION_ERROR'
+      }
+    });
+    fetchMock.mockRejectedValue(error);
+    const handler = await loadHandler();
+
+    await expect(handler({} as never)).rejects.toMatchObject({
+      statusCode: 502,
+      statusMessage: 'Bad Gateway',
+      message: 'AUTHENTICATION_ERROR'
+    });
+  });
+
+  it('maps documented Face++ auth messages to bad gateway even without a status', async () => {
+    const error = Object.assign(new Error('upstream auth failed'), {
+      data: {
+        error_message: 'AUTHORIZATION_ERROR'
+      }
+    });
+    fetchMock.mockRejectedValue(error);
+    const handler = await loadHandler();
+
+    await expect(handler({} as never)).rejects.toMatchObject({
+      statusCode: 502,
+      statusMessage: 'Bad Gateway',
+      message: 'AUTHORIZATION_ERROR'
+    });
+  });
+
+  it('reads nested upstream error messages from response data', async () => {
+    const error = Object.assign(new Error('request failed'), {
+      response: {
+        status: 400,
+        _data: {
+          error: {
+            message: 'NESTED_FACE_ERROR'
+          }
+        }
+      }
+    });
+    fetchMock.mockRejectedValue(error);
+    const handler = await loadHandler();
+
+    await expect(handler({} as never)).rejects.toMatchObject({
+      statusCode: 400,
+      statusMessage: 'Bad Request',
+      message: 'NESTED_FACE_ERROR'
+    });
+  });
+
+  it('maps Face++ upstream 5xx responses to service unavailable', async () => {
+    const error = Object.assign(new Error('upstream down'), {
+      status: 500,
+      data: {
+        request_id: 'request-4',
+        time_used: 10,
+        error_message: 'Internal server error'
+      }
+    });
+    fetchMock.mockRejectedValue(error);
+    const handler = await loadHandler();
+
+    await expect(handler({} as never)).rejects.toMatchObject({
+      statusCode: 503,
+      statusMessage: 'Service Unavailable',
+      message: 'Internal server error'
+    });
+  });
+
+  it('falls back to bad gateway for unknown upstream failures', async () => {
+    const error = Object.assign(new Error('unexpected upstream failure'), {
+      status: 418,
+      data: {
+        error_message: 'SOMETHING_UNEXPECTED'
+      }
+    });
+    fetchMock.mockRejectedValue(error);
+    const handler = await loadHandler();
+
+    await expect(handler({} as never)).rejects.toMatchObject({
+      statusCode: 502,
+      statusMessage: 'Bad Gateway',
+      message: 'SOMETHING_UNEXPECTED'
     });
   });
 });

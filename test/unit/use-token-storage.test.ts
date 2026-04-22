@@ -2,6 +2,10 @@
 
 const fetchMock = vi.fn();
 const useRequestHeadersMock = vi.fn();
+const eventFetchMock = vi.fn();
+const eventMock = {
+  $fetch: eventFetchMock
+} as never;
 
 describe('useTokenStorage', () => {
   const loadComposable = async () =>
@@ -23,7 +27,7 @@ describe('useTokenStorage', () => {
     const useTokenStorage = await loadComposable();
     const { saveRefreshTokenInSession } = useTokenStorage();
 
-    saveRefreshTokenInSession('test-refresh-token');
+    await saveRefreshTokenInSession('test-refresh-token');
 
     expect(fetchMock).toHaveBeenCalledWith('/api/auth/session', {
       method: 'POST',
@@ -48,6 +52,21 @@ describe('useTokenStorage', () => {
     );
   });
 
+  it('uses the request event fetcher during SSR', async () => {
+    eventFetchMock.mockResolvedValueOnce({ token: 'test-token', userId: 'user-1' });
+
+    const useTokenStorage = await loadComposable();
+    const { getAuthTokenInSession } = useTokenStorage();
+    const result = await getAuthTokenInSession(eventMock);
+
+    expect(result).toEqual({ token: 'test-token', userId: 'user-1' });
+    expect(eventFetchMock).toHaveBeenCalledWith('/api/auth/session', {
+      credentials: 'include',
+      headers: undefined
+    });
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
   it('includes credentials when requesting the current auth session', async () => {
     fetchMock.mockResolvedValueOnce({ token: 'test-token', userId: 'user-1' });
 
@@ -65,6 +84,17 @@ describe('useTokenStorage', () => {
     await removeAuthTokenFromSession();
 
     expect(fetchMock).toHaveBeenCalledWith('/api/auth/session', {
+      method: 'DELETE',
+      credentials: 'include'
+    });
+  });
+
+  it('deletes the auth session with the request event fetcher during SSR', async () => {
+    const useTokenStorage = await loadComposable();
+    const { removeAuthTokenFromSession } = useTokenStorage();
+    await removeAuthTokenFromSession(eventMock);
+
+    expect(eventFetchMock).toHaveBeenCalledWith('/api/auth/session', {
       method: 'DELETE',
       credentials: 'include'
     });

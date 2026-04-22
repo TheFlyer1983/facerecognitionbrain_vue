@@ -22,11 +22,11 @@ describe('server/api/auth/session.delete', () => {
     const handler = await loadHandler();
     const result = await handler(event);
 
-    expect(deleteCookieMock).toHaveBeenCalledWith(event, 'refreshToken');
+    expect(deleteCookieMock).toHaveBeenCalledWith(event, 'refreshToken', {
+      path: '/'
+    });
     expect(result).toEqual({
-      message: 'Refresh token deleted successfully',
-      statusCode: 200,
-      statusMessage: 'OK'
+      message: 'Refresh token deleted successfully'
     });
   });
 });

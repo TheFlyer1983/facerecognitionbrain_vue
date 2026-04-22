@@ -17,6 +17,7 @@ const getAuthTokenInSessionMock = vi.fn();
 const removeAuthTokenFromSessionMock = vi.fn();
 const isAxiosErrorMock = vi.fn();
 const isErrorMock = vi.fn();
+const requestEvent = {} as never;
 
 describe('useUserStore', () => {
   const signinEndpoint = `${firebaseAuthUrl}:signInWithPassword`;
@@ -32,8 +33,8 @@ describe('useUserStore', () => {
   beforeEach(() => {
     vi.resetModules();
     vi.clearAllMocks();
-    import.meta.env.NUXT_FIREBASE_AUTH_URL = firebaseAuthUrl;
-    import.meta.env.NUXT_FIREBASE_URL = firebaseDbUrl;
+    vi.stubEnv('NUXT_FIREBASE_AUTH_URL', firebaseAuthUrl);
+    vi.stubEnv('NUXT_FIREBASE_URL', firebaseDbUrl);
     setActivePinia(createPinia());
     vi.stubGlobal('defineStore', defineStore);
     vi.stubGlobal('ref', ref);
@@ -72,6 +73,7 @@ describe('useUserStore', () => {
 
   afterEach(() => {
     vi.unstubAllGlobals();
+    vi.unstubAllEnvs();
   });
 
   it('logs in and loads user profile successfully', async () => {
@@ -149,6 +151,29 @@ describe('useUserStore', () => {
     errorSpy.mockRestore();
   });
 
+  it('returns false when login gets a null user profile response', async () => {
+    const store = await makeStore();
+    postMock.mockResolvedValueOnce({
+      data: {
+        idToken: 'token-1',
+        refreshToken: 'refresh-1',
+        localId: 'user-1'
+      }
+    });
+    fetchMock.mockResolvedValueOnce(null);
+
+    const result = await store.login({
+      email: 'paul@test.dev',
+      password: 'secret'
+    });
+
+    expect(result).toBe(false);
+    expect(saveRefreshTokenInSessionMock).not.toHaveBeenCalled();
+    expect(removeAuthTokenFromSessionMock).toHaveBeenCalled();
+    expect(store.user).toBeNull();
+    expect(store.isSignedIn).toBe(false);
+  });
+
   it('registers user and creates profile', async () => {
     const store = await makeStore();
     postMock.mockResolvedValueOnce({
@@ -178,7 +203,6 @@ describe('useUserStore', () => {
       },
       { params: { key: firebaseApiKey } }
     );
-    expect(saveRefreshTokenInSessionMock).toHaveBeenCalledWith('refresh-2');
     expect(putMock).toHaveBeenCalledWith(
       profileEndpoint('user-2'),
       expect.objectContaining({
@@ -187,12 +211,16 @@ describe('useUserStore', () => {
       }),
       { params: { auth: 'token-2' } }
     );
+    expect(saveRefreshTokenInSessionMock).toHaveBeenCalledWith('refresh-2');
+    expect(putMock.mock.invocationCallOrder[0]).toBeLessThan(
+      saveRefreshTokenInSessionMock.mock.invocationCallOrder[0]
+    );
     expect(store.isSignedIn).toBe(true);
   });
 
-  it('logs when createProfile fails', async () => {
+  it('does not persist the refresh token when createProfile fails', async () => {
     const store = await makeStore();
-    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     postMock.mockResolvedValueOnce({
       data: {
         idToken: 'token-2',
@@ -209,8 +237,9 @@ describe('useUserStore', () => {
       confirmPassword: 'secret'
     });
 
-    expect(logSpy).toHaveBeenCalled();
-    logSpy.mockRestore();
+    expect(saveRefreshTokenInSessionMock).not.toHaveBeenCalled();
+    expect(errorSpy).toHaveBeenCalled();
+    errorSpy.mockRestore();
   });
 
   it('logs when registerUser request fails', async () => {
@@ -270,6 +299,21 @@ describe('useUserStore', () => {
     expect(saveRefreshTokenInSessionMock).not.toHaveBeenCalled();
   });
 
+  it('forwards the SSR event during reauthenticate', async () => {
+    const store = await makeStore();
+    getAuthTokenInSessionMock.mockResolvedValueOnce({
+      token: 'token-3',
+      userId: 'user-3'
+    });
+    fetchMock
+      .mockResolvedValueOnce({ name: 'Reauth User', entries: 4 })
+      .mockResolvedValueOnce({ input: '🐥' });
+
+    await store.reauthenticate(requestEvent);
+
+    expect(getAuthTokenInSessionMock).toHaveBeenCalledWith(requestEvent);
+  });
+
   it('signs out when there is no session to reauthenticate', async () => {
     const store = await makeStore();
     const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -281,6 +325,17 @@ describe('useUserStore', () => {
     expect(store.token).toBeNull();
     expect(store.id).toBeNull();
     expect(errorSpy).toHaveBeenCalled();
+    errorSpy.mockRestore();
+  });
+
+  it('forwards the SSR event when reauthenticate falls back to signout', async () => {
+    const store = await makeStore();
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    getAuthTokenInSessionMock.mockResolvedValueOnce({ token: null, userId: null });
+
+    await store.reauthenticate(requestEvent);
+
+    expect(removeAuthTokenFromSessionMock).toHaveBeenCalledWith(requestEvent);
     errorSpy.mockRestore();
   });
 
@@ -361,19 +416,20 @@ describe('useUserStore', () => {
       .mockResolvedValueOnce({ input: '🦅' });
 
     await store.updateUser({ name: 'Updated' });
-    await Promise.resolve();
-    await Promise.resolve();
 
     expect(patchMock).toHaveBeenCalledWith(
       profileEndpoint('user-4'),
       { name: 'Updated' },
       { params: { auth: 'token-4' } }
     );
-    expect(fetchMock).toHaveBeenCalledWith(profileEndpoint('user-4'), {
-      params: { auth: 'token-4' }
+
+    await vi.waitFor(() => {
+      expect(fetchMock).toHaveBeenCalledWith(profileEndpoint('user-4'), {
+        params: { auth: 'token-4' }
+      });
+      expect(store.user).toEqual({ name: 'Updated', entries: 5 });
+      expect(store.rank).toBe('🦅');
     });
-    expect(store.user).toEqual({ name: 'Updated', entries: 5 });
-    expect(store.rank).toBe('🦅');
   });
 
   it('logs when updateUser request fails', async () => {

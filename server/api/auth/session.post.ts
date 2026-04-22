@@ -1,7 +1,7 @@
 import { setRefreshToken } from '~~/server/utils/session';
 
 export default defineEventHandler(async (event) => {
-  const { refreshToken } = await readBody(event);
+  const { refreshToken } = await readBody<{ refreshToken?: string }>(event);
 
   if (!refreshToken) {
     throw createError({

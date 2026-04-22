@@ -22,7 +22,7 @@ export const useImageStore = defineStore('image', () => {
       });
 
       boxes.value = response.faces;
-      increaseEntries();
+      await increaseEntries();
     } catch (error) {
       console.error(error);
     }

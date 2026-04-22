@@ -1,3 +1,4 @@
+import type { H3Event } from 'h3';
 import type { RankResponse } from '../../types';
 import type { UserState } from '../../types/user';
 
@@ -54,9 +55,13 @@ export const useUserStore = defineStore('UserStore', () => {
     const requestURL = `${firebaseDatabase}/users/${userId}.json`;
 
     try {
-      const response = await $fetch<User>(requestURL, {
+      const response = await $fetch<User | null>(requestURL, {
         params: { auth: token.value }
       });
+
+      if (!response) {
+        return false;
+      }
 
       user.value = response;
       isSignedIn.value = true;
@@ -84,12 +89,10 @@ export const useUserStore = defineStore('UserStore', () => {
           params: { key: firebaseApiKey }
         }
       );
-
-      await saveRefreshTokenInSession(response.data.refreshToken);
-
       token.value = response.data.idToken;
       id.value = response.data.localId;
       await createProfile(payload.name, id.value);
+      await saveRefreshTokenInSession(response.data.refreshToken);
     } catch (error) {
       console.error(error);
     }
@@ -103,26 +106,22 @@ export const useUserStore = defineStore('UserStore', () => {
     };
 
     const requestURL = `${firebaseDatabase}/users/${userId}.json`;
+    const response = await $api().put<User>(requestURL, profilePayload, {
+      params: { auth: token.value }
+    });
 
-    try {
-      const response = await $api().put<User>(requestURL, profilePayload, {
-        params: { auth: token.value }
-      });
-
-      user.value = response.data;
-      isSignedIn.value = true;
-    } catch (error) {
-      console.log(error);
-    }
+    user.value = response.data;
+    isSignedIn.value = true;
+    return true;
   }
 
-  async function signout() {
-    await reset();
+  async function signout(event?: H3Event) {
+    await reset(event);
   }
 
-  async function reauthenticate() {
+  async function reauthenticate(event?: H3Event) {
     try {
-      const { token: userToken, userId } = await getAuthTokenInSession();
+      const { token: userToken, userId } = await getAuthTokenInSession(event);
 
       if (!userToken || !userId) {
         throw new Error('No user token or user id found');
@@ -138,7 +137,7 @@ export const useUserStore = defineStore('UserStore', () => {
     } catch (error) {
       console.error(error);
 
-      await signout();
+      await signout(event);
     }
   }
 
@@ -195,9 +194,9 @@ export const useUserStore = defineStore('UserStore', () => {
     }
   }
 
-  async function reset() {
+  async function reset(event?: H3Event) {
     try {
-      await removeAuthTokenFromSession();
+      await removeAuthTokenFromSession(event);
     } catch (error) {
       console.error(error);
     } finally {
