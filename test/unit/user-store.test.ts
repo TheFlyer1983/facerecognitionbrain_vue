@@ -362,7 +362,7 @@ describe('useUserStore', () => {
     expect(removeAuthTokenFromSessionMock).toHaveBeenCalled();
     expect(store.token).toBeNull();
     expect(store.id).toBeNull();
-    expect(errorSpy).toHaveBeenCalled();
+    expect(errorSpy).not.toHaveBeenCalled();
     errorSpy.mockRestore();
   });
 
@@ -377,7 +377,27 @@ describe('useUserStore', () => {
     errorSpy.mockRestore();
   });
 
-  it('signs out when reauthenticate cannot load the user profile', async () => {
+  it('signs out when reauthenticate cannot load a user profile', async () => {
+    const store = await makeStore();
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    getAuthTokenInSessionMock.mockResolvedValueOnce({
+      token: 'token-3',
+      userId: 'user-3'
+    });
+    fetchMock.mockResolvedValueOnce(null);
+
+    await store.reauthenticate();
+
+    expect(removeAuthTokenFromSessionMock).toHaveBeenCalled();
+    expect(store.token).toBeNull();
+    expect(store.id).toBeNull();
+    expect(store.user).toBeNull();
+    expect(store.isSignedIn).toBe(false);
+    expect(errorSpy).not.toHaveBeenCalled();
+    errorSpy.mockRestore();
+  });
+
+  it('clears only local state when reauthenticate hits a transient profile error', async () => {
     const store = await makeStore();
     const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     getAuthTokenInSessionMock.mockResolvedValueOnce({
@@ -388,7 +408,7 @@ describe('useUserStore', () => {
 
     await store.reauthenticate();
 
-    expect(removeAuthTokenFromSessionMock).toHaveBeenCalled();
+    expect(removeAuthTokenFromSessionMock).not.toHaveBeenCalled();
     expect(store.token).toBeNull();
     expect(store.id).toBeNull();
     expect(store.user).toBeNull();
@@ -513,17 +533,44 @@ describe('useUserStore', () => {
     expect(store.token).toBeNull();
   });
 
-  it('still signs out when deleteUser request fails', async () => {
+  it('does not sign out when profile deletion fails', async () => {
     const store = await makeStore();
     const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     store.id = 'user-6';
     store.token = 'token-6';
     deleteMock.mockRejectedValueOnce(new Error('delete failed'));
 
-    await store.deleteUser();
+    await expect(store.deleteUser()).rejects.toThrow('delete failed');
 
     expect(errorSpy).toHaveBeenCalled();
-    expect(removeAuthTokenFromSessionMock).toHaveBeenCalled();
+    expect(removeAuthTokenFromSessionMock).not.toHaveBeenCalled();
+    expect(store.id).toBe('user-6');
+    expect(store.token).toBe('token-6');
+    errorSpy.mockRestore();
+  });
+
+  it('does not sign out when Firebase account deletion fails', async () => {
+    const store = await makeStore();
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    store.id = 'user-7';
+    store.token = 'token-7';
+    deleteMock.mockResolvedValueOnce({});
+    postMock.mockRejectedValueOnce(new Error('firebase delete failed'));
+
+    await expect(store.deleteUser()).rejects.toThrow('firebase delete failed');
+
+    expect(deleteMock).toHaveBeenCalledWith(profileEndpoint('user-7'), {
+      params: { auth: 'token-7' }
+    });
+    expect(postMock).toHaveBeenCalledWith(
+      deleteEndpoint,
+      { idToken: 'token-7' },
+      { params: { key: firebaseApiKey } }
+    );
+    expect(errorSpy).toHaveBeenCalled();
+    expect(removeAuthTokenFromSessionMock).not.toHaveBeenCalled();
+    expect(store.id).toBe('user-7');
+    expect(store.token).toBe('token-7');
     errorSpy.mockRestore();
   });
 });

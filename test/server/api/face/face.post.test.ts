@@ -38,7 +38,10 @@ describe('server/api/face/face.post', () => {
       facePlusPlusUrl,
       expect.objectContaining({
         method: 'POST',
-        query: expect.objectContaining({
+        headers: expect.objectContaining({
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }),
+        body: new URLSearchParams({
           api_key: 'face-key',
           api_secret: 'face-secret',
           image_url: 'https://img.test/a.jpg'
@@ -46,6 +49,46 @@ describe('server/api/face/face.post', () => {
       })
     );
     expect(result).toEqual(mockResponse);
+  });
+
+  it('returns bad request when imageUrl is missing', async () => {
+    vi.stubGlobal('readBody', vi.fn(async () => ({ })));
+    const handler = await loadHandler();
+
+    await expect(handler({} as never)).rejects.toMatchObject({
+      statusCode: 400,
+      statusMessage: 'Bad Request',
+      message: 'A valid imageUrl is required'
+    });
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('returns bad request when imageUrl is not a valid URL', async () => {
+    vi.stubGlobal('readBody', vi.fn(async () => ({ imageUrl: 'not-a-url' })));
+    const handler = await loadHandler();
+
+    await expect(handler({} as never)).rejects.toMatchObject({
+      statusCode: 400,
+      statusMessage: 'Bad Request',
+      message: 'imageUrl must be a valid URL'
+    });
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('returns internal server error when Face++ config is missing', async () => {
+    vi.stubGlobal('useRuntimeConfig', () => ({
+      facePlusPlusApiKey: '',
+      facePlusPlusApiSecret: 'face-secret',
+      facePlusPlusUrl
+    }));
+    const handler = await loadHandler();
+
+    await expect(handler({} as never)).rejects.toMatchObject({
+      statusCode: 500,
+      statusMessage: 'Internal Server Error',
+      message: 'Face++ configuration is missing'
+    });
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 
   it('returns bad request when Face++ rejects an invalid image URL', async () => {
@@ -192,6 +235,20 @@ describe('server/api/face/face.post', () => {
       statusCode: 502,
       statusMessage: 'Bad Gateway',
       message: 'SOMETHING_UNEXPECTED'
+    });
+  });
+
+  it('sanitizes generic upstream errors before returning them to clients', async () => {
+    const error = new Error(
+      'fetch failed for https://face.test/detect?api_secret=face-secret'
+    );
+    fetchMock.mockRejectedValue(error);
+    const handler = await loadHandler();
+
+    await expect(handler({} as never)).rejects.toMatchObject({
+      statusCode: 502,
+      statusMessage: 'Bad Gateway',
+      message: 'Face++ request failed'
     });
   });
 });

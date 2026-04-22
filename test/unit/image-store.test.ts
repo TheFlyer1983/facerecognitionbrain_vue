@@ -127,14 +127,19 @@ describe('useImageStore', () => {
 
   it('logs an error when face request fails', async () => {
     const store = await makeStore();
-    const error = new Error('bad image');
+    const error = {
+      statusMessage: 'Bad Request',
+      data: {
+        message: 'INVALID_IMAGE_URL'
+      }
+    };
     const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     fetchMock.mockRejectedValue(error);
     store.imageUrl = 'https://img.test/a.jpg';
 
     await store.submitURL();
 
-    expect(errorSpy).toHaveBeenCalled();
+    expect(errorSpy).toHaveBeenCalledWith('INVALID_IMAGE_URL');
     errorSpy.mockRestore();
   });
 });

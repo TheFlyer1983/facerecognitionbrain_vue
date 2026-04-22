@@ -20,6 +20,15 @@ export const useUserStore = defineStore('UserStore', () => {
   const isProfileOpen = ref(false);
   const rank = ref<UserState['rank']>(null);
 
+  function clearLocalState() {
+    token.value = null;
+    id.value = null;
+    user.value = null;
+    isSignedIn.value = false;
+    isProfileOpen.value = false;
+    rank.value = null;
+  }
+
   async function login(payload: LoginInfo) {
     payload = { ...payload, returnSecureToken: true };
 
@@ -54,25 +63,20 @@ export const useUserStore = defineStore('UserStore', () => {
   async function getUser(userId: string) {
     const requestURL = `${firebaseDatabase}/users/${userId}.json`;
 
-    try {
-      const response = await $fetch<User | null>(requestURL, {
-        params: { auth: token.value }
-      });
+    const response = await $fetch<User | null>(requestURL, {
+      params: { auth: token.value }
+    });
 
-      if (!response) {
-        return false;
-      }
-
-      user.value = response;
-      isSignedIn.value = true;
-
-      await getRank();
-
-      return true;
-    } catch (error) {
-      console.error(error);
+    if (!response) {
       return false;
     }
+
+    user.value = response;
+    isSignedIn.value = true;
+
+    await getRank();
+
+    return true;
   }
 
   async function registerUser(payload: RegisterInfo) {
@@ -125,7 +129,8 @@ export const useUserStore = defineStore('UserStore', () => {
       const { token: userToken, userId } = await getAuthTokenInSession(event);
 
       if (!userToken || !userId) {
-        throw new Error('No user token or user id found');
+        await signout(event);
+        return;
       }
 
       token.value = userToken;
@@ -133,12 +138,12 @@ export const useUserStore = defineStore('UserStore', () => {
 
       const success = await getUser(userId);
       if (!success) {
-        throw new Error('Failed to get user');
+        await signout(event);
+        return;
       }
     } catch (error) {
       console.error(error);
-
-      await signout(event);
+      clearLocalState();
     }
   }
 
@@ -190,9 +195,10 @@ export const useUserStore = defineStore('UserStore', () => {
       );
     } catch (error) {
       console.error(error);
-    } finally {
-      await signout();
+      throw error;
     }
+
+    await signout();
   }
 
   async function reset(event?: H3Event) {
@@ -201,12 +207,7 @@ export const useUserStore = defineStore('UserStore', () => {
     } catch (error) {
       console.error(error);
     } finally {
-      token.value = null;
-      id.value = null;
-      user.value = null;
-      isSignedIn.value = false;
-      isProfileOpen.value = false;
-      rank.value = null;
+      clearLocalState();
     }
   }
   return {

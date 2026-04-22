@@ -1,8 +1,11 @@
+import { useErrorTypes } from '~~/app/composables/useErrorTypes';
+
 export const useImageStore = defineStore('image', () => {
   const { $api } = useNuxtApp();
   const {
     public: { firebaseDatabase }
   } = useRuntimeConfig();
+  const { isError } = useErrorTypes();
   const userStore = useUserStore();
 
   const imageUrl = ref<string | null>(null);
@@ -24,7 +27,9 @@ export const useImageStore = defineStore('image', () => {
       boxes.value = response.faces;
       await increaseEntries();
     } catch (error) {
-      console.error(error);
+      if (isError(error)) {
+        console.error(error.data?.message);
+      }
     }
   }
 

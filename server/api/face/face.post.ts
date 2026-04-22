@@ -58,7 +58,7 @@ function getFacePlusPlusErrorMessage(error: unknown) {
     return errorBody.error.message;
   }
 
-  return error.message || 'Face++ request failed';
+  return 'Face++ request failed';
 }
 
 function isFacePlusPlusErrorResponse(
@@ -74,24 +74,77 @@ function isFacePlusPlusErrorResponse(
   );
 }
 
+function isNonEmptyString(x: unknown): x is string {
+  return typeof x === 'string' && x.trim().length > 0;
+}
+
+function isValidHttpUrl(x: string) {
+  try {
+    const url = new URL(x);
+    return url.protocol === 'http:' || url.protocol === 'https:';
+  } catch {
+    return false;
+  }
+}
+
 export default defineEventHandler(async (event) => {
   const { facePlusPlusApiKey, facePlusPlusApiSecret, facePlusPlusUrl } = useRuntimeConfig();
 
+  if (
+    !isNonEmptyString(facePlusPlusApiKey) ||
+    !isNonEmptyString(facePlusPlusApiSecret) ||
+    !isNonEmptyString(facePlusPlusUrl)
+  ) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Internal Server Error',
+      message: 'Face++ configuration is missing'
+    });
+  }
+
   const body = await readBody(event);
 
-  const imageUrl: string = body.imageUrl;
+  if (
+    typeof body !== 'object' ||
+    body === null ||
+    !('imageUrl' in body) ||
+    !isNonEmptyString(body.imageUrl)
+  ) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'Bad Request',
+      message: 'A valid imageUrl is required'
+    });
+  }
+
+  const imageUrl = body.imageUrl;
+
+  if (!isValidHttpUrl(imageUrl)) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'Bad Request',
+      message: 'imageUrl must be a valid URL'
+    });
+  }
+
+  const formBody = new URLSearchParams({
+    api_key: facePlusPlusApiKey,
+    api_secret: facePlusPlusApiSecret,
+    image_url: imageUrl
+  });
 
   try {
     const response = await $fetch<ImageResponse>(facePlusPlusUrl, {
       method: 'POST',
-      query: {
-        api_key: facePlusPlusApiKey,
-        api_secret: facePlusPlusApiSecret,
-        image_url: imageUrl
-      }
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: formBody
     });
     return response;
   } catch (error) {
+    console.error(error);
+    
     const status = getFacePlusPlusErrorStatus(error);
     const message = getFacePlusPlusErrorMessage(error);
 
