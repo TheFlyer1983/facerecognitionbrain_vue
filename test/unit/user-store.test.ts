@@ -238,6 +238,44 @@ describe('useUserStore', () => {
     });
 
     expect(saveRefreshTokenInSessionMock).not.toHaveBeenCalled();
+    expect(removeAuthTokenFromSessionMock).toHaveBeenCalled();
+    expect(store.token).toBeNull();
+    expect(store.id).toBeNull();
+    expect(store.user).toBeNull();
+    expect(store.isSignedIn).toBe(false);
+    expect(errorSpy).toHaveBeenCalled();
+    errorSpy.mockRestore();
+  });
+
+  it('clears auth state when saving the refresh token fails', async () => {
+    const store = await makeStore();
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    postMock.mockResolvedValueOnce({
+      data: {
+        idToken: 'token-2',
+        refreshToken: 'refresh-2',
+        localId: 'user-2'
+      }
+    });
+    putMock.mockResolvedValueOnce({
+      data: { name: 'New User', entries: 0 }
+    });
+    saveRefreshTokenInSessionMock.mockRejectedValueOnce(
+      new Error('session save failed')
+    );
+
+    await store.registerUser({
+      name: 'New User',
+      email: 'new@test.dev',
+      password: 'secret',
+      confirmPassword: 'secret'
+    });
+
+    expect(removeAuthTokenFromSessionMock).toHaveBeenCalled();
+    expect(store.token).toBeNull();
+    expect(store.id).toBeNull();
+    expect(store.user).toBeNull();
+    expect(store.isSignedIn).toBe(false);
     expect(errorSpy).toHaveBeenCalled();
     errorSpy.mockRestore();
   });

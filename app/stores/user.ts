@@ -95,6 +95,7 @@ export const useUserStore = defineStore('UserStore', () => {
       await saveRefreshTokenInSession(response.data.refreshToken);
     } catch (error) {
       console.error(error);
+      await reset();
     }
   }
 

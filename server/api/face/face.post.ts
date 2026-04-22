@@ -92,8 +92,6 @@ export default defineEventHandler(async (event) => {
     });
     return response;
   } catch (error) {
-    console.error(error);
-
     const status = getFacePlusPlusErrorStatus(error);
     const message = getFacePlusPlusErrorMessage(error);
 

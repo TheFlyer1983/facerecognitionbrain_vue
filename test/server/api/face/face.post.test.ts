@@ -39,6 +39,8 @@ describe('server/api/face/face.post', () => {
       expect.objectContaining({
         method: 'POST',
         query: expect.objectContaining({
+          api_key: 'face-key',
+          api_secret: 'face-secret',
           image_url: 'https://img.test/a.jpg'
         })
       })
