@@ -1,4 +1,3 @@
-/// <reference types="vite/types/importMeta.d.ts" />
 import type {
   FacePlusPlusErrorResponse,
   ImageResponse
@@ -143,10 +142,9 @@ export default defineEventHandler(async (event) => {
     });
     return response;
   } catch (error) {
-    console.error(error);
-    
     const status = getFacePlusPlusErrorStatus(error);
     const message = getFacePlusPlusErrorMessage(error);
+    console.error('Face++ request failed', { status, message });
 
     if (status === 429 || facePlusPlusRateLimitErrors.has(message)) {
       throw createError({

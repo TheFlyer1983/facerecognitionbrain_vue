@@ -5,7 +5,7 @@ export const useImageStore = defineStore('image', () => {
   const {
     public: { firebaseDatabase }
   } = useRuntimeConfig();
-  const { isError } = useErrorTypes();
+  const { isAxiosError, isError } = useErrorTypes();
   const userStore = useUserStore();
 
   const imageUrl = ref<string | null>(null);
@@ -29,16 +29,25 @@ export const useImageStore = defineStore('image', () => {
     } catch (error) {
       if (isError(error)) {
         console.error(error.data?.message);
-      }
+      } else {
+        console.error(error);
+      } 
     }
   }
 
   async function increaseEntries() {
-    if (!userStore.user || !userStore.id) return;
-
-    const requestURL = `${firebaseDatabase}/users/${userStore.id}.json`;
-
     try {
+      if (!userStore.user || !userStore.id) return;
+
+      if (!firebaseDatabase) {
+        throw createError({
+          statusCode: 500,
+          statusMessage: 'Internal Server Error',
+          message: 'Firebase database is not configured'
+        });
+      }
+      const requestURL = `${firebaseDatabase}/users/${userStore.id}.json`;
+
       const response = await $api().patch(
         requestURL,
         {
@@ -50,7 +59,13 @@ export const useImageStore = defineStore('image', () => {
       userStore.user.entries = response.data.entries;
       userStore.getRank();
     } catch (error) {
-      console.error(error);
+      if (isAxiosError(error)) {
+        console.error(error.message);
+      } else if (isError(error)) {
+        console.error(error.data?.message);
+      }
+
+      throw error;
     }
   }
 

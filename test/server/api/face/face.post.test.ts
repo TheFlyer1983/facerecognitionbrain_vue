@@ -238,10 +238,11 @@ describe('server/api/face/face.post', () => {
     });
   });
 
-  it('sanitizes generic upstream errors before returning them to clients', async () => {
+  it('falls back to a generic message for non-Face++-shaped upstream errors', async () => {
     const error = new Error(
       'fetch failed for https://face.test/detect?api_secret=face-secret'
     );
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     fetchMock.mockRejectedValue(error);
     const handler = await loadHandler();
 
@@ -250,5 +251,10 @@ describe('server/api/face/face.post', () => {
       statusMessage: 'Bad Gateway',
       message: 'Face++ request failed'
     });
+
+    const loggedOutput = errorSpy.mock.calls.flat().map(String).join(' ');
+    expect(loggedOutput).not.toMatch(/api_secret/);
+    expect(loggedOutput).not.toMatch(/face-secret/);
+    errorSpy.mockRestore();
   });
 });

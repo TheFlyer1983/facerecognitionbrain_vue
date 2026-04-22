@@ -1,5 +1,6 @@
 /// <reference types="vitest/globals" />
 
+import type { H3Event } from 'h3';
 import { createPinia, defineStore, setActivePinia } from 'pinia';
 import { ref } from 'vue';
 
@@ -17,7 +18,7 @@ const getAuthTokenInSessionMock = vi.fn();
 const removeAuthTokenFromSessionMock = vi.fn();
 const isAxiosErrorMock = vi.fn();
 const isErrorMock = vi.fn();
-const requestEvent = {} as never;
+const requestEvent = {} as H3Event;
 
 describe('useUserStore', () => {
   const signinEndpoint = `${firebaseAuthUrl}:signInWithPassword`;
