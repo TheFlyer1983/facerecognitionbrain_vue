@@ -1,34 +1,43 @@
-export const useTokenStorage = () => {
-  const { data, execute } = useFetch('/api/storage', {
-    deep: true
-  });
+import type { H3Event } from 'h3';
 
-  function saveAuthTokenInSession(token: string, refreshToken: string) {
-    $fetch('/api/storage', {
+export const useTokenStorage = () => {
+  async function saveRefreshTokenInSession(
+    refreshToken: string,
+    event?: H3Event
+  ) {
+    const fetcher = event?.$fetch ?? $fetch;
+
+    await fetcher('/api/auth/session', {
       method: 'POST',
       body: {
-        token,
         refreshToken
-      }
+      },
+      credentials: 'include'
     });
   }
 
-  async function getAuthTokenInSession() {
-    await execute();
-    const token = data.value?.token;
-    const refreshToken = data.value?.refreshToken;
+  async function getAuthTokenInSession(event?: H3Event) {
+    const fetcher = event?.$fetch ?? $fetch;
+    const headers =
+      import.meta.server && !event ? useRequestHeaders(['cookie']) : undefined;
 
-    return { token, refreshToken };
+    return await fetcher('/api/auth/session', {
+      credentials: 'include',
+      headers
+    });
   }
 
-  async function removeAuthTokenFromSession() {
-    $fetch('/api/storage', {
-      method: 'DELETE'
+  async function removeAuthTokenFromSession(event?: H3Event) {
+    const fetcher = event?.$fetch ?? $fetch;
+
+    await fetcher('/api/auth/session', {
+      method: 'DELETE',
+      credentials: 'include'
     });
   }
 
   return {
-    saveAuthTokenInSession,
+    saveRefreshTokenInSession,
     getAuthTokenInSession,
     removeAuthTokenFromSession
   };

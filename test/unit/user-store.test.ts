@@ -1,44 +1,62 @@
 /// <reference types="vitest/globals" />
 
+import type { H3Event } from 'h3';
 import { createPinia, defineStore, setActivePinia } from 'pinia';
 import { ref } from 'vue';
-import { endpoints, reAuthURL } from '../../constants/api';
+
+const firebaseAuthUrl = 'https://firebase-auth.test/accounts';
+const firebaseDbUrl = 'https://firebase-db.test';
+const firebaseApiKey = 'firebase-api-key';
 
 const postMock = vi.fn();
-const getMock = vi.fn();
 const putMock = vi.fn();
 const patchMock = vi.fn();
 const deleteMock = vi.fn();
 const fetchMock = vi.fn();
-const saveAuthTokenInSessionMock = vi.fn();
+const saveRefreshTokenInSessionMock = vi.fn();
 const getAuthTokenInSessionMock = vi.fn();
 const removeAuthTokenFromSessionMock = vi.fn();
 const isAxiosErrorMock = vi.fn();
 const isErrorMock = vi.fn();
+const requestEvent = {} as H3Event;
 
 describe('useUserStore', () => {
+  const signinEndpoint = `${firebaseAuthUrl}:signInWithPassword`;
+  const registerEndpoint = `${firebaseAuthUrl}:signUp`;
+  const deleteEndpoint = `${firebaseAuthUrl}:delete`;
+  const profileEndpoint = (userId: string) => `${firebaseDbUrl}/users/${userId}.json`;
+
   const makeStore = async () => {
     const { useUserStore } = await import('../../app/stores/user');
     return useUserStore();
   };
 
   beforeEach(() => {
+    vi.resetModules();
     vi.clearAllMocks();
+    vi.stubEnv('NUXT_FIREBASE_AUTH_URL', firebaseAuthUrl);
+    vi.stubEnv('NUXT_FIREBASE_URL', firebaseDbUrl);
     setActivePinia(createPinia());
     vi.stubGlobal('defineStore', defineStore);
     vi.stubGlobal('ref', ref);
     vi.stubGlobal('$fetch', fetchMock);
+    vi.stubGlobal('useRuntimeConfig', () => ({
+      public: {
+        firebaseAuth: firebaseAuthUrl,
+        firebaseApiKey,
+        firebaseDatabase: firebaseDbUrl
+      }
+    }));
     vi.stubGlobal('useNuxtApp', () => ({
       $api: () => ({
         post: postMock,
-        get: getMock,
         put: putMock,
         patch: patchMock,
         delete: deleteMock
       })
     }));
     vi.stubGlobal('useTokenStorage', () => ({
-      saveAuthTokenInSession: saveAuthTokenInSessionMock,
+      saveRefreshTokenInSession: saveRefreshTokenInSessionMock,
       getAuthTokenInSession: getAuthTokenInSessionMock,
       removeAuthTokenFromSession: removeAuthTokenFromSessionMock
     }));
@@ -47,7 +65,8 @@ describe('useUserStore', () => {
       isError: isErrorMock
     }));
     getAuthTokenInSessionMock.mockResolvedValue({
-      refreshToken: 'refresh-token'
+      token: 'token-session',
+      userId: 'user-session'
     });
     isAxiosErrorMock.mockReturnValue(false);
     isErrorMock.mockReturnValue(false);
@@ -55,6 +74,7 @@ describe('useUserStore', () => {
 
   afterEach(() => {
     vi.unstubAllGlobals();
+    vi.unstubAllEnvs();
   });
 
   it('logs in and loads user profile successfully', async () => {
@@ -66,10 +86,9 @@ describe('useUserStore', () => {
         localId: 'user-1'
       }
     });
-    getMock.mockResolvedValueOnce({
-      data: { name: 'Paul', entries: 2 }
-    });
-    fetchMock.mockResolvedValueOnce({ input: '🐣' });
+    fetchMock
+      .mockResolvedValueOnce({ name: 'Paul', entries: 2 })
+      .mockResolvedValueOnce({ input: '🐣' });
 
     const result = await store.login({
       email: 'paul@test.dev',
@@ -78,18 +97,15 @@ describe('useUserStore', () => {
 
     expect(result).toBe(true);
     expect(postMock).toHaveBeenCalledWith(
-      endpoints.signin,
+      signinEndpoint,
       expect.objectContaining({
         email: 'paul@test.dev',
         password: 'secret',
         returnSecureToken: true
       }),
-      expect.any(Object)
+      { params: { key: firebaseApiKey } }
     );
-    expect(saveAuthTokenInSessionMock).toHaveBeenCalledWith(
-      'token-1',
-      'refresh-1'
-    );
+    expect(saveRefreshTokenInSessionMock).toHaveBeenCalledWith('refresh-1');
     expect(store.token).toBe('token-1');
     expect(store.id).toBe('user-1');
     expect(store.isSignedIn).toBe(true);
@@ -122,7 +138,7 @@ describe('useUserStore', () => {
         localId: 'user-1'
       }
     });
-    getMock.mockRejectedValueOnce(new Error('profile failed'));
+    fetchMock.mockRejectedValueOnce(new Error('profile failed'));
 
     const result = await store.login({
       email: 'paul@test.dev',
@@ -130,10 +146,33 @@ describe('useUserStore', () => {
     });
 
     expect(result).toBe(false);
-    expect(saveAuthTokenInSessionMock).not.toHaveBeenCalled();
+    expect(saveRefreshTokenInSessionMock).not.toHaveBeenCalled();
     expect(removeAuthTokenFromSessionMock).toHaveBeenCalled();
     expect(errorSpy).toHaveBeenCalled();
     errorSpy.mockRestore();
+  });
+
+  it('returns false when login gets a null user profile response', async () => {
+    const store = await makeStore();
+    postMock.mockResolvedValueOnce({
+      data: {
+        idToken: 'token-1',
+        refreshToken: 'refresh-1',
+        localId: 'user-1'
+      }
+    });
+    fetchMock.mockResolvedValueOnce(null);
+
+    const result = await store.login({
+      email: 'paul@test.dev',
+      password: 'secret'
+    });
+
+    expect(result).toBe(false);
+    expect(saveRefreshTokenInSessionMock).not.toHaveBeenCalled();
+    expect(removeAuthTokenFromSessionMock).toHaveBeenCalled();
+    expect(store.user).toBeNull();
+    expect(store.isSignedIn).toBe(false);
   });
 
   it('registers user and creates profile', async () => {
@@ -157,28 +196,32 @@ describe('useUserStore', () => {
     });
 
     expect(postMock).toHaveBeenCalledWith(
-      endpoints.register,
+      registerEndpoint,
       {
         email: 'new@test.dev',
         password: 'secret',
         returnSecureToken: true
       },
-      expect.any(Object)
+      { params: { key: firebaseApiKey } }
     );
     expect(putMock).toHaveBeenCalledWith(
-      endpoints.profile.replace(':id', 'user-2'),
+      profileEndpoint('user-2'),
       expect.objectContaining({
         name: 'New User',
         entries: 0
       }),
       { params: { auth: 'token-2' } }
     );
+    expect(saveRefreshTokenInSessionMock).toHaveBeenCalledWith('refresh-2');
+    expect(putMock.mock.invocationCallOrder[0]).toBeLessThan(
+      saveRefreshTokenInSessionMock.mock.invocationCallOrder[0]
+    );
     expect(store.isSignedIn).toBe(true);
   });
 
-  it('logs when createProfile fails', async () => {
+  it('does not persist the refresh token when createProfile fails', async () => {
     const store = await makeStore();
-    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     postMock.mockResolvedValueOnce({
       data: {
         idToken: 'token-2',
@@ -195,8 +238,47 @@ describe('useUserStore', () => {
       confirmPassword: 'secret'
     });
 
-    expect(logSpy).toHaveBeenCalled();
-    logSpy.mockRestore();
+    expect(saveRefreshTokenInSessionMock).not.toHaveBeenCalled();
+    expect(removeAuthTokenFromSessionMock).toHaveBeenCalled();
+    expect(store.token).toBeNull();
+    expect(store.id).toBeNull();
+    expect(store.user).toBeNull();
+    expect(store.isSignedIn).toBe(false);
+    expect(errorSpy).toHaveBeenCalled();
+    errorSpy.mockRestore();
+  });
+
+  it('clears auth state when saving the refresh token fails', async () => {
+    const store = await makeStore();
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    postMock.mockResolvedValueOnce({
+      data: {
+        idToken: 'token-2',
+        refreshToken: 'refresh-2',
+        localId: 'user-2'
+      }
+    });
+    putMock.mockResolvedValueOnce({
+      data: { name: 'New User', entries: 0 }
+    });
+    saveRefreshTokenInSessionMock.mockRejectedValueOnce(
+      new Error('session save failed')
+    );
+
+    await store.registerUser({
+      name: 'New User',
+      email: 'new@test.dev',
+      password: 'secret',
+      confirmPassword: 'secret'
+    });
+
+    expect(removeAuthTokenFromSessionMock).toHaveBeenCalled();
+    expect(store.token).toBeNull();
+    expect(store.id).toBeNull();
+    expect(store.user).toBeNull();
+    expect(store.isSignedIn).toBe(false);
+    expect(errorSpy).toHaveBeenCalled();
+    errorSpy.mockRestore();
   });
 
   it('logs when registerUser request fails', async () => {
@@ -237,64 +319,73 @@ describe('useUserStore', () => {
 
   it('reauthenticates and refreshes session successfully', async () => {
     const store = await makeStore();
-    postMock.mockResolvedValueOnce({
-      data: {
-        id_token: 'token-3',
-        refresh_token: 'refresh-3',
-        user_id: 'user-3'
-      }
+    getAuthTokenInSessionMock.mockResolvedValueOnce({
+      token: 'token-3',
+      userId: 'user-3'
     });
-    getMock.mockResolvedValueOnce({
-      data: { name: 'Reauth User', entries: 4 }
-    });
-    fetchMock.mockResolvedValueOnce({ input: '🐥' });
+    fetchMock
+      .mockResolvedValueOnce({ name: 'Reauth User', entries: 4 })
+      .mockResolvedValueOnce({ input: '🐥' });
 
     await store.reauthenticate();
 
-    expect(postMock).toHaveBeenCalledWith(
-      reAuthURL,
-      { grant_type: 'refresh_token', refresh_token: 'refresh-token' },
-      expect.any(Object)
-    );
+    expect(getAuthTokenInSessionMock).toHaveBeenCalled();
     expect(store.token).toBe('token-3');
     expect(store.id).toBe('user-3');
     expect(store.isSignedIn).toBe(true);
-    expect(saveAuthTokenInSessionMock).toHaveBeenCalledWith(
-      'token-3',
-      'refresh-3'
-    );
+    expect(store.user).toEqual({ name: 'Reauth User', entries: 4 });
+    expect(store.rank).toBe('🐥');
+    expect(saveRefreshTokenInSessionMock).not.toHaveBeenCalled();
   });
 
-  it('handles missing refresh token in reauthenticate', async () => {
+  it('forwards the SSR event during reauthenticate', async () => {
+    const store = await makeStore();
+    getAuthTokenInSessionMock.mockResolvedValueOnce({
+      token: 'token-3',
+      userId: 'user-3'
+    });
+    fetchMock
+      .mockResolvedValueOnce({ name: 'Reauth User', entries: 4 })
+      .mockResolvedValueOnce({ input: '🐥' });
+
+    await store.reauthenticate(requestEvent);
+
+    expect(getAuthTokenInSessionMock).toHaveBeenCalledWith(requestEvent);
+  });
+
+  it('signs out when there is no session to reauthenticate', async () => {
     const store = await makeStore();
     const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-    getAuthTokenInSessionMock.mockResolvedValueOnce({ refreshToken: null });
+    getAuthTokenInSessionMock.mockResolvedValueOnce({ token: null, userId: null });
 
     await store.reauthenticate();
 
-    expect(postMock).not.toHaveBeenCalled();
-    expect(errorSpy).toHaveBeenCalled();
+    expect(removeAuthTokenFromSessionMock).toHaveBeenCalled();
+    expect(store.token).toBeNull();
+    expect(store.id).toBeNull();
+    expect(errorSpy).not.toHaveBeenCalled();
     errorSpy.mockRestore();
   });
 
-  it('signs out when reauthenticate fails with USER_DISABLED', async () => {
+  it('forwards the SSR event when reauthenticate falls back to signout', async () => {
     const store = await makeStore();
-    store.token = 'token-old';
-    store.id = 'user-old';
-    store.user = { name: 'Old', entries: 1 } as never;
-    store.isSignedIn = true;
-    const disabledError = {
-      status: 400,
-      response: {
-        data: {
-          error: {
-            message: 'USER_DISABLED'
-          }
-        }
-      }
-    };
-    postMock.mockRejectedValueOnce(disabledError);
-    isAxiosErrorMock.mockReturnValue(true);
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    getAuthTokenInSessionMock.mockResolvedValueOnce({ token: null, userId: null });
+
+    await store.reauthenticate(requestEvent);
+
+    expect(removeAuthTokenFromSessionMock).toHaveBeenCalledWith(requestEvent);
+    errorSpy.mockRestore();
+  });
+
+  it('signs out when reauthenticate cannot load a user profile', async () => {
+    const store = await makeStore();
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    getAuthTokenInSessionMock.mockResolvedValueOnce({
+      token: 'token-3',
+      userId: 'user-3'
+    });
+    fetchMock.mockResolvedValueOnce(null);
 
     await store.reauthenticate();
 
@@ -303,6 +394,28 @@ describe('useUserStore', () => {
     expect(store.id).toBeNull();
     expect(store.user).toBeNull();
     expect(store.isSignedIn).toBe(false);
+    expect(errorSpy).not.toHaveBeenCalled();
+    errorSpy.mockRestore();
+  });
+
+  it('clears only local state when reauthenticate hits a transient profile error', async () => {
+    const store = await makeStore();
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    getAuthTokenInSessionMock.mockResolvedValueOnce({
+      token: 'token-3',
+      userId: 'user-3'
+    });
+    fetchMock.mockRejectedValueOnce(new Error('profile failed'));
+
+    await store.reauthenticate();
+
+    expect(removeAuthTokenFromSessionMock).not.toHaveBeenCalled();
+    expect(store.token).toBeNull();
+    expect(store.id).toBeNull();
+    expect(store.user).toBeNull();
+    expect(store.isSignedIn).toBe(false);
+    expect(errorSpy).toHaveBeenCalled();
+    errorSpy.mockRestore();
   });
 
   it('updates rank when getRank succeeds', async () => {
@@ -357,24 +470,25 @@ describe('useUserStore', () => {
     store.id = 'user-4';
     store.token = 'token-4';
     patchMock.mockResolvedValueOnce({});
-    getMock.mockResolvedValueOnce({
-      data: { name: 'Updated', entries: 5 }
-    });
-    fetchMock.mockResolvedValueOnce({ input: '🦅' });
+    fetchMock
+      .mockResolvedValueOnce({ name: 'Updated', entries: 5 })
+      .mockResolvedValueOnce({ input: '🦅' });
 
     await store.updateUser({ name: 'Updated' });
 
     expect(patchMock).toHaveBeenCalledWith(
-      endpoints.profile.replace(':id', 'user-4'),
+      profileEndpoint('user-4'),
       { name: 'Updated' },
       { params: { auth: 'token-4' } }
     );
-    expect(getMock).toHaveBeenCalledWith(
-      endpoints.profile.replace(':id', 'user-4'),
-      {
+
+    await vi.waitFor(() => {
+      expect(fetchMock).toHaveBeenCalledWith(profileEndpoint('user-4'), {
         params: { auth: 'token-4' }
-      }
-    );
+      });
+      expect(store.user).toEqual({ name: 'Updated', entries: 5 });
+      expect(store.rank).toBe('🦅');
+    });
   });
 
   it('logs when updateUser request fails', async () => {
@@ -407,33 +521,57 @@ describe('useUserStore', () => {
 
     await store.deleteUser();
 
-    expect(deleteMock).toHaveBeenCalledWith(
-      endpoints.profile.replace(':id', 'user-5'),
-      {
-        params: { auth: 'token-5' }
-      }
-    );
+    expect(deleteMock).toHaveBeenCalledWith(profileEndpoint('user-5'), {
+      params: { auth: 'token-5' }
+    });
     expect(postMock).toHaveBeenCalledWith(
-      endpoints.delete,
+      deleteEndpoint,
       { idToken: 'token-5' },
-      expect.any(Object)
+      { params: { key: firebaseApiKey } }
     );
     expect(removeAuthTokenFromSessionMock).toHaveBeenCalled();
     expect(store.id).toBeNull();
     expect(store.token).toBeNull();
   });
 
-  it('still signs out when deleteUser request fails', async () => {
+  it('does not sign out when profile deletion fails', async () => {
     const store = await makeStore();
     const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     store.id = 'user-6';
     store.token = 'token-6';
     deleteMock.mockRejectedValueOnce(new Error('delete failed'));
 
-    await store.deleteUser();
+    await expect(store.deleteUser()).rejects.toThrow('delete failed');
 
     expect(errorSpy).toHaveBeenCalled();
-    expect(removeAuthTokenFromSessionMock).toHaveBeenCalled();
+    expect(removeAuthTokenFromSessionMock).not.toHaveBeenCalled();
+    expect(store.id).toBe('user-6');
+    expect(store.token).toBe('token-6');
+    errorSpy.mockRestore();
+  });
+
+  it('does not sign out when Firebase account deletion fails', async () => {
+    const store = await makeStore();
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    store.id = 'user-7';
+    store.token = 'token-7';
+    deleteMock.mockResolvedValueOnce({});
+    postMock.mockRejectedValueOnce(new Error('firebase delete failed'));
+
+    await expect(store.deleteUser()).rejects.toThrow('firebase delete failed');
+
+    expect(deleteMock).toHaveBeenCalledWith(profileEndpoint('user-7'), {
+      params: { auth: 'token-7' }
+    });
+    expect(postMock).toHaveBeenCalledWith(
+      deleteEndpoint,
+      { idToken: 'token-7' },
+      { params: { key: firebaseApiKey } }
+    );
+    expect(errorSpy).toHaveBeenCalled();
+    expect(removeAuthTokenFromSessionMock).not.toHaveBeenCalled();
+    expect(store.id).toBe('user-7');
+    expect(store.token).toBe('token-7');
     errorSpy.mockRestore();
   });
 });

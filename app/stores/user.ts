@@ -1,15 +1,18 @@
-import { endpoints, reAuthURL } from '../../constants/api';
+import type { H3Event } from 'h3';
 import type { RankResponse } from '../../types';
 import type { UserState } from '../../types/user';
 
 export const useUserStore = defineStore('UserStore', () => {
   const { $api } = useNuxtApp();
   const {
-    saveAuthTokenInSession,
+    public: { firebaseApiKey, firebaseAuth, firebaseDatabase }
+  } = useRuntimeConfig();
+  const {
+    saveRefreshTokenInSession,
     getAuthTokenInSession,
     removeAuthTokenFromSession
   } = useTokenStorage();
-  const { isAxiosError, isError } = useErrorTypes();
+  const { isError } = useErrorTypes();
   const token = ref<string | null>(null);
   const id = ref<string | null>(null);
   const user = ref<User | null>(null);
@@ -17,28 +20,37 @@ export const useUserStore = defineStore('UserStore', () => {
   const isProfileOpen = ref(false);
   const rank = ref<UserState['rank']>(null);
 
+  function clearLocalState() {
+    token.value = null;
+    id.value = null;
+    user.value = null;
+    isSignedIn.value = false;
+    isProfileOpen.value = false;
+    rank.value = null;
+  }
+
   async function login(payload: LoginInfo) {
     payload = { ...payload, returnSecureToken: true };
 
     try {
       const response = await $api().post<LoginResponse>(
-        endpoints.signin,
+        `${firebaseAuth}:signInWithPassword`,
         payload,
         {
-          params: { key: import.meta.env.VITE_APP_FIREBASE_API_KEY }
+          params: { key: firebaseApiKey }
         }
       );
 
       token.value = response.data.idToken;
       id.value = response.data.localId;
 
-      const success = await getUser(response.data.localId);
+      const success = await getUser(id.value);
       if (!success) {
         await reset();
         return false;
       }
 
-      saveAuthTokenInSession(response.data.idToken, response.data.refreshToken);
+      await saveRefreshTokenInSession(response.data.refreshToken);
 
       return true;
     } catch (error) {
@@ -49,23 +61,22 @@ export const useUserStore = defineStore('UserStore', () => {
   }
 
   async function getUser(userId: string) {
-    const requestURL = endpoints.profile.replace(':id', userId);
+    const requestURL = `${firebaseDatabase}/users/${userId}.json`;
 
-    try {
-      const response = await $api().get<User>(requestURL, {
-        params: { auth: token.value }
-      });
+    const response = await $fetch<User | null>(requestURL, {
+      params: { auth: token.value }
+    });
 
-      user.value = response.data;
-      isSignedIn.value = true;
-
-      await getRank();
-
-      return true;
-    } catch (error) {
-      console.error(error);
+    if (!response) {
       return false;
     }
+
+    user.value = response;
+    isSignedIn.value = true;
+
+    await getRank();
+
+    return true;
   }
 
   async function registerUser(payload: RegisterInfo) {
@@ -76,83 +87,63 @@ export const useUserStore = defineStore('UserStore', () => {
     };
     try {
       const response = await $api().post<RegisterResponse>(
-        endpoints.register,
+        `${firebaseAuth}:signUp`,
         registerPayload,
         {
-          params: { key: import.meta.env.VITE_APP_FIREBASE_API_KEY }
+          params: { key: firebaseApiKey }
         }
       );
-
-      saveAuthTokenInSession(response.data.idToken, response.data.refreshToken);
-
       token.value = response.data.idToken;
       id.value = response.data.localId;
-      await createProfile(payload.name);
+      await createProfile(payload.name, id.value);
+      await saveRefreshTokenInSession(response.data.refreshToken);
     } catch (error) {
       console.error(error);
+      await reset();
     }
   }
 
-  async function createProfile(name: string) {
+  async function createProfile(name: string, userId: string) {
     const profilePayload = {
       name,
       entries: 0,
       joined: new Date()
     };
 
-    const requestURL = endpoints.profile.replace(':id', id.value!);
+    const requestURL = `${firebaseDatabase}/users/${userId}.json`;
+    const response = await $api().put<User>(requestURL, profilePayload, {
+      params: { auth: token.value }
+    });
 
-    try {
-      const response = await $api().put<User>(requestURL, profilePayload, {
-        params: { auth: token.value }
-      });
-
-      user.value = response.data;
-      isSignedIn.value = true;
-    } catch (error) {
-      console.log(error);
-    }
+    user.value = response.data;
+    isSignedIn.value = true;
+    return true;
   }
 
-  async function signout() {
-    await reset();
+  async function signout(event?: H3Event) {
+    await reset(event);
   }
 
-  async function reauthenticate() {
+  async function reauthenticate(event?: H3Event) {
     try {
-      const { refreshToken } = await getAuthTokenInSession();
+      const { token: userToken, userId } = await getAuthTokenInSession(event);
 
-      if (!refreshToken) {
-        throw new Error('Unable to get the refresh token');
+      if (!userToken || !userId) {
+        await signout(event);
+        return;
       }
-      const payload = {
-        grant_type: 'refresh_token',
-        refresh_token: refreshToken
-      };
 
-      const response = await $api().post<ReAuthResponse>(reAuthURL, payload, {
-        params: { key: import.meta.env.VITE_APP_FIREBASE_API_KEY }
-      });
+      token.value = userToken;
+      id.value = userId;
 
-      token.value = response.data.id_token;
-      id.value = response.data.user_id;
-      await getUser(response.data.user_id);
-
-      saveAuthTokenInSession(
-        response.data.id_token,
-        response.data.refresh_token
-      );
+      const success = await getUser(userId);
+      if (!success) {
+        await signout(event);
+        return;
+      }
     } catch (error) {
       console.error(error);
-
-      if (
-        isAxiosError(error) &&
-        error.status === 400 &&
-        error.response?.data.error.message === 'USER_DISABLED'
-      ) {
-        console.error('Session Expired');
-        await signout();
-      }
+      clearLocalState();
     }
   }
 
@@ -175,7 +166,9 @@ export const useUserStore = defineStore('UserStore', () => {
 
   async function updateUser(payload: UpdateInfo) {
     if (!id.value) return;
-    const requestURL = endpoints.profile.replace(':id', id.value);
+
+    const requestURL = `${firebaseDatabase}/users/${id.value}.json`;
+
     try {
       await $api().patch(requestURL, payload, {
         params: { auth: token.value }
@@ -190,34 +183,31 @@ export const useUserStore = defineStore('UserStore', () => {
   async function deleteUser() {
     if (!id.value) return;
 
-    const requestURL = endpoints.profile.replace(':id', id.value);
+    const requestURL = `${firebaseDatabase}/users/${id.value}.json`;
+
     try {
       await $api().delete(requestURL, { params: { auth: token.value } });
 
       await $api().post(
-        endpoints.delete,
+        `${firebaseAuth}:delete`,
         { idToken: token.value },
-        { params: { key: import.meta.env.VITE_APP_FIREBASE_API_KEY } }
+        { params: { key: firebaseApiKey } }
       );
     } catch (error) {
       console.error(error);
-    } finally {
-      await signout();
+      throw error;
     }
+
+    await signout();
   }
 
-  async function reset() {
+  async function reset(event?: H3Event) {
     try {
-      await removeAuthTokenFromSession();
+      await removeAuthTokenFromSession(event);
     } catch (error) {
       console.error(error);
     } finally {
-      token.value = null;
-      id.value = null;
-      user.value = null;
-      isSignedIn.value = false;
-      isProfileOpen.value = false;
-      rank.value = null;
+      clearLocalState();
     }
   }
   return {

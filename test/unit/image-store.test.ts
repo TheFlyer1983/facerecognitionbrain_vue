@@ -2,11 +2,11 @@
 
 import { createPinia, defineStore, setActivePinia } from 'pinia';
 import { nextTick, ref, watch } from 'vue';
-import { endpoints } from '../../constants/api';
 
 const fetchMock = vi.fn();
 const patchMock = vi.fn();
 const getRankMock = vi.fn();
+const firebaseDbUrl = 'https://firebase-db.test';
 const userStoreMock = {
   user: null as { entries: number } | null,
   id: null as string | null,
@@ -21,12 +21,19 @@ describe('useImageStore', () => {
   };
 
   beforeEach(() => {
+    vi.resetModules();
     vi.clearAllMocks();
+    // import.meta.env.NUXT_FIREBASE_URL = firebaseDbUrl;
     setActivePinia(createPinia());
     vi.stubGlobal('defineStore', defineStore);
     vi.stubGlobal('ref', ref);
     vi.stubGlobal('watch', watch);
     vi.stubGlobal('$fetch', fetchMock);
+    vi.stubGlobal('useRuntimeConfig', () => ({
+      public: {
+        firebaseDatabase: firebaseDbUrl
+      }
+    }));
     vi.stubGlobal('useNuxtApp', () => ({
       $api: () => ({
         patch: patchMock
@@ -110,7 +117,7 @@ describe('useImageStore', () => {
     await store.submitURL();
 
     expect(patchMock).toHaveBeenCalledWith(
-      endpoints.profile.replace(':id', 'user-1'),
+      `${firebaseDbUrl}/users/user-1.json`,
       { entries: 2 },
       { params: { auth: 'token-1' } }
     );
@@ -120,14 +127,60 @@ describe('useImageStore', () => {
 
   it('logs an error when face request fails', async () => {
     const store = await makeStore();
-    const error = new Error('bad image');
+    const error = {
+      statusMessage: 'Bad Request',
+      data: {
+        message: 'INVALID_IMAGE_URL'
+      }
+    };
     const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     fetchMock.mockRejectedValue(error);
     store.imageUrl = 'https://img.test/a.jpg';
 
     await store.submitURL();
 
-    expect(errorSpy).toHaveBeenCalled();
+    expect(errorSpy).toHaveBeenCalledWith('INVALID_IMAGE_URL');
+    errorSpy.mockRestore();
+  });
+
+  it('logs raw errors when face request fails with a non-H3 error', async () => {
+    const store = await makeStore();
+    const error = new Error('network failed');
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    fetchMock.mockRejectedValue(error);
+    store.imageUrl = 'https://img.test/a.jpg';
+
+    await store.submitURL();
+
+    expect(errorSpy).toHaveBeenCalledWith(error);
+    errorSpy.mockRestore();
+  });
+
+  it('logs and rethrows entry update errors to submitURL', async () => {
+    const store = await makeStore();
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    fetchMock.mockResolvedValue({
+      faces: [
+        {
+          face_token: 'face-1',
+          face_rectangle: { top: 1, left: 2, height: 3, width: 4 }
+        }
+      ]
+    });
+    userStoreMock.user = { entries: 1 };
+    userStoreMock.id = 'user-1';
+    userStoreMock.token = 'token-1';
+    patchMock.mockRejectedValue({
+      isAxiosError: true,
+      message: 'entry update failed'
+    });
+    store.imageUrl = 'https://img.test/a.jpg';
+
+    await store.submitURL();
+
+    expect(errorSpy).toHaveBeenCalledWith('entry update failed');
+    expect(userStoreMock.user.entries).toBe(1);
+    expect(getRankMock).not.toHaveBeenCalled();
     errorSpy.mockRestore();
   });
 });

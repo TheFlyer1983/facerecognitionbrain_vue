@@ -1,7 +1,6 @@
 <script setup lang="ts">
-const imagePath = computed(
-  () => new URL(`/assets/img/brain.png`, import.meta.url).href
-);
+import brainImage from '~/assets/img/brain.png';
+
 </script>
 
 <template>
@@ -11,7 +10,7 @@ const imagePath = computed(
     >
       <div class="p-4">
         <img
-          :src="imagePath"
+          :src="brainImage"
           alt="logo"
           class="flex justify-self-center pt-[5px]"
         />
