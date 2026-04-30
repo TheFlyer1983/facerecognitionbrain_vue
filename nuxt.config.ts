@@ -40,6 +40,15 @@ export default defineNuxtConfig({
     }
   },
 
+  routeRules: {
+    '/home': {
+      redirect: {
+        to: '/',
+        statusCode: 301
+      }
+    }
+  },
+
   app: {
     head: {
       meta: [
