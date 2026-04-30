@@ -9,9 +9,11 @@ function signOut() {
 </script>
 
 <template>
-  <nav class="flex justify-between items-start">
+  <nav
+    class="flex flex-col items-center gap-4 sm:flex-row sm:items-start sm:justify-between"
+  >
     <BrainLogo />
-    <div class="flex">
+    <div class="flex flex-wrap justify-center sm:justify-end">
       <template v-if="userStore.isSignedIn">
         <ProfileIcon @signout="signOut" />
       </template>
