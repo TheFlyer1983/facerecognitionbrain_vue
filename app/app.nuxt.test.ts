@@ -13,8 +13,6 @@ describe('App.vue', () => {
   });
 
   it('matches the snapshot', () => {
-    const shell = component.find('.particles.py-3');
-    expect(shell.exists()).toBe(true);
-    expect(shell.element).toMatchSnapshot();
+    expect(component.element).toMatchSnapshot();
   });
 });
