@@ -1,4 +1,7 @@
 <script setup lang="ts">
+definePageMeta({
+  middleware: 'guest',
+})
 const userStore = useUserStore();
 
 const email = ref('');
