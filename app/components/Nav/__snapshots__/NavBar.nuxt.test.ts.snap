@@ -2,18 +2,39 @@
 
 exports[`Given the NavBar component > when the component is rendered > matches the snapshot 1`] = `
 <nav
-  class="flex justify-end"
+  class="flex flex-col items-center gap-4 sm:flex-row sm:items-start sm:justify-between"
 >
-  <section
-    class="relative m-4"
+  <div
+    class="m-8 mt-0 text-center"
   >
-    <span
-      class="flex cursor-pointer justify-center"
-      data-test="profile-avatar"
+    <div
+      class="h-[150px] w-[150px] rounded bg-gradient-to-r from-[#ff5edf] to-[#04c8de] shadow-[0_0_8px_2px_rgba(0,0,0,0.2)]"
     >
+      <div
+        class="p-4"
+      >
+        <img
+          alt="logo"
+          class="flex justify-self-center pt-[5px]"
+          src="/app/assets/img/brain.png"
+        />
+      </div>
+    </div>
+  </div>
+  <div
+    class="flex flex-wrap justify-center sm:justify-end"
+  >
+    <section
+      class="relative m-4"
+    >
+      <span
+        class="flex cursor-pointer justify-center"
+        data-test="profile-avatar"
+      >
+        <!--v-if-->
+      </span>
       <!--v-if-->
-    </span>
-    <!--v-if-->
-  </section>
+    </section>
+  </div>
 </nav>
 `;
