@@ -39,6 +39,12 @@ describe('Given the NavBar component', () => {
       expect(component.exists()).toBe(true);
     });
 
+    it('uses a stacked mobile layout', async () => {
+      const { component } = await render();
+      expect(component.attributes('class')).toContain('flex-col');
+      expect(component.attributes('class')).toContain('sm:flex-row');
+    });
+
     it('matches the snapshot', async () => {
       const { component } = await render();
       expect(component.element).toMatchSnapshot();
