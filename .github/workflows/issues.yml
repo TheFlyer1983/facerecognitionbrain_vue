@@ -21,7 +21,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Assign to One Project
-        uses: srggrs/assign-one-project-github-action@1.2.1
+        uses: srggrs/assign-one-project-github-action@65a8ddab497df42ef268001e67bbf976f8fd39e1
+        env:
+          MY_GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
         if: github.event.action == 'opened'
         with:
           project: https://github.com/users/TheFlyer1983/projects/1

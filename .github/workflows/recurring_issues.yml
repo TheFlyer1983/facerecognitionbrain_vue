@@ -12,20 +12,20 @@ jobs:
     steps:
       - name: Get current date
         id: date
-        run: echo "::set-output name=date::$(date +'%m-%Y')"
+        run: echo "date=$(date +'%m-%Y')" >> "$GITHUB_OUTPUT"
       - name: Create Monthly Maintenance Audit Issue
-        uses: imjohnbo/issue-bot@v3.3.4
+        uses: imjohnbo/issue-bot@3188c6ce06249206709d3b1f274d0d4c5a521601
         with:
           token: ${{ secrets.MY_GITHUB_TOKEN }}
           labels: "maintenance, audit"
-          title: Maintenance & Dependancy Update - ${{ steps.date.outputs.date }}
+          title: Maintenance & Dependency Update - ${{ steps.date.outputs.date }}
           body: |
-            ### Update Outdated Packages and Dependancies
+            ### Update Outdated Packages and Dependencies
 
             #### Acceptance Criteria
 
             - Update any outdated packages
             - Audit current packages for vulnerabilities
-            - Update any dependancies with vulnerabilities (where possible)
+            - Update any dependencies with vulnerabilities (where possible)
           pinned: true
           close-previous: true
