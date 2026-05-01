@@ -15,8 +15,8 @@
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
     "lint": "eslint .",
-    "prettier": "prettier . --check",
-    "prettier:fix": "prettier . --write",
+    "format:check": "oxfmt --check",
+    "fmt": "oxfmt",
     "typecheck": "nuxt typecheck"
   },
   "dependencies": {
@@ -45,6 +45,7 @@
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "happy-dom": "^20.3.3",
+    "oxfmt": "^0.47.0",
     "playwright-core": "^1.57.0",
     "prettier": "^3.8.0",
     "prettier-plugin-tailwindcss": "^0.7.2",

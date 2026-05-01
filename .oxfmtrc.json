@@ -1,0 +1,11 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "tabWidth": 2,
+  "useTabs": false,
+  "trailingComma": "none",
+  "singleQuote": true,
+  "sortTailwindcss": {
+    "config": "./tailwind.config.ts"
+  },
+  "ignorePatterns": [".nuxt/**", ".output/**", "dist/**", "coverage/**", "pnpm-lock.yaml"]
+}
