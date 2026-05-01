@@ -1,29 +1,4 @@
 {
-  "compilerOptions": {
-    "allowJs": true,
-    "target": "esnext",
-    "useDefineForClassFields": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "strict": true,
-    "jsx": "preserve",
-    "sourceMap": true,
-    "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "lib": ["esnext", "dom"],
-    "baseUrl": ".",
-    "types": [
-      "vite/client",
-      "@types/node",
-      "vitest",
-      "vitest/globals"
-    ],
-    "paths": {
-      "@/*": [
-        "src/*"
-      ]
-    }
-  },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/components/Logo/Logo.stories.ts", "vite.config.*"],
-  "exclude": ["node_modules"]
+  // https://nuxt.com/docs/guide/concepts/typescript
+  "extends": "./.nuxt/tsconfig.json"
 }
