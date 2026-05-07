@@ -23,10 +23,8 @@ async function updateProfile() {
 
   if (userName.value && userName.value !== user.value?.name)
     userInfo = { ...userInfo, name: userName.value };
-  if (age.value && age.value !== user.value?.age)
-    userInfo = { ...userInfo, age: age.value };
-  if (pet.value && pet.value !== user.value?.pet)
-    userInfo = { ...userInfo, pet: pet.value };
+  if (age.value && age.value !== user.value?.age) userInfo = { ...userInfo, age: age.value };
+  if (pet.value && pet.value !== user.value?.pet) userInfo = { ...userInfo, pet: pet.value };
 
   if (!isEmpty(userInfo)) await userStore.updateUser(userInfo);
   closeModal();
@@ -52,9 +50,7 @@ async function deleteUser() {
       <main class="w-[80%] p-8 text-black text-opacity-80">
         <ProfileAvatar v-if="user" :name="user.name" />
         <h1 class="my-[0.67rem] text-[2rem] font-[500]">{{ user?.name }}</h1>
-        <h4 class="mb-[0.5rem] text-2xl font-[500]">
-          Images Submitted: {{ user?.entries }}
-        </h4>
+        <h4 class="mb-[0.5rem] text-2xl font-[500]">Images Submitted: {{ user?.entries }}</h4>
         <p class="mb-4">
           Member Since:
           {{ new Date(`${user?.joined}`).toLocaleDateString('en-GB') }}
@@ -81,9 +77,7 @@ async function deleteUser() {
           </div>
         </template>
         <template v-else>
-          <label for="user-name" class="my-2 inline-block font-semibold">
-            Name:
-          </label>
+          <label for="user-name" class="my-2 inline-block font-semibold"> Name: </label>
           <input
             id="name"
             v-model="userName"
@@ -92,9 +86,7 @@ async function deleteUser() {
             class="w-full border border-black p-2"
             :placeholder="user?.name"
           />
-          <label for="user-age" class="my-2 inline-block font-semibold">
-            Age:
-          </label>
+          <label for="user-age" class="my-2 inline-block font-semibold"> Age: </label>
           <input
             id="age"
             v-model="age"
@@ -103,9 +95,7 @@ async function deleteUser() {
             class="w-full border border-black p-2"
             :placeholder="agePlaceHolderText"
           />
-          <label for="user-pet" class="my-2 inline-block font-semibold">
-            Pet:
-          </label>
+          <label for="user-pet" class="my-2 inline-block font-semibold"> Pet: </label>
           <input
             id="pet"
             v-model="pet"

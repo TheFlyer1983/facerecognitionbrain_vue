@@ -31,7 +31,7 @@ export const useImageStore = defineStore('image', () => {
         console.error(error.data?.message);
       } else {
         console.error(error);
-      } 
+      }
     }
   }
 

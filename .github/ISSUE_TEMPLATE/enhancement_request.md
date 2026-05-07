@@ -4,7 +4,6 @@ about: Suggest an idea for this project
 title: ''
 labels: enhancement, story
 assignees: ''
-
 ---
 
 **Description:**
@@ -12,6 +11,7 @@ assignees: ''
 A clear and concise description of what you want to happen.
 
 **Acceptance Criteria:**
+
 - A list of deliverables
 - that describe how the feature works
 

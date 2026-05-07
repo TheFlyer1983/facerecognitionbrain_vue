@@ -7,11 +7,8 @@ export const useUserStore = defineStore('UserStore', () => {
   const {
     public: { firebaseApiKey, firebaseAuth, firebaseDatabase }
   } = useRuntimeConfig();
-  const {
-    saveRefreshTokenInSession,
-    getAuthTokenInSession,
-    removeAuthTokenFromSession
-  } = useTokenStorage();
+  const { saveRefreshTokenInSession, getAuthTokenInSession, removeAuthTokenFromSession } =
+    useTokenStorage();
   const { isError } = useErrorTypes();
   const token = ref<string | null>(null);
   const id = ref<string | null>(null);

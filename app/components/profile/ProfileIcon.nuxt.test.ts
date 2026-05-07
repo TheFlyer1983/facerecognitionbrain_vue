@@ -100,8 +100,7 @@ describe('Given the ProfileIcon component', () => {
           }));
 
           const trigger = component.find(`[data-test="profile-avatar"]`);
-          const viewProfile = () =>
-            component.find(`[data-test="view-profile"]`);
+          const viewProfile = () => component.find(`[data-test="view-profile"]`);
 
           for (const key of expectedMenuItems) {
             expect(component.find(`[data-test="${key}"]`).exists()).toBe(false);

@@ -1,7 +1,6 @@
 import { stubServerHandlerGlobals } from '../../../setupGlobals';
 
-const loadHandler = async () =>
-  (await import('../../../../server/api/face/face.post')).default;
+const loadHandler = async () => (await import('../../../../server/api/face/face.post')).default;
 
 describe('server/api/face/face.post', () => {
   const fetchMock = vi.fn();
@@ -52,7 +51,10 @@ describe('server/api/face/face.post', () => {
   });
 
   it('returns bad request when imageUrl is missing', async () => {
-    vi.stubGlobal('readBody', vi.fn(async () => ({ })));
+    vi.stubGlobal(
+      'readBody',
+      vi.fn(async () => ({}))
+    );
     const handler = await loadHandler();
 
     await expect(handler({} as never)).rejects.toMatchObject({
@@ -64,7 +66,10 @@ describe('server/api/face/face.post', () => {
   });
 
   it('returns bad request when imageUrl is not a valid URL', async () => {
-    vi.stubGlobal('readBody', vi.fn(async () => ({ imageUrl: 'not-a-url' })));
+    vi.stubGlobal(
+      'readBody',
+      vi.fn(async () => ({ imageUrl: 'not-a-url' }))
+    );
     const handler = await loadHandler();
 
     await expect(handler({} as never)).rejects.toMatchObject({
@@ -239,9 +244,7 @@ describe('server/api/face/face.post', () => {
   });
 
   it('falls back to a generic message for non-Face++-shaped upstream errors', async () => {
-    const error = new Error(
-      'fetch failed for https://face.test/detect?api_secret=face-secret'
-    );
+    const error = new Error('fetch failed for https://face.test/detect?api_secret=face-secret');
     const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     fetchMock.mockRejectedValue(error);
     const handler = await loadHandler();

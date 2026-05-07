@@ -2,9 +2,6 @@
   "name": "facerecognitionbrain_vue",
   "private": true,
   "type": "module",
-  "engines": {
-    "pnpm": ">10.0.0"
-  },
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
@@ -50,5 +47,8 @@
     "prettier": "^3.8.0",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "vitest": "4.1.2"
+  },
+  "engines": {
+    "pnpm": ">10.0.0"
   }
 }

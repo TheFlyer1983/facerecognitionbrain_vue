@@ -26,9 +26,7 @@ describe('Given the useErrorTypes composable', () => {
       expect(isError(null)).toBe(false);
       expect(isError(123)).toBe(false);
       expect(isError({ statusMessage: 'Missing data' })).toBe(false);
-      expect(isError({ data: { message: 'Missing statusMessage' } })).toBe(
-        false
-      );
+      expect(isError({ data: { message: 'Missing statusMessage' } })).toBe(false);
     });
   });
 });

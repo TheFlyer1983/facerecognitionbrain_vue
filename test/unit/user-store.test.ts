@@ -261,9 +261,7 @@ describe('useUserStore', () => {
     putMock.mockResolvedValueOnce({
       data: { name: 'New User', entries: 0 }
     });
-    saveRefreshTokenInSessionMock.mockRejectedValueOnce(
-      new Error('session save failed')
-    );
+    saveRefreshTokenInSessionMock.mockRejectedValueOnce(new Error('session save failed'));
 
     await store.registerUser({
       name: 'New User',

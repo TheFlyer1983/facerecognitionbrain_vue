@@ -1,20 +1,10 @@
-import type {
-  FacePlusPlusErrorResponse,
-  ImageResponse
-} from '~~/types/image';
+import type { FacePlusPlusErrorResponse, ImageResponse } from '~~/types/image';
 
-const facePlusPlusRateLimitErrors = new Set([
-  'CONCURRENCY_LIMIT_EXCEEDED'
-]);
+const facePlusPlusRateLimitErrors = new Set(['CONCURRENCY_LIMIT_EXCEEDED']);
 
-const facePlusPlusAuthErrors = new Set([
-  'AUTHENTICATION_ERROR',
-  'AUTHORIZATION_ERROR'
-]);
+const facePlusPlusAuthErrors = new Set(['AUTHENTICATION_ERROR', 'AUTHORIZATION_ERROR']);
 
-const facePlusPlusValidationErrors = new Set([
-  'INVALID_IMAGE_URL'
-]);
+const facePlusPlusValidationErrors = new Set(['INVALID_IMAGE_URL']);
 
 function getFacePlusPlusErrorStatus(error: unknown) {
   if (!(error instanceof Error)) {
@@ -60,9 +50,7 @@ function getFacePlusPlusErrorMessage(error: unknown) {
   return 'Face++ request failed';
 }
 
-function isFacePlusPlusErrorResponse(
-  x: unknown
-): x is FacePlusPlusErrorResponse {
+function isFacePlusPlusErrorResponse(x: unknown): x is FacePlusPlusErrorResponse {
   return !!(
     typeof x === 'object' &&
     x &&
@@ -154,11 +142,7 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    if (
-      status === 401 ||
-      status === 403 ||
-      facePlusPlusAuthErrors.has(message)
-    ) {
+    if (status === 401 || status === 403 || facePlusPlusAuthErrors.has(message)) {
       throw createError({
         statusCode: 502,
         statusMessage: 'Bad Gateway',

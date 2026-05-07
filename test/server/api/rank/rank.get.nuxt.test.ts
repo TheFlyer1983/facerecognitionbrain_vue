@@ -1,7 +1,6 @@
 import { stubServerHandlerGlobals } from '../../../setupGlobals';
 
-const loadHandler = async () =>
-  (await import('../../../../server/api/rank/rank.get')).default;
+const loadHandler = async () => (await import('../../../../server/api/rank/rank.get')).default;
 
 describe('server/api/rank/rank.get', () => {
   beforeEach(() => {

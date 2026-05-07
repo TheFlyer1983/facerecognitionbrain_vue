@@ -29,12 +29,7 @@ async function onSubmitRegister() {
     <template #form>
       <legend class="mx-0 px-0 text-5xl font-semibold">Register</legend>
       <div class="mt-4">
-        <label
-          for="name"
-          class="block text-center text-sm font-semibold leading-6"
-        >
-          Name
-        </label>
+        <label for="name" class="block text-center text-sm font-semibold leading-6"> Name </label>
         <input
           id="name"
           v-model="name"
@@ -44,10 +39,7 @@ async function onSubmitRegister() {
         />
       </div>
       <div class="mt-4">
-        <label
-          for="email-address"
-          class="block text-center text-sm font-semibold leading-6"
-        >
+        <label for="email-address" class="block text-center text-sm font-semibold leading-6">
           Email
         </label>
         <input
@@ -59,10 +51,7 @@ async function onSubmitRegister() {
         />
       </div>
       <div class="mt-4">
-        <label
-          for="password"
-          class="block text-center text-sm font-semibold leading-6"
-        >
+        <label for="password" class="block text-center text-sm font-semibold leading-6">
           Password
         </label>
         <input

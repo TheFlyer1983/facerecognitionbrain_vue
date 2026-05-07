@@ -59,9 +59,7 @@ describe('Given the Home page', () => {
     });
 
     it('should render the RankComponent', () => {
-      expect(component.findComponent({ name: 'RankComponent' }).exists()).toBe(
-        true
-      );
+      expect(component.findComponent({ name: 'RankComponent' }).exists()).toBe(true);
     });
   });
 
@@ -84,9 +82,7 @@ describe('Given the Home page', () => {
     });
 
     it('should render the ProfileModal', () => {
-      expect(component.findComponent({ name: 'ProfileModal' }).exists()).toBe(
-        true
-      );
+      expect(component.findComponent({ name: 'ProfileModal' }).exists()).toBe(true);
     });
   });
 
@@ -106,9 +102,7 @@ describe('Given the Home page', () => {
     });
 
     it('should not render the RankComponent', () => {
-      expect(component.findComponent({ name: 'RankComponent' }).exists()).toBe(
-        false
-      );
+      expect(component.findComponent({ name: 'RankComponent' }).exists()).toBe(false);
     });
   });
 });

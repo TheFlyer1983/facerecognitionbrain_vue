@@ -15,7 +15,7 @@ jobs:
       - name: Label issues
         uses: andymckay/labeler@5c59dabdfd4dd5bd9c6e6d255b01b9d764af4414
         with:
-          add-labels: "frontend"
+          add-labels: 'frontend'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
   add_issues:
     runs-on: ubuntu-latest
@@ -27,4 +27,4 @@ jobs:
         if: github.event.action == 'opened'
         with:
           project: https://github.com/users/TheFlyer1983/projects/1
-          column_name: "Backlog"
+          column_name: 'Backlog'
