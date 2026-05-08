@@ -77,7 +77,7 @@ async function deleteUser() {
           </div>
         </template>
         <template v-else>
-          <label for="user-name" class="my-2 inline-block font-semibold"> Name: </label>
+          <label for="name" class="my-2 inline-block font-semibold"> Name: </label>
           <input
             id="name"
             v-model="userName"
@@ -86,7 +86,7 @@ async function deleteUser() {
             class="w-full border border-black p-2"
             :placeholder="user?.name"
           />
-          <label for="user-age" class="my-2 inline-block font-semibold"> Age: </label>
+          <label for="age" class="my-2 inline-block font-semibold"> Age: </label>
           <input
             id="age"
             v-model="age"
@@ -95,7 +95,7 @@ async function deleteUser() {
             class="w-full border border-black p-2"
             :placeholder="agePlaceHolderText"
           />
-          <label for="user-pet" class="my-2 inline-block font-semibold"> Pet: </label>
+          <label for="pet" class="my-2 inline-block font-semibold"> Pet: </label>
           <input
             id="pet"
             v-model="pet"
