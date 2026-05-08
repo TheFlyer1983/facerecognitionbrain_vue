@@ -1,7 +1,6 @@
 import { stubServerHandlerGlobals } from '../../../setupGlobals';
 
-const loadHandler = async () =>
-  (await import('../../../../server/api/auth/session.post')).default;
+const loadHandler = async () => (await import('../../../../server/api/auth/session.post')).default;
 
 describe('server/api/auth/session.post', () => {
   const readBodyMock = vi.fn();

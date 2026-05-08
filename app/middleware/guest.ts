@@ -1,8 +1,8 @@
-export default defineNuxtRouteMiddleware(async (to, from) => {
+export default defineNuxtRouteMiddleware(async () => {
   const userStore = useUserStore();
   const event = useRequestEvent();
 
-  if (!userStore.id) { 
+  if (!userStore.id) {
     await userStore.reauthenticate(event);
   }
 

@@ -54,18 +54,14 @@ describe('Given the NavBar component', () => {
   describe('when the user is logged in', () => {
     it('should render the ProfileIcon', async () => {
       const { component } = await render();
-      expect(component.findComponent({ name: 'ProfileIcon' }).exists()).toBe(
-        true
-      );
+      expect(component.findComponent({ name: 'ProfileIcon' }).exists()).toBe(true);
     });
 
     describe('and the profile icon is clicked', () => {
       it('should open the profile dropdown menu', async () => {
         const { component } = await render();
         await component.find('[data-test="profile-avatar"]').trigger('click');
-        expect(component.find('[data-test="view-profile"]').exists()).toBe(
-          true
-        );
+        expect(component.find('[data-test="view-profile"]').exists()).toBe(true);
       });
 
       it('signs the user out and navigates to login', async () => {

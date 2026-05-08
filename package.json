@@ -2,9 +2,6 @@
   "name": "facerecognitionbrain_vue",
   "private": true,
   "type": "module",
-  "engines": {
-    "pnpm": ">10.0.0"
-  },
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
@@ -15,8 +12,8 @@
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
     "lint": "eslint .",
-    "prettier": "prettier . --check",
-    "prettier:fix": "prettier . --write",
+    "format:check": "oxfmt --check",
+    "fmt": "oxfmt",
     "typecheck": "nuxt typecheck"
   },
   "dependencies": {
@@ -43,11 +40,12 @@
     "@vue/test-utils": "^2.4.6",
     "axios-mock-adapter": "^2.1.0",
     "eslint": "^9.39.2",
-    "eslint-config-prettier": "^10.1.8",
     "happy-dom": "^20.3.3",
+    "oxfmt": "^0.47.0",
     "playwright-core": "^1.57.0",
-    "prettier": "^3.8.0",
-    "prettier-plugin-tailwindcss": "^0.7.2",
     "vitest": "4.1.2"
+  },
+  "engines": {
+    "pnpm": ">=10.0.0"
   }
 }

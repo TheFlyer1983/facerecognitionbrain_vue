@@ -11,7 +11,7 @@ exports[`BrainLogo component > matches the snapshot 1`] = `
       class="p-4"
     >
       <img
-        alt="logo"
+        alt="Brain Logo"
         class="flex justify-self-center pt-[5px]"
         src="/app/assets/img/brain.png"
       />

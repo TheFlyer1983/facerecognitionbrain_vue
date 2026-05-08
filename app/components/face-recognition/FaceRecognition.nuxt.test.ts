@@ -16,10 +16,7 @@ mockNuxtImport('useImageStore', () => {
 });
 
 describe('FaceRecognition', () => {
-  const render = async (state?: {
-    imageUrl?: string | null;
-    boxes?: Face[];
-  }) => {
+  const render = async (state?: { imageUrl?: string | null; boxes?: Face[] }) => {
     useImageStoreMock.mockReturnValue(
       reactive({
         imageUrl: ref(state?.imageUrl ?? null),

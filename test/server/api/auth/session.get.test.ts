@@ -3,8 +3,7 @@ import { stubServerHandlerGlobals } from '../../../setupGlobals';
 const firebaseApiKey = 'firebase-api-key';
 const firebaseReauthUrl = 'https://securetoken.test/v1/token';
 
-const loadHandler = async () =>
-  (await import('../../../../server/api/auth/session.get')).default;
+const loadHandler = async () => (await import('../../../../server/api/auth/session.get')).default;
 
 describe('server/api/auth/session.get', () => {
   const getCookieMock = vi.fn();

@@ -10,9 +10,7 @@ const firebaseAuthErrors = new Set([
   'INVALID_GRANT'
 ]);
 
-function isFirebaseReauthError(
-  x: unknown
-): x is FirebaseReauthError {
+function isFirebaseReauthError(x: unknown): x is FirebaseReauthError {
   return !!(
     typeof x === 'object' &&
     x &&

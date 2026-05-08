@@ -18,7 +18,7 @@ exports[`App.vue > matches the snapshot 1`] = `
           class="p-4"
         >
           <img
-            alt="logo"
+            alt="Brain Logo"
             class="flex justify-self-center pt-[5px]"
             src="/app/assets/img/brain.png"
           />
@@ -30,13 +30,13 @@ exports[`App.vue > matches the snapshot 1`] = `
     >
       
       <p
-        class="hover:opactiy-50 mb-4 mt-0 cursor-pointer p-4 text-[1.5rem] text-black underline opacity-100 transition-opacity duration-[0.15s] ease-in hover:transition-opacity hover:duration-[0.15s] hover:ease-in"
+        class="mb-4 mt-0 cursor-pointer p-4 text-[1.5rem] text-black underline opacity-100 transition-opacity duration-[0.15s] ease-in hover:opacity-50 hover:transition-opacity hover:duration-[0.15s] hover:ease-in"
         data-test="signin"
       >
          Sign In 
       </p>
       <p
-        class="hover:opactiy-50 mb-4 mt-0 cursor-pointer p-4 text-[1.5rem] text-black underline opacity-100 transition-opacity duration-[0.15s] ease-in hover:transition-opacity hover:duration-[0.15s] hover:ease-in"
+        class="mb-4 mt-0 cursor-pointer p-4 text-[1.5rem] text-black underline opacity-100 transition-opacity duration-[0.15s] ease-in hover:opacity-50 hover:transition-opacity hover:duration-[0.15s] hover:ease-in"
         data-test="register"
       >
          Register 

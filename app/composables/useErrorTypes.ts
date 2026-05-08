@@ -11,21 +11,11 @@ type ErrorData = {
 
 export const useErrorTypes = () => {
   function isAxiosError(x: unknown): x is AxiosError<ApiErrors> {
-    return !!(
-      typeof x === 'object' &&
-      x &&
-      'isAxiosError' in x &&
-      x.isAxiosError
-    );
+    return !!(typeof x === 'object' && x && 'isAxiosError' in x && x.isAxiosError);
   }
 
   function isError(x: unknown): x is H3Error<ErrorData> {
-    return !!(
-      typeof x === 'object' &&
-      x &&
-      'statusMessage' in x &&
-      'data' in x
-    );
+    return !!(typeof x === 'object' && x && 'statusMessage' in x && 'data' in x);
   }
 
   return { isAxiosError, isError };

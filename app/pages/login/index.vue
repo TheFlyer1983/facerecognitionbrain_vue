@@ -1,7 +1,7 @@
 <script setup lang="ts">
 definePageMeta({
-  middleware: 'guest',
-})
+  middleware: 'guest'
+});
 const userStore = useUserStore();
 
 const email = ref('');
@@ -26,12 +26,7 @@ async function onSubmitSignIn(): Promise<void> {
     <template #form>
       <legend class="mx-auto px-0 text-5xl font-semibold">Sign In</legend>
       <div class="mt-4">
-        <label
-          for="email-address"
-          class="block text-center text-sm font-semibold"
-        >
-          Email
-        </label>
+        <label for="email-address" class="block text-center text-sm font-semibold"> Email </label>
         <input
           id="email-address"
           v-model="email"
@@ -42,9 +37,7 @@ async function onSubmitSignIn(): Promise<void> {
         />
       </div>
       <div class="mt-4">
-        <label for="password" class="block text-center text-sm font-semibold">
-          Password
-        </label>
+        <label for="password" class="block text-center text-sm font-semibold"> Password </label>
         <input
           id="password"
           v-model="password"
