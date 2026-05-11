@@ -11,7 +11,10 @@
     "test": "vitest run",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
-    "lint": "eslint .",
+    "lint:ox": "oxlint .",
+    "lint:ox:fix": "oxlint . --fix",
+    "lint:vue": "eslint .",
+    "lint": "pnpm run lint:ox && pnpm run lint:vue",
     "format:check": "oxfmt --check",
     "fmt": "oxfmt",
     "typecheck": "nuxt typecheck"
@@ -40,8 +43,10 @@
     "@vue/test-utils": "^2.4.6",
     "axios-mock-adapter": "^2.1.0",
     "eslint": "^9.39.2",
+    "eslint-plugin-oxlint": "^1.63.0",
     "happy-dom": "^20.3.3",
     "oxfmt": "^0.47.0",
+    "oxlint": "^1.63.0",
     "playwright-core": "^1.57.0",
     "vitest": "4.1.2"
   },

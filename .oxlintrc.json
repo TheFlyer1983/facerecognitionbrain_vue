@@ -1,0 +1,31 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "import", "unicorn", "vue", "vitest"],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "error",
+    "perf": "warn"
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "vue": true
+  },
+  "ignorePatterns": [".nuxt/**", ".output/**", "dist/**", "coverage/**"],
+  "rules": {
+    "import/no-named-as-default": "off",
+    "eslint/no-underscore-dangle": "off",
+    "unicorn/consistent-function-scoping": "off"
+  },
+  "overrides": [
+    {
+      "files": ["**/*.{test,spec}.ts", "**/*.nuxt.test.ts"],
+      "env": {
+        "vitest": true
+      },
+      "rules": {
+        "vitest/require-mock-type-parameters": "off"
+      }
+    }
+  ]
+}
