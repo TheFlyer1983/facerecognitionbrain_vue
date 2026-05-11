@@ -11,12 +11,7 @@
     "node": true,
     "vue": true
   },
-  "ignorePatterns": [
-    ".nuxt/**",
-    ".output/**",
-    "dist/**",
-    "coverage/**"
-  ],
+  "ignorePatterns": [".nuxt/**", ".output/**", "dist/**", "coverage/**"],
   "rules": {
     "import/no-named-as-default": "off",
     "eslint/no-underscore-dangle": "off",
@@ -24,10 +19,7 @@
   },
   "overrides": [
     {
-      "files": [
-        "**/*.{test,spec}.ts",
-        "**/*.nuxt.test.ts"
-      ],
+      "files": ["**/*.{test,spec}.ts", "**/*.nuxt.test.ts"],
       "env": {
         "vitest": true
       },
